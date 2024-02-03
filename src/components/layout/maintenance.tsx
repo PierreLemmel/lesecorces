@@ -20,7 +20,7 @@ const Maintenance = () => <div className="text-white text-2xl bg-red-400 min-h-f
                 Notre site est en maintenance mais nous revenons bientôt !
             </div>
             <div className={mergeClasses()}>
-                Du 29 juin au 21 juillet prochain, retrouvez <b>Quelque Chose a Changé dans l'Air</b> au théâtre de l'Oulle lors du festival d'Avignon !
+                Du 29 juin au 21 juillet prochain, retrouvez <b>Quelque Chose a Changé dans l&apos;Air</b> au théâtre de l&apos;Oulle lors du festival d&apos;Avignon !
             </div>
             <div className={mergeClasses("flex flex-col gap-2")}>
                 <div><b>Nous contacter :</b> <a href="mailto:lesecorces@gmail.com">lesecorces@gmail.com</a></div>
