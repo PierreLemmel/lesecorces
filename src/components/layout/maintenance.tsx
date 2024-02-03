@@ -3,7 +3,7 @@ import { mergeClasses } from "@/lib/utils";
 
 const Maintenance = () => <div className="text-white text-2xl bg-red-400 min-h-full flex flex-col absolute top-0 bottom-0 left-0 right-0">
     <div style={{
-        backgroundImage: cssUrl('img', 'qacdla', 'qacda-banneer2.jpg'),
+        backgroundImage: cssUrl('img/qacda/qacda-banneer2.jpg'),
     }} className={mergeClasses(
         "bg-cover bg-center flex-grow dark brightness-[85%]",
         "flex items-center justify-center h-full"      
