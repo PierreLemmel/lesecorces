@@ -1,4 +1,4 @@
-import { cssUrl } from '@/lib/files';
+import { cssUrl } from '../lib/files';
 import Image from 'next/image'
 
 const Home = () => {

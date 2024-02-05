@@ -10,5 +10,5 @@ export function pathCombine(...parts: string[]) {
 }
 
 export function cssUrl(...parts: string[]) {
-    return `url('${pathCombine(...parts)}')`
+    return `url('/${pathCombine(...parts)}')`
 }

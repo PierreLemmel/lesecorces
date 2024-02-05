@@ -1,14 +1,13 @@
-import { cssUrl } from "@/lib/files";
-import { mergeClasses } from "@/lib/utils";
+import { mergeClasses } from "../../lib/utils";
+import Image from 'next/image';
 
-const Maintenance = () => <div className="text-white text-2xl bg-red-400 min-h-full flex flex-col absolute top-0 bottom-0 left-0 right-0">
-    <div style={{
-        backgroundImage: cssUrl('img', 'qacdla', 'qacda-banneer2.jpg'),
-    }} className={mergeClasses(
-        "bg-cover bg-center flex-grow dark brightness-[85%]",
-        "flex items-center justify-center h-full"      
+const Maintenance = () => <>
+    <div className={mergeClasses(
+        "absolute top-0 left-0 w-full h-full z-50",
+        "flex items-center justify-center"
     )}>
         <div className={mergeClasses(
+            "text-white text-2xl",
             "flex flex-col items-center justify-evenly h-full",
             "text-center italic",
             "opacity-90",
@@ -28,6 +27,13 @@ const Maintenance = () => <div className="text-white text-2xl bg-red-400 min-h-f
             </div>
         </div>
     </div>
-</div>
+    
+    <div className="absolute top-0 left-0 w-full h-full">
+        <Image 
+            className="brightness-[85%] object-cover"
+            src="/img/qacda/qacda-banneer2.jpg" alt="qacda-banneer" fill
+        />
+    </div>
+</>
 
 export default Maintenance;

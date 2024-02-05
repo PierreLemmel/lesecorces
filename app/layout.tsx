@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { mergeClasses } from '@/lib/utils'
-import MainMenu from '@/components/layout/main-menu'
 import { env } from 'process'
-import Maintenance from '@/components/layout/maintenance'
+import MainMenu from '../components/layout/main-menu'
+import Maintenance from '../components/layout/maintenance'
+import { mergeClasses } from '../lib/utils'
 
 const inter = Inter({ subsets: ['latin'] })
 
