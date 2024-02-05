@@ -1,5 +1,4 @@
-import { cssUrl } from "@/lib/files";
-import { mergeClasses } from "@/lib/utils";
+import { mergeClasses } from "../../lib/utils";
 import Image from 'next/image';
 
 const Maintenance = () => <>

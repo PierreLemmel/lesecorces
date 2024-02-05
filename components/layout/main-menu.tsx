@@ -1,4 +1,4 @@
-import { mergeClasses } from "@/lib/utils"
+import { mergeClasses } from "../../lib/utils"
 import Link from "next/link";
 
 export type MainMenuProps = {
