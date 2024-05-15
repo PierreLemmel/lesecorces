@@ -1,5 +1,3 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import '../globals.css'
 import MainMenu from '../../components/layout/main-menu'
 import { mergeClasses } from '../../lib/utils'
@@ -10,7 +8,7 @@ type RootLayoutProps = {
 }
 
 export default function RootLayout(props: RootLayoutProps) {
-console.log(props);
+
 	const { children } = props;
 
 	return <body className={mergeClasses(
