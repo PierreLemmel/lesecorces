@@ -5,10 +5,12 @@ import { useParams } from 'next/navigation';
 
 const URL_PROARTI = 'https://www.proarti.fr/collect/project/quelque-chose-a-change-dans-lair/0';
 const URL_FACTORY_AVIGNON = 'https://lafactory.vostickets.net/billet/FR/representation-LA_FACTORY-21994-0.wb';
+const URL_CLAVEL = 'https://www.billetweb.fr/qacda-clavel';
 
 const urls: Record<string, string> = {
     'carte-visite': URL_PROARTI,
     'flyer-avignon': URL_FACTORY_AVIGNON,
+    'qacda-clavel': URL_CLAVEL,
     'flyer-cagnotte': URL_PROARTI,
     'kakemono': URL_PROARTI,
 };
