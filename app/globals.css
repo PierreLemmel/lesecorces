@@ -2,14 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: 'AbrilFatface';
-    src: url("/fonts/AbrilFatFace/AbrilFatface-Regular.ttf") format('truetype');
+.center-child {
+    @apply flex justify-center items-center;
 }
 
 @font-face {
-    font-family: 'Arsenica';
-    src: url('/fonts/Arsenica/ArsenicaTrial-Regular.ttf') format('truetype');
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-Regular.ttf') format('truetype');
     font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-Bold.ttf') format('truetype');
+    font-weight: bold;
     font-style: normal;
 }

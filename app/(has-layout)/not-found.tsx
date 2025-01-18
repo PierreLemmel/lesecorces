@@ -2,7 +2,7 @@
 
 const CustomNotFound = () => {
 
-    return <div>Oups, impossible de trouver la page que vosu demandez.</div>
+    return <div>Oups, impossible de trouver la page que vous demandez.</div>
 }
 
 export default CustomNotFound;

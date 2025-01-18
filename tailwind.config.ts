@@ -9,9 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        'abril-fatface': ['AbrilFatface', 'sans-serif'],
-        'arsenica': ['Arsenica', 'sans-serif'],
-      }
+        'red-hat-display': ['RedHatDisplay', 'sans-serif'],
+      },
+      colors: {
+        golden: '#F3BC77',
+        flower: '#150808',
+        water: '#081215',
+        trunk: '#151108',
+        leaves: '#0C1508'
+      },
     },
   },
   plugins: [],
