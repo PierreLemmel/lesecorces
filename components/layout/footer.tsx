@@ -8,6 +8,7 @@ import { uiBreakPoints } from "../ui/ecorces-ui";
 import TextInput from "../ui/text-input";
 import { NewsLetter } from "../ui/newsletter";
 import Link from "next/link";
+import { TextLink } from "../ui/text-link";
 
 export type FooterProps = {
 
@@ -44,8 +45,9 @@ const Footer_Small = (props: InnerFooterProps) => <div className={mergeClasses(
         }}
     />
 
-    <NewsLetter />
+    <NewsLetter className="mb-2" />
     <ContactBlock />
+    <SocialBlock_Small />
     <MentionsLegales />
 
 </div>
@@ -54,16 +56,36 @@ const Footer_Large = (props: InnerFooterProps) => <div>
     FOOTER_LARGE
 </div>
 
-const ContactBlock = () => <div>
-    <div>lesecorces@gmail.com</div>
-    <div>+33 6 48 03 16 10</div>
-    <div>Espace professionnels</div>
+const ContactBlock = () => <div className={mergeClasses(
+    "flex flex-col gap-2 px-2 py-2",
+    "border-t border-t-golden"
+)} >
+    <Link href="mailto:lesecorces@gmail.com"><div className="italic">lesecorces@gmail.com</div></Link>
+    <Link href="tel:+33648031610"><div className="italic">+33 6 48 03 16 10</div></Link>
+    <Link href="/espace-pro"><div className="italic">Espace professionnels</div></Link>
 </div>
 
-const MentionsLegales = () => <div className="flex flex-col items-start">
-    <div>@{new Date().getFullYear()} Les Écorcés
+const social = {
+    instagram: 'https://www.instagram.com/lesecorces',
+    facebook: 'https://www.facebook.com/troupelesecorces',
+    youtube: 'https://www.youtube.com/@lesecorcestheatreimprovise1880'
+} as const;
+
+const SocialBlock_Small = () => <div className={mergeClasses(
+    "flex flex-row items-center justify-evenly",
+    "border-t border-t-golden border-b border-b-golden p-2 font-bold"
+)}>
+    <TextLink href={social.instagram}>Instagram</TextLink>
+    <TextLink href={social.facebook}>Facebook</TextLink>
+    <TextLink href={social.youtube}>Youtube</TextLink>
+</div>
+
+const MentionsLegales = () => <div className={mergeClasses(
+    "flex flex-col items-start px-2 gap-2 py-2"
+)}>
+    <div>©{new Date().getFullYear()} Les Écorcés
     </div>
-    <Link href="/mentionsl-legales">Mentions légales</Link>
+    <TextLink href="/mentions-legales" className="text-sm">Mentions légales</TextLink>
     <div className="italic opacity-70 text-xs">Site désigné dans la joie par Loup Lacaille...</div>
     <div className="italic opacity-70 text-xs">... et développé dans la bonne humeur par Pierre Lemmel</div>
 </div>

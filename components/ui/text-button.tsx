@@ -1,22 +1,25 @@
 import { mergeClasses } from "../../lib/utils";
 
 export type TextButtonProps = {
-    children: string;
+    enabled?: boolean;
+    children: string|JSX.Element;
     onClick: () => void;
     className?: string;
 }
   
 export const TextButton = (props: TextButtonProps) => {
     const {
+        enabled = true,
         children,
         onClick,
         className = ''
     } = props
 
     return <div
-        onClick={onClick}
+        onClick={() => enabled && onClick()}
         className={mergeClasses(
-            "cursor-pointer text-blue-500 hover:underline ${className}",
+            "italic",
+            enabled && "cursor-pointer hover:scale-110 transition-transform",
             className
         )}
     >

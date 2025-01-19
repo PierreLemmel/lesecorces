@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from "react";
+import { DependencyList, RefObject, useEffect } from "react";
 
 export function useElementSize<T extends HTMLElement = HTMLElement>(ref: RefObject<T>, onSizeChanged: (size: { width: number, height: number }) => void) {
 
@@ -23,4 +23,14 @@ export function useElementSize<T extends HTMLElement = HTMLElement>(ref: RefObje
         };
     }, []);
 
+}
+
+export const useEffectAsync = (effect: () => Promise<void>, deps?: DependencyList): void => {
+    deps ||= [];
+    
+    useEffect(() => {
+        (async () => {
+            await effect();
+        })();
+    }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 }

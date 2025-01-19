@@ -8,6 +8,21 @@
 
 @font-face {
     font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'RedHatDisplay';
     src: url('/fonts/RedHatDisplay/RedHatDisplay-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
@@ -15,7 +30,49 @@
 
 @font-face {
     font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
     src: url('/fonts/RedHatDisplay/RedHatDisplay-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: 800;
+    font-style: italic;
 }

@@ -68,7 +68,7 @@ const TextInput: React.FC<TextInputProps> = (props: TextInputProps) => {
             className={mergeClasses(
                 "bg-transparent border border-golden/50 focus:border-golden/70 focus:border-2 outline-0 focus:ring-0",
                 "text-white/80 placeholder-white/40",
-                "rounded-sm md:rounded-md"
+                "px-[0.35rem] py-[0.12rem] rounded-md"
             )}
             type="text"
             value={value}
