@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import { emailRegex } from "./ecorces-ui";
-import TextInput from "./text-input";
 import { TextButton } from "./text-button";
 import { saveNewsLetterMail } from "../../server/server";
 import { mergeClasses } from "../../lib/utils";
+import EcorcesTextInput from "./ecorces-text-input";
 
 const validateMail = (val: string) => {
     return val === "" || emailRegex.test(val);
@@ -47,7 +47,7 @@ export const NewsLetter = (props: NewsLetterProps) => {
     )}>
         <div className="italic text-golden/80">Newsletter</div>
         <div className="flex flex-row items-stretch gap-4">
-            <TextInput
+            <EcorcesTextInput
                 value={mailEdit}
                 setValue={setMailEdit}
                 className="flex-grow-[2]"

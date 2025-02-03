@@ -1,9 +1,8 @@
 'use client';
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { mergeClasses } from "../../lib/utils"
 import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSquareXmark } from '@fortawesome/free-solid-svg-icons'
 import { motion } from "framer-motion";
 import { EcorcesIcon } from "../ui/icon";

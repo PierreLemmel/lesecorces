@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { collection, deleteDoc, doc, DocumentData, getDoc, getDocs, getFirestore, initializeFirestore, setDoc, updateDoc, WithFieldValue } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -50,6 +50,29 @@ function getFirebase(): FirebaseProps {
     return firebase;
 }
 
+export async function signInWithGoogle() {
+    const { auth } = getFirebase();
+    const googleProvider = new GoogleAuthProvider();
+
+    const { user } = await signInWithPopup(auth, googleProvider);
+
+    if (!user) {
+        throw "Failed to sign in with Google";
+    }
+
+    const token = await user.getIdToken();
+    const fetchResult = await fetch("/api/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token })
+    });
+
+    if (!fetchResult.ok) {
+        throw "Failed to create session cookie";
+    }
+}
 
 export async function documentExists(path: string) {
     const { db } = getFirebase();
@@ -134,4 +157,16 @@ export async function listDocuments(path: string) {
     const ids = docRefs.docs.map(doc => doc.id);
 
     return ids;
+}
+
+export async function storeFile(file: File, path: string) {
+
+    const { storage } = getFirebase();
+    
+    const storageRef = ref(storage, path);
+
+    const uploadResult = await uploadBytes(storageRef, file);
+	const downloadURL = await getDownloadURL(storageRef);
+
+	return downloadURL;
 }

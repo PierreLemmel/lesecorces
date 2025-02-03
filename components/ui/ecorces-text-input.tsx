@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { mergeClasses } from '../../lib/utils';
+import { baseUiInputClasses } from './ecorces-ui';
 
-export type TextInputProps = {
+export type EcorcesTextInputProps = {
     value: string;
     setValue: (val: string) => void;
 
@@ -15,7 +16,7 @@ export type TextInputProps = {
     className?: string;
 }
 
-const TextInput: React.FC<TextInputProps> = (props: TextInputProps) => {
+const TextInput = (props: EcorcesTextInputProps) => {
     const {
         value,
         setValue,
@@ -61,14 +62,13 @@ const TextInput: React.FC<TextInputProps> = (props: TextInputProps) => {
     }
 
     return <div className={mergeClasses(
-        "flex flex-col justify-start gap-1",
+        "flex flex-col justify-start gap-1 ",
         className
     )}>
         <input
             className={mergeClasses(
-                "bg-transparent border border-golden/50 focus:border-golden/70 focus:border-2 outline-0 focus:ring-0",
-                "text-white/80 placeholder-white/40",
-                "px-[0.35rem] py-[0.12rem] rounded-md"
+                baseUiInputClasses,
+                "px-[0.35rem] py-[0.12rem]",
             )}
             type="text"
             value={value}

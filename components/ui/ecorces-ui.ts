@@ -1,5 +1,59 @@
+import { Area } from "react-easy-crop";
+import { mergeClasses } from "../../lib/utils";
+
 export const uiBreakPoints = {
     md: 768,
 } as const;
 
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export const baseUiInputClasses = mergeClasses(
+    "border border-golden/50 focus:border-golden/70 focus:border-2 outline-0 focus:ring-0",
+    "text-white/80 placeholder-white/60 bg-white/20",
+    "rounded-md"
+);
+
+export const getButtonClasses = (size: ButtonSize): string => mergeClasses(
+    getButtonSizeClasses(size),
+    "cursor-pointer",
+    "bg-golden text-black",
+    "rounded px-4 py-2 transition-all focus:outline-none focus:ring-2 focus:ring-opacity-50",
+)
+
+export type ButtonSize = "Normal"|"Small";
+
+export function getButtonSizeClasses(size: ButtonSize): string {
+    
+    switch (size) {
+        case "Small":
+            return mergeClasses(
+                "px-1 py-1",
+                "text-sm"
+            );
+
+        case "Normal":
+            return mergeClasses(
+                "px-4 py-2",
+                "text-normal"
+            );
+    }
+}
+
+export const getImageData = (src: string, area: Area, onImageDataReady: (data: string) => void) => {
+
+    const image = new Image();
+    image.src = src;
+    image.crossOrigin = "anonymous";
+    image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        if (ctx) {
+            canvas.width = area.width;
+            canvas.height = area.height;
+            ctx.drawImage(image, area.x, area.y, area.width, area.height, 0, 0, area.width, area.height);
+            
+            onImageDataReady(canvas.toDataURL());
+        }
+    }
+}

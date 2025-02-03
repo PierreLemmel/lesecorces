@@ -1,14 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react"
-import Image from "next/image"
 import { mergeClasses } from "../../lib/utils"
 import { useElementSize } from "../../lib/hooks"
 import { uiBreakPoints } from "../ui/ecorces-ui";
-import TextInput from "../ui/text-input";
 import { NewsLetter } from "../ui/newsletter";
 import Link from "next/link";
 import { TextLink } from "../ui/text-link";
+import { socialNetworks } from "../../lib/res";
 
 export type FooterProps = {
 
@@ -65,19 +64,13 @@ const ContactBlock = () => <div className={mergeClasses(
     <Link href="/espace-pro"><div className="italic">Espace professionnels</div></Link>
 </div>
 
-const social = {
-    instagram: 'https://www.instagram.com/lesecorces',
-    facebook: 'https://www.facebook.com/troupelesecorces',
-    youtube: 'https://www.youtube.com/@lesecorcestheatreimprovise1880'
-} as const;
-
 const SocialBlock_Small = () => <div className={mergeClasses(
     "flex flex-row items-center justify-evenly",
     "border-t border-t-golden border-b border-b-golden p-2 font-bold"
 )}>
-    <TextLink href={social.instagram}>Instagram</TextLink>
-    <TextLink href={social.facebook}>Facebook</TextLink>
-    <TextLink href={social.youtube}>Youtube</TextLink>
+    <TextLink href={socialNetworks.instagram}>Instagram</TextLink>
+    <TextLink href={socialNetworks.facebook}>Facebook</TextLink>
+    <TextLink href={socialNetworks.youtube}>Youtube</TextLink>
 </div>
 
 const MentionsLegales = () => <div className={mergeClasses(

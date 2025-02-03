@@ -6,6 +6,14 @@
     @apply flex justify-center items-center;
 }
 
+.heading-1 {
+    @apply uppercase font-extrabold text-xl
+}
+
+.heading-2 {
+    @apply font-semibold text-lg
+}
+
 @font-face {
     font-family: 'RedHatDisplay';
     src: url('/fonts/RedHatDisplay/RedHatDisplay-Light.ttf') format('truetype');
