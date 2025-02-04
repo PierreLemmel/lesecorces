@@ -49,6 +49,16 @@ export const allActiviteVilles = [
 ] as const;
 export type ActiviteVille = typeof allActiviteVilles[number];
 
+export type EcorcesBanneer = {
+    url: string;
+    cropArea: {
+        x: number,
+        y: number,
+        width: number,
+        height: number
+    }
+}
+
 export type EcorcesActivite = {
     type: ActiviteType;
     title: string;
@@ -56,15 +66,7 @@ export type EcorcesActivite = {
     endDate?: Timestamp;
     city: ActiviteVille;
     description: string;
-    banneer?: {
-        url: string;
-        cropArea: {
-            x: number,
-            y: number,
-            width: number,
-            height: number
-        }
-    }
+    banneer?: EcorcesBanneer;
     link?: string;
     full: boolean;
     visible: boolean;
@@ -83,39 +85,123 @@ export function createEmptyActivite(): EcorcesActivite {
     }
 }
 
+export function duplicateActivite(activite: EcorcesActivite): EcorcesActivite {
+
+    return {
+        ...activite,
+        banneer: activite.banneer ? { ...activite.banneer } : undefined,
+        title: activite.title + " (copie)",
+    }
+}
+
 type ActivitesDbModel = {
     activites: EcorcesActivite[];
 }
 
 const pathToActivites = () => pathCombine("activites", "default");
 
-export async function getActivites(): Promise<EcorcesActivite[]> {
+export type GetActivitesParams = {
+    limit: number;
+    upcoming: boolean;
+    visible: boolean;
+}
+
+export async function getActivites(params?: Partial<GetActivitesParams>): Promise<EcorcesActivite[]> {
+
+    const {
+        limit,
+        upcoming = false,
+        visible = false
+    } = params || {};
 
     const path = pathToActivites();
 
     const data = await getDocument<ActivitesDbModel>(path);
 
-    return data.activites;
-}
+    let result = data.activites;
 
-export async function getUpcomingActivites(): Promise<EcorcesActivite[]> {
+    if (visible) {
+        result = result.filter(activite => {
+            return activite.visible;
+        })
+    }
 
-    const activites = await getActivites();
+    if (upcoming) {
 
-    const now = Timestamp.now();
+        const now = Timestamp.now();
+        result = result.filter(activite => {
+            return activite.date > now;
+        })
 
-    const result = activites.filter(activite => {
-        return activite.date > now;
-    })
+    }
+
+    if (limit) {
+        result = result.slice(0, limit);
+    }
 
     return result;
 }
 
-export async function saveActivites(activites: EcorcesActivite[]): Promise<boolean> {
+
+export async function saveActivites(activites: EcorcesActivite[]): Promise<EcorcesActivite[]> {
 
     const path = pathToActivites();
-    console.log("Saving activites", activites);
-    await setDocument<ActivitesDbModel>(path, { activites }, true);
+    
+    const sorted = activites.toSorted((a, b) => a.date.toMillis() - b.date.toMillis());
+    
+    await setDocument<ActivitesDbModel>(path, {
+        activites: sorted
+    }, true);
 
-    return true;
+    return sorted;
+}
+
+export type EcorcesOffrePedagogique = {
+    name: string;
+    description: string;
+    link?: string;
+    full: boolean;
+    visible: boolean;
+}
+
+const pathToOffresPedagogiques = () => pathCombine("offre-pedagogique", "default");
+
+type OffrePedagogiqueDbModels = {
+    offres: EcorcesOffrePedagogique[];
+}
+
+export async function getOffrePedagogique(): Promise<EcorcesOffrePedagogique[]> {
+
+    const path = pathToOffresPedagogiques();
+
+    const { offres } = await  getDocument<OffrePedagogiqueDbModels>(path);
+
+    return offres;
+}
+
+export async function saveOffrePedagogique(offres: EcorcesOffrePedagogique[]): Promise<EcorcesOffrePedagogique[]> {
+    
+    const path = pathToOffresPedagogiques();
+
+    await setDocument<OffrePedagogiqueDbModels>(path, {
+        offres
+    }, true);
+
+    return offres;
+}
+
+export function createEmptyOffrePedagogique(): EcorcesOffrePedagogique {
+    return {
+        name: "Nouvelle offre",
+        description: "",
+        visible: false,
+        full: false
+    }
+}
+
+export function duplicateOffrePedagogique(offre: EcorcesOffrePedagogique): EcorcesOffrePedagogique {
+    return {
+        ...offre,
+        name: offre.name + " (copie)"
+    }
 }

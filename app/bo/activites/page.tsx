@@ -2,7 +2,7 @@
 
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { Timestamp } from "firebase/firestore";
-import { ActiviteType, ActiviteVille, allActiviteVilles, allActivityTypes, createEmptyActivite, EcorcesActivite, getActivites, saveActivites } from "../../../server/server";
+import { ActiviteType, ActiviteVille, allActiviteVilles, allActivityTypes, createEmptyActivite, duplicateActivite, EcorcesActivite, getActivites, saveActivites } from "../../../server/server";
 import LoadingSpinner from "../../../components/ui/loading-spinner";
 import { useEffectAsync } from "../../../lib/hooks";
 import EcorcesButton from "../../../components/ui/ecorces-button";
@@ -20,7 +20,6 @@ import { getImageData } from "../../../components/ui/ecorces-ui";
 const EcorcesActiviteManager = () => {
     const [activities, setActivities] = useState<EcorcesActivite[]>([]);
     
-
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -28,7 +27,8 @@ const EcorcesActiviteManager = () => {
     const commitChanges = useCallback(async () => {
         try {
             setIsSaving(true);
-            await saveActivites(activities);
+            const updated = await saveActivites(activities);
+            setActivities(updated);
             setIsSaving(false);
         }
         catch (err: any) {
@@ -131,12 +131,20 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
         setActivities(updatedActivities);
     };
 
+    const handleDuplicate = (index: number) => {
+
+        const newActivity = duplicateActivite(activities[index]);
+        setActivities([...activities, newActivity]);
+        setForm(newActivity);
+        setEditingIndex(activities.length);
+    };
+
     const handleCancel = () => {
         setEditingIndex(null);
         setForm(createEmptyActivite());
     }
 
-    return <div className="p-4 max-w-4xl mx-auto">
+    return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
             <div className="heading-1">Activités</div>
             <EcorcesButton
@@ -152,64 +160,13 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
                 <p className="">Aucun activité pour l'instant.</p>
             ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {activities.map((activity, index) => {
-
-                        const [banneerData, setBanneerData] = useState<string | null>(null);
-                        useEffect(() => {
-                            if (activity.banneer) {
-                                const {
-                                    url,
-                                    cropArea
-                                } = activity.banneer;
-    
-                                getImageData(url, cropArea, setBanneerData);
-                            }
-                            else {
-                                setBanneerData(null);
-                            }
-                            
-                        }, [activity.banneer]);
-
-                        return (
-                            <div key={index}
-                                className="p-4 border rounded shadow-sm flex flex-col justify-between"
-                            >
-                                <div className={mergeClasses(
-                                    "flex flex-col text-gray-300",
-                                    "relative",
-                                    "p-3"
-                                )}
-
-                                >
-                                    {banneerData && <div className={mergeClasses(
-                                        "bg-cover bg-center bg-no-repeat",
-                                        "absolute top-0 left-0 right-0 bottom-0 -z-10",
-                                        "opacity-45 rounded"
-                                    )} style={{
-                                        backgroundImage: `url(${banneerData})`,
-                                    }} />}
-
-                                    <div className="font-bold text-xl text-golden">{activity.title}{activity.full && " (Complet)"}</div>
-                                    <div className="text-sm italic mb-2">{activity.city} - {activity.type}</div>
-                                    <div className="">{activity.description}</div>
-                                    <div className="text-sm">
-                                        {activity.endDate ?
-                                            `Du ${activity.date.toDate().toLocaleDateString()} au ${activity.endDate.toDate().toLocaleDateString()}` :
-                                            `Le ${activity.date.toDate().toLocaleDateString()}`}
-                                    </div>
-                                    <div className="text-sm">{activity.visible ? "Visible" : "Masqué"}</div>
-                                    {activity.link && <TextLink href={activity.link} className="mt-2">
-                                        Visiter le lien
-                                    </TextLink>}
-                                </div>
-
-                                <div className="flex mt-4 space-x-2">
-                                    <EcorcesButton onClick={() => handleEdit(index)}>Modifier</EcorcesButton>
-                                    <EcorcesButton onClick={() => handleDelete(index)}>Supprimer</EcorcesButton>
-                                </div>
-                            </div>
-                        );
-                    })}
+                    {activities.map((activity, index) => <ActivityCard
+                        key={`Activite-${index.toString().padStart(2, "0")}`}
+                        activity={activity}
+                        handleEdit={() => handleEdit(index)}
+                        handleDelete={() => handleDelete(index)}
+                        handleDuplicate={() => handleDuplicate(index)}
+                    />)}
                 </div>
             )}
         </div>
@@ -311,6 +268,82 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
             </div>
         </div>
     </div>
+}
+
+
+type ActivityCardProps = {
+    activity: EcorcesActivite;
+    handleEdit: () => void;
+    handleDelete: () => void;
+    handleDuplicate: () => void;
+}
+
+const ActivityCard = (props: ActivityCardProps) => {
+
+    const {
+        activity,
+        handleEdit,
+        handleDelete,
+        handleDuplicate
+    } = props;
+
+    const [banneerData, setBanneerData] = useState<string | null>(null);
+    useEffect(() => {
+        if (activity.banneer) {
+            const {
+                url,
+                cropArea
+            } = activity.banneer;
+
+            getImageData(url, cropArea, setBanneerData);
+        }
+        else {
+            setBanneerData(null);
+        }
+        
+    }, [activity.banneer]);
+
+    return (
+        <div 
+            className="p-4 border rounded shadow-sm flex flex-col justify-between"
+        >
+            <div className={mergeClasses(
+                "flex flex-col text-gray-300",
+                "relative",
+                "p-3",
+                "flex-grow"
+            )}
+
+            >
+                {banneerData && <div className={mergeClasses(
+                    "bg-cover bg-center bg-no-repeat",
+                    "absolute top-0 left-0 right-0 bottom-0 -z-10",
+                    "opacity-45 rounded"
+                )} style={{
+                    backgroundImage: `url(${banneerData})`,
+                }} />}
+
+                <div className="font-bold text-xl text-golden">{activity.title}{activity.full && " (Complet)"}</div>
+                <div className="text-sm italic mb-2">{activity.city} - {activity.type}</div>
+                <div className="">{activity.description}</div>
+                <div className="text-sm">
+                    {activity.endDate ?
+                        `Du ${activity.date.toDate().toLocaleDateString()} au ${activity.endDate.toDate().toLocaleDateString()}` :
+                        `Le ${activity.date.toDate().toLocaleDateString()}`}
+                </div>
+                <div className="text-sm">{activity.visible ? "Visible" : "Masqué"}</div>
+                {activity.link && <TextLink href={activity.link} className="mt-2" target="_blank">
+                    Visiter le lien
+                </TextLink>}
+            </div>
+
+            <div className="flex flex-row mt-4 space-x-2">
+                <EcorcesButton onClick={handleEdit}>Modifier</EcorcesButton>
+                <EcorcesButton onClick={handleDelete}>Supprimer</EcorcesButton>
+                <EcorcesButton onClick={handleDuplicate}>Dupliquer</EcorcesButton>
+            </div>
+        </div>
+    );
 }
 
 export default EcorcesActiviteManager;

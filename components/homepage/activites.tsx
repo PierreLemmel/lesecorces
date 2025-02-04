@@ -4,9 +4,11 @@ import { useRef, useState, useEffect } from "react";
 import { mergeClasses } from "../../lib/utils";
 import { TextLink } from "../ui/text-link";
 import { useEffectAsync, useElementSize } from "../../lib/hooks";
-import { uiBreakPoints } from "../ui/ecorces-ui";
-import { EcorcesActivite, getUpcomingActivites } from "../../server/server";
+import { getImageData, uiBreakPoints } from "../ui/ecorces-ui";
+import { EcorcesBanneer, EcorcesActivite, getActivites } from "../../server/server";
 import LoadingSpinner from "../ui/loading-spinner";
+import { Timestamp } from "firebase-admin/firestore";
+import Link from "next/link";
 
 export const ActivitesBlock = () => {
     const [width, setWidth] = useState<number>(0);
@@ -19,7 +21,11 @@ export const ActivitesBlock = () => {
     useEffectAsync(async () => {
         setLoading(true);
         
-        const activites = await getUpcomingActivites();
+        const activites = await getActivites({
+            upcoming: true,
+            visible: true,
+            limit: 3
+        });
 
         setLoading(false);
         setActivites(activites);
@@ -48,11 +54,12 @@ const ActivitesBlock_Small = (props: ActivitesBlockProps) => {
     } = props;
 
     return <div className={mergeClasses(
-        "flex flex-col items-center"
+        "flex flex-col items-center",
+        "mb-12 mt-8"
     )}>
         <div className="heading-1">Nos prochaines activités</div>
         
-        <div className="h-16">
+        <div className="flex flex-col items-stretch gap-2 px-3 w-full mb-4 mt-2">
             <ActivitesBlockContent_Small loading={loading} activites={activites} />
         </div>
         
@@ -71,21 +78,24 @@ const ActivitesBlockContent_Small = (props: ActivitesBlockProps) => {
         return <LoadingSpinner />
     }
     else if (activites.length > 0) {
-        return <div>Aucune activité n'est prévue pour l'instant</div>
-    }
-    else {
         return <>
-            {activites.map((activite, index) => <ActiviteCard
+            {activites.map((activite, index) => <ActiviteCard_Small
                 activite={activite}
                 key={`Activity-${index.toString().padStart(2, " ")}`}
             />)}
         </>
     }
+    else {
+        return <div className="text-white mt-4">
+            Aucune activité n&apos;est prévue pour l'instant
+        </div>
+    }
 }
 
 const ActivitesBlock_Large = (props: ActivitesBlockProps) => {
     return <div className={mergeClasses(
-        "flex flex-col items-center"
+        "flex flex-col items-center",
+        "mb-8"
     )}>
         <div className="heading-1">Nos prochaines activités</div>
         <div><TextLink href="/activites" className="underline">Tout voir</TextLink></div>
@@ -96,26 +106,116 @@ type ActiviteCardProps = {
     activite: EcorcesActivite;
 }
 
-const ActiviteCard = (props: ActiviteCardProps) => {
+const ActiviteCard_Small = (props: ActiviteCardProps) => {
 
     const {
         activite: {
             type,
             title,
-            description,
             date,
+            endDate,
             city,
-            imageUrl,
-            link
+            banneer,
+            link = ""
         }
     } = props;
 
-    return <div style={{
-        backgroundImage:`url(${imageUrl})`
-    }}>
-        <div>{title}</div>
-        <div>{type} - {city} - {date.toDate().toDateString()}</div>
-        <div>{description}</div>
-        {link && <TextLink href={link}>Voir</TextLink>}
-    </div>;
+    return <Link
+        href={link}
+        target="_blank"
+    ><div
+        className={mergeClasses(
+            "cursor-pointer transition-transform transform-gpu hover:scale-105",
+            "relative",
+            "px-2"
+        )}
+    >
+        {banneer && <BanneerBackground banneer={banneer} />}
+        <div className={mergeClasses(
+            "flex flex-col z-10",
+            "relative items-stretch top-0 left-0 bottom-0 right-0",
+            "px-2 py-2"
+        )}>
+            <div className={mergeClasses(
+                "flex flex-row justify-end gap-1",
+            )}>
+                <div className="border border-golden rounded px-[0.32rem] py-[0.07rem]">
+                    {city}
+                </div>
+                <div className="border border-golden rounded px-[0.32rem] py-[0.07rem]">
+                    {type}
+                </div>
+            </div>
+            <div className={mergeClasses(
+                "w-full",
+                "text-2xl font-bold text-white text-left truncate",
+                "mt-3"
+            )}>
+                {title}
+            </div>
+            <div className={mergeClasses(
+                "text-sm text-white/70"
+            )}>
+                {cardDateFormat(date, endDate)}
+            </div>
+        </div>
+    </div></Link>;
+}
+
+
+function cardDateFormat(date: Timestamp, endDate?: Timestamp) {
+
+    const year = (endDate ?? date).toDate().getFullYear()
+
+    const formatter = new Intl.DateTimeFormat('fr-FR', {
+        month: 'long',
+        day: 'numeric'
+    })
+
+    if (endDate) {
+        return `Du ${formatter.format(date.toDate())} au ${formatter.format(endDate.toDate())} ${year}`;
+    }
+    else {
+        return `Le ${formatter.format(date.toDate())} ${year}`;
+    }
+}
+
+type BanneerBackgroundProps = {
+    banneer: EcorcesBanneer;
+    className?: string;
+}
+
+const BanneerBackground = (props: BanneerBackgroundProps) => {
+
+    const {
+        banneer: {
+            url,
+            cropArea
+        },
+        className
+    } = props;
+
+    const [imgData, setImgData] = useState<string | null>(null);
+
+    useEffect(() => {
+        getImageData(url, cropArea, setImgData)
+    }, [url, cropArea])
+
+    return <div
+        className={mergeClasses(
+            "absolute inset-0 w-full h-full",
+            "bg-cover bg-center bg-no-repeat",
+            "rounded-md",
+            className
+        )}
+        style={{
+            backgroundImage: imgData ? `url(${imgData})` : undefined,
+        }}
+    >
+        <div className={mergeClasses(
+            "w-full h-full",
+            "bg-gradient-to-r from-black/90 via-black/20 to-black/90"
+        )}
+        />
+    </div>
 }

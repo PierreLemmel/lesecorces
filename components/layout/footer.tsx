@@ -7,7 +7,7 @@ import { uiBreakPoints } from "../ui/ecorces-ui";
 import { NewsLetter } from "../ui/newsletter";
 import Link from "next/link";
 import { TextLink } from "../ui/text-link";
-import { socialNetworks } from "../../lib/res";
+import { siteMakers, socialNetworks } from "../../lib/res";
 
 export type FooterProps = {
 
@@ -68,9 +68,9 @@ const SocialBlock_Small = () => <div className={mergeClasses(
     "flex flex-row items-center justify-evenly",
     "border-t border-t-golden border-b border-b-golden p-2 font-bold"
 )}>
-    <TextLink href={socialNetworks.instagram}>Instagram</TextLink>
-    <TextLink href={socialNetworks.facebook}>Facebook</TextLink>
-    <TextLink href={socialNetworks.youtube}>Youtube</TextLink>
+    <TextLink href={socialNetworks.instagram} emphasis={false}>Instagram</TextLink>
+    <TextLink href={socialNetworks.facebook} emphasis={false}>Facebook</TextLink>
+    <TextLink href={socialNetworks.youtube} emphasis={false}>Youtube</TextLink>
 </div>
 
 const MentionsLegales = () => <div className={mergeClasses(
@@ -78,7 +78,8 @@ const MentionsLegales = () => <div className={mergeClasses(
 )}>
     <div>©{new Date().getFullYear()} Les Écorcés
     </div>
-    <TextLink href="/mentions-legales" className="text-sm">Mentions légales</TextLink>
-    <div className="italic opacity-70 text-xs">Site désigné dans la joie par Loup Lacaille...</div>
-    <div className="italic opacity-70 text-xs">... et développé dans la bonne humeur par Pierre Lemmel</div>
+    <TextLink href="/mentions-legales" emphasis={false} className="text-sm">Mentions légales</TextLink>
+    <div className="italic opacity-70 text-xs">Site désigné dans la joie par <Link href={siteMakers.loupLacaille}>Loup Lacaille</Link>...</div>
+    <div className="italic opacity-70 text-xs">... et développé dans la bonne humeur par <Link href={siteMakers.pierreLemmel}>Pierre Lemmel</Link>.</div>
+    <div className="italic opacity-70 text-xs">Crédits photo <Link href={siteMakers.janisAroling}>Janis Aroling</Link> et <Link href={siteMakers.christianDeHericourt}>Christian De Héricourt</Link></div>
 </div>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Footer } from "../../components/layout/footer";
 import { faNewspaper, faPhone, faPhotoFilm } from '@fortawesome/free-solid-svg-icons'
@@ -8,6 +7,8 @@ import { EcorcesIcon } from "../../components/ui/icon";
 import { proRessources } from "../../lib/res";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { ActivitesBlock } from "../../components/homepage/activites";
+import { NewsLetterBlock } from "../../components/homepage/newsletter-block";
+import { OffresPedagogiqueBlock } from "../../components/homepage/offre-pedagogique-block";
 
 const Home = () => {
   	return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
@@ -15,6 +16,7 @@ const Home = () => {
 
 		<ActivitesBlock />
 		<OffresPedagogiqueBlock />
+		<NewsLetterBlock />
 		<CompagnieBlock />
 		<EspaceProBlock />
 
@@ -29,14 +31,9 @@ const Header = () => <div className="w-full flex flex-col items-stretch pt-[1rem
 	</div>
 </div>
 
-const OffresPedagogiqueBlock = () => {
 
-	
 
-	return <div>
-		NOS OFFRES PEDAGOGIQUES
-	</div>;
-}
+
 
 const CompagnieBlock = () => <div className={mergeClasses(
 	"pt-12 pb-16 px-2",

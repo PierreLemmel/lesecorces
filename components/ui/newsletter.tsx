@@ -46,7 +46,7 @@ export const NewsLetter = (props: NewsLetterProps) => {
         className
     )}>
         <div className="italic text-golden/80">Newsletter</div>
-        <div className="flex flex-row items-stretch gap-4">
+        <div className="flex flex-row items-center gap-4">
             <EcorcesTextInput
                 value={mailEdit}
                 setValue={setMailEdit}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { mergeClasses } from "../../lib/utils"
 import Link from "next/link";
 import { faBars, faSquareXmark } from '@fortawesome/free-solid-svg-icons'
@@ -56,15 +56,40 @@ const MainMenu = (props: MainMenuProps) => {
 }
 
 
+const MAX_SCROLL_SMALL = 100;
+
 const MainMenu_Small = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [scroll, setScroll] = useState<number>(0);
+
+    const scrollRef = useRef<number>(0);
+
+    useEffect(() => {
+		const handleScroll = () => {
+
+            const newScroll = Math.min(window.scrollY / MAX_SCROLL_SMALL, 1);
+
+            if (newScroll !== scrollRef.current) {
+                scrollRef.current = newScroll;
+                setScroll(newScroll);
+            }
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
     return <div className={mergeClasses(
-        "fixed top-[1.3rem] left-0 z-50 w-full",
+        "fixed left-0 z-50 w-full",
         "flex flex-col items-stretch",
-        "border-t border-golden",
-    )}>
+        (scroll !== 1) && "border-t border-golden",
+        
+    )}
+        style={{
+            transform: `translateY(${(1 - scroll) * 1.3}rem)`,
+        }}
+    >
         <motion.div
             className={mergeClasses(
                 "w-screen h-screen fixed top-0 left-0 bg-black -z-10",

@@ -5,20 +5,25 @@ export type TextLinkProps = {
     href: string;
     children: string;
     className?: string;
+    emphasis?: boolean;
+    target?: "_blank";
 }
   
 export const TextLink = (props: TextLinkProps) => {
     const {
         href,
         children,
-        className = ''
+        className,
+        emphasis = true,
+        target
     } = props
 
-    return <Link href={href}>
+    return <Link href={href} target={target}>
         <div
             className={mergeClasses(
                 "italic",
-                "cursor-pointer hover:scale-110 transition-transform",
+                emphasis ? "font-semibold text-golden2" : "text-golden",
+                "cursor-pointer hover:scale-105 transition-transform transform-gpu origin-center",
                 className
             )}
         >

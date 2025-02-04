@@ -17,6 +17,13 @@ export const EcorcesDatePicker = (props: EcorcesDatePickerProps) => {
         minDate
     } = props;
 
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newDate = new Date(e.target.value);
+        if (!isNaN(newDate.getTime())) {
+            setDate(newDate);
+        }
+    }
+
     return <input
         type="date"
         className={mergeClasses(
@@ -26,6 +33,6 @@ export const EcorcesDatePicker = (props: EcorcesDatePickerProps) => {
         )}
         min={minDate ? minDate.toISOString().split("T")[0] : undefined}
         value={date ? date.toISOString().split("T")[0] : ""}
-        onChange={(e) => setDate(new Date(e.target.value))}
+        onChange={onChange}
     />
 }

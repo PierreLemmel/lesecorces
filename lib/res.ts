@@ -9,3 +9,10 @@ export const proRessources = {
     prog: 'https://drive.google.com/drive/u/0/folders/1v40FjqJ02mT6wyuw1QJxoWyuLJ4Ui1iQ',
     visuels: 'https://drive.google.com/drive/u/0/folders/1vFmHt_Msh_NoSEE_Hpj1swRHcZf-lWkZ',
 } as const;
+
+export const siteMakers = {
+    loupLacaille: "https://www.instagram.com/l.lacaille.design/",
+    pierreLemmel: "https://www.instagram.com/p_lemmel/",
+    christianDeHericourt: "https://www.instagram.com/theatredansechrisdeher/",
+    janisAroling: "https://www.instagram.com/janisaroling_photographe/"
+} as const;
