@@ -8,8 +8,8 @@ import { proRessources } from "../../lib/res";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { ActivitesBlock } from "../../components/homepage/activites";
 import { NewsLetterBlock } from "../../components/homepage/newsletter-block";
-import { OffresPedagogiqueBlock } from "../../components/homepage/offre-pedagogique-block";
-import { getBlockContent } from "../../server/server";
+import { getBlockContent, getOffrePedagogique } from "../../server/server";
+import EcorcesTabComponent from "../../components/ui/ecorces-tab-component";
 
 const Home = () => {
   	return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
@@ -33,57 +33,109 @@ const Header = () => <div className="w-full flex flex-col items-stretch pt-[1rem
 </div>
 
 
+const OffresPedagogiqueBlock = async () => {
 
+	const offrePedaText = await getBlockContent("HOMEPAGE_OFFRE_PEDA");
+	const offrePeda = await getOffrePedagogique();
 
+	const tabs = offrePeda.map(offre => ({
+		title: offre.name,
+		content: offre.description
+	}));
 
-const CompagnieBlock = async () => <div className={mergeClasses(
-	"pt-12 pb-16 px-2",
-	"relative flex flex-row gap-4"
-)}>
-	<div className={mergeClasses(
-		"flex flex-col items-stretch",
-		"z-10"
+	return <div className={mergeClasses(
+		"flex flex-col items-stretch gap-3",
+		"pb-16",
+		"relative z-20",
 	)}>
 		<div className={mergeClasses(
-			"heading-1 text-golden",
-			"text-center"
-		)}>
-			Notre Compagnie
-		</div>
-		<div className={mergeClasses(
-			"heading-2 text-white",
-			"text-center"
-		)}>
-			Pourquoi Écorcés ?
-		</div>
-		<div className={mergeClasses(
-			"mt-12 mb-4",
-			"text-white font-light",
-			"text-right"
-		)}>
-			{await getBlockContent("HOMEPAGE_COMPAGNIE")}
-		</div>
-		<div className="flex flex-row justify-end mt-4">
-			<TextLink
-				href="/compagnie"
-				className={mergeClasses(
-					"pt-3 text-right",
-					"border-t border-golden"
-				)}
-			>
-				Page de notre compagnie
-			</TextLink>
+				"absolute inset-0",
+				"bg-cover bg-top bg-no-repeat",
+				"-z-10"
+			)}
+			style={{
+				backgroundImage: "url(/img/qacda/qacda-02.jpeg)",
+			}}
+		>
+			<div className={mergeClasses(
+				"w-full h-full",
+				"bg-gradient-to-r from-black/90 via-black/60 to-black/90"
+			)} />
 		</div>
 
-	</div>
-	<div className={mergeClasses(
-		"absolute w-full h-full top-0 left-0",
-		"background-cover bg-top bg-no-repeat",
-		"filter blur-[3px] saturate-[0.7] opacity-60 sepia-[0.2]"
-	)} style={{
-		backgroundImage: "url(/img/qacda/qacda-01.jpeg)",
-	}}></div>
-</div>
+		<div className={mergeClasses(
+			"heading-1 text-golden",
+			"text-center",
+		)}>
+			Nos offres pédagogiques
+		</div>
+		<div className="text-white text-center">
+			{offrePedaText}
+		</div>
+		<div>
+			<EcorcesTabComponent tabs={tabs}/>
+		</div>
+		<TextLink href="/ecole" className="text-center underline">
+			Voir nos offres pédagogiques
+		</TextLink>
+		
+	</div>;
+}
+
+
+const CompagnieBlock = async () => {
+
+	const compagnieDescription = await getBlockContent("HOMEPAGE_COMPAGNIE");
+
+	return <div className={mergeClasses(
+		"pt-12 pb-16 px-2",
+		"relative flex flex-row gap-4"
+	)}>
+		<div className={mergeClasses(
+			"flex flex-col items-stretch",
+			"z-10"
+		)}>
+			<div className={mergeClasses(
+				"heading-1 text-golden",
+				"text-center"
+			)}>
+				Notre Compagnie
+			</div>
+			<div className={mergeClasses(
+				"heading-2 text-white",
+				"text-center"
+			)}>
+				Pourquoi Écorcés ?
+			</div>
+			<div className={mergeClasses(
+				"mt-12 mb-4",
+				"text-white font-light",
+				"text-right"
+			)}>
+				{compagnieDescription}
+			</div>
+			<div className="flex flex-row justify-end mt-4">
+				<TextLink
+					href="/compagnie"
+					className={mergeClasses(
+						"pt-3 text-right",
+						"border-t border-golden"
+					)}
+				>
+					Page de notre compagnie
+				</TextLink>
+			</div>
+
+		</div>
+		<div className={mergeClasses(
+			"absolute w-full h-full top-0 left-0",
+			"bg-cover bg-top bg-no-repeat",
+			"filter blur-[3px] saturate-[0.7] opacity-60 sepia-[0.2]"
+		)} style={{
+			backgroundImage: "url(/img/qacda/qacda-01.jpeg)",
+		}}></div>
+	</div>;
+}
 
 const EspaceProBlock = () => <div className={mergeClasses(
 	"flex flex-col items-stretch",
