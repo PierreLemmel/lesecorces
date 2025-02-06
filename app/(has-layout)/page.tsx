@@ -9,6 +9,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { ActivitesBlock } from "../../components/homepage/activites";
 import { NewsLetterBlock } from "../../components/homepage/newsletter-block";
 import { OffresPedagogiqueBlock } from "../../components/homepage/offre-pedagogique-block";
+import { getBlockContent } from "../../server/server";
 
 const Home = () => {
   	return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
@@ -35,7 +36,7 @@ const Header = () => <div className="w-full flex flex-col items-stretch pt-[1rem
 
 
 
-const CompagnieBlock = () => <div className={mergeClasses(
+const CompagnieBlock = async () => <div className={mergeClasses(
 	"pt-12 pb-16 px-2",
 	"relative flex flex-row gap-4"
 )}>
@@ -60,7 +61,7 @@ const CompagnieBlock = () => <div className={mergeClasses(
 			"text-white font-light",
 			"text-right"
 		)}>
-			Car sous l&apos;écorce d&apos;un arbre se cache un bois brut. Sous nos masques et ses failles nous aimons toucher à une mise à nue scénique, vulnérable et onirique. Notre compagnie puise aussi ses racines dans nos engagements sociaux, féministes et en constante réflexion sur les rapport de pouvoir et nos corps politiques et sexués. Nos spectacles veulent créer un rapport direct avec le public : porter son histoire sur scène. Nous avons à cœur de mettre l&apos;accent sur notre rapport à la création lumière, à notre engagement physique dans nos spectacles et à l&apos;hybridation des formes artistiques.
+			{await getBlockContent("HOMEPAGE_COMPAGNIE")}
 		</div>
 		<div className="flex flex-row justify-end mt-4">
 			<TextLink
@@ -153,6 +154,7 @@ const EspaceProBlockCard = (props: EspaceProBlockCardProps) => {
 		<div className="text-center text-white pt-3 pb-4">{text}</div>
 		<TextLink
 			href={actionHref}
+			target="_blank"
 		>
 			{actionString}
 		</TextLink>

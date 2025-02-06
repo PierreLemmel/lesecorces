@@ -7,7 +7,7 @@ import { get } from "http";
 
 export type EcorcesButtonProps = {
     children: React.ReactNode;
-    onClick?: () => void;
+    onClick?: () => void|Promise<void>;
     className?: string;
     disabled?: boolean;
     loading?: boolean;

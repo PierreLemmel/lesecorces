@@ -14,6 +14,7 @@ export type EcorcesTextInputProps = {
     errorMessage?: string| ((val: string) => string);
 
     className?: string;
+    disabled?: boolean;
 }
 
 const TextInput = (props: EcorcesTextInputProps) => {
@@ -24,7 +25,8 @@ const TextInput = (props: EcorcesTextInputProps) => {
         onValueCommitted,
         validateValue,
         errorMessage,
-        className
+        className,
+        disabled = false
      } = props;
 
     const [isValid, setIsValid] = useState(true);
@@ -69,12 +71,14 @@ const TextInput = (props: EcorcesTextInputProps) => {
             className={mergeClasses(
                 baseUiInputClasses,
                 "px-[0.35rem] py-[0.12rem]",
+                disabled && "cursor-not-allowed text-white/60"
             )}
             type="text"
             value={value}
             onChange={handleChange}
             onBlur={handleValidation}
             placeholder={placeHolder}
+            disabled={disabled}
         />
         {!isValid && <div>
             {errorMsg}

@@ -13,7 +13,7 @@ const config: Config = {
       },
       colors: {
         golden: '#F3BC77',
-        golden2: '#F97316',
+        golden2: '#FA5B17',
         flower: '#150808',
         water: '#081215',
         trunk: '#151108',

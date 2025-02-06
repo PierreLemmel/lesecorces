@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { pathCombine } from "../lib/files";
-import { documentExists, getDocument, setDocument } from "../lib/firebase";
+import { deleteDocument, documentExists, getDocument, listDocuments, setDocument } from "../lib/firebase";
 
 type NewsLetterData = {
     mails: string[];
@@ -204,4 +204,94 @@ export function duplicateOffrePedagogique(offre: EcorcesOffrePedagogique): Ecorc
         ...offre,
         name: offre.name + " (copie)"
     }
+}
+
+export type EcorcesBlock = {
+    id: string;
+    content: string;
+    lastModified: Timestamp;
+    history: {
+        date: Timestamp;
+        content: string;
+    }[]
+}
+
+
+const pathToBlock = (blockId: string) => pathCombine("blocks", blockId);
+
+export async function getBlock(blockId: string): Promise<EcorcesBlock> {
+    
+    const path = pathToBlock(blockId);
+
+    return await getDocument<EcorcesBlock>(path);
+}
+
+export async function saveBlock(block: EcorcesBlock): Promise<EcorcesBlock> {
+    
+    const path = pathToBlock(block.id);
+
+    await setDocument<EcorcesBlock>(path, block, true);
+
+    return block;
+}
+
+export async function deleteBlock(blockId: string): Promise<void> {
+    
+    const path = pathToBlock(blockId);
+
+    await deleteDocument(path);
+}
+
+export function createEmptyBlock(): EcorcesBlock {
+    return {
+        id: "NEW_BLOCK",
+        content: "",
+        lastModified: Timestamp.now(),
+        history: []
+    }
+}
+
+export function createBlock(id: string, content: string): EcorcesBlock {
+    return {
+        id,
+        content,
+        lastModified: Timestamp.now(),
+        history: []
+    }
+}
+
+export function duplicateBlock(block: EcorcesBlock): EcorcesBlock {
+    console.log({
+        ...block,
+        id: block.id + "_COPIE"
+    })
+    return {
+        ...block,
+        id: block.id + "_COPIE"
+    }
+}
+
+export function addVersionToBlock(block: EcorcesBlock, content: string): EcorcesBlock {
+    return {
+        id: block.id,
+        content,
+        lastModified: Timestamp.now(),
+        history: [
+            {
+                date: Timestamp.now(),
+                content: block.content
+            },
+            ...block.history,
+        ]
+    }
+}
+
+export async function listBlocksIds(): Promise<string[]> {
+    const ids = await listDocuments("blocks");
+    return ids;
+}
+
+export async function getBlockContent(id: string): Promise<string> {
+    const block = await getBlock(id);
+    return block.content;
 }
