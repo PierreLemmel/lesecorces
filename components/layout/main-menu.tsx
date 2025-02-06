@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { mergeClasses } from "../../lib/utils"
 import Link from "next/link";
 import { faBars, faSquareXmark } from '@fortawesome/free-solid-svg-icons'
-import { motion } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { EcorcesIcon } from "../ui/icon";
 import { useElementSize } from "../../lib/hooks";
 import { uiBreakPoints } from "../ui/ecorces-ui";
@@ -61,31 +61,20 @@ const MAX_SCROLL_SMALL = 100;
 const MainMenu_Small = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const { scrollY } = useScroll();
     const [scroll, setScroll] = useState<number>(0);
 
-    const scrollRef = useRef<number>(0);
+    useMotionValueEvent(scrollY, "change", (latest) => {
+        const newScroll = Math.min(latest / MAX_SCROLL_SMALL, 1);
+        setScroll(newScroll);
+    });
 
-    useEffect(() => {
-		const handleScroll = () => {
-
-            const newScroll = Math.min(window.scrollY / MAX_SCROLL_SMALL, 1);
-
-            if (newScroll !== scrollRef.current) {
-                scrollRef.current = newScroll;
-                setScroll(newScroll);
-            }
-		};
-
-		window.addEventListener("scroll", handleScroll);
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
-
-    return <div className={mergeClasses(
-        "fixed left-0 z-50 w-full",
-        "flex flex-col items-stretch",
-        (scroll !== 1) && "border-t border-golden",
-        
-    )}
+    return <motion.div className={mergeClasses(
+            "fixed left-0 z-50 w-full",
+            "flex flex-col items-stretch",
+            (scroll !== 1) && "border-t border-golden",    
+        )}
         style={{
             transform: `translateY(${(1 - scroll) * 1.3}rem)`,
         }}
@@ -132,7 +121,7 @@ const MainMenu_Small = () => {
                 </div>
             </motion.div>
         </div>
-    </div>
+    </motion.div>
 }
 
 
