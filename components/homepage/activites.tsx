@@ -87,7 +87,7 @@ const ActivitesBlockContent_Small = (props: ActivitesBlockProps) => {
     }
     else {
         return <div className="text-white mt-4">
-            Aucune activité n&apos;est prévue pour l'instant
+            Aucune activité n&apos;est prévue pour l&apos;instant
         </div>
     }
 }

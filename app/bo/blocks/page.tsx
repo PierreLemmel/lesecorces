@@ -237,7 +237,7 @@ const BlocksEdition = (props: BlocksEditionProps) => {
 
         <div className="mb-6">
             {blockIds.length === 0 ? (
-                <p className="">Aucun offre pour l'instant.</p>
+                <p className="">Aucun offre pour l&apos;instant.</p>
             ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {blockIds.map((blockId, index) => <OffreCard

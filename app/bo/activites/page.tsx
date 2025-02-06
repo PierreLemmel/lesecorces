@@ -157,7 +157,7 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
 
         <div className="mb-6">
             {activities.length === 0 ? (
-                <p className="">Aucun activité pour l'instant.</p>
+                <p className="">Aucun activité pour l&apos;instant.</p>
             ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {activities.map((activity, index) => <ActivityCard

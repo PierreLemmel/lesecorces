@@ -151,7 +151,7 @@ const OffresPedagogiquesEdition = (props: OffresPedagogiquesEditionProps) => {
 
         <div className="mb-6">
             {offres.length === 0 ? (
-                <p className="">Aucun offre pour l'instant.</p>
+                <p className="">Aucun offre pour l&apos;instant.</p>
             ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {offres.map((offre, index) => <OffreCard
