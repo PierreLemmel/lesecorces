@@ -92,7 +92,7 @@ const BlocksManager = () => {
             const block = await getBlock(blockId);
             const newBlock = duplicateBlock(block);
 
-            setCurrentBlock(newBlock);
+            setCurrentBlock(null);
             setForm(createFormFromBlock(newBlock));
 
             setIsLoading(false);

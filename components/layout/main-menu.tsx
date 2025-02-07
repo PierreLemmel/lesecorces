@@ -73,6 +73,7 @@ const MainMenu_Small = () => {
     return <motion.div className={mergeClasses(
             "fixed left-0 z-50 w-full",
             "flex flex-col items-stretch",
+            !isOpen && "pointer-events-none",
             (scroll !== 1) && "border-t border-golden",    
         )}
         style={{
@@ -82,7 +83,6 @@ const MainMenu_Small = () => {
         <motion.div
             className={mergeClasses(
                 "w-screen h-screen fixed top-0 left-0 bg-black -z-10",
-                !isOpen && "pointer-events-none"
             )}
             animate={{
                 opacity: isOpen ? 0.75 : 0,
@@ -90,7 +90,12 @@ const MainMenu_Small = () => {
             
         />
 
-        <div className="flex justify-between items-center py-2 px-4">
+        <div className={mergeClasses(
+            "flex justify-between items-center",
+            "py-2 px-4",
+            "bg-gradient-to-b from-black to-black/40",
+            "pointer-events-auto"
+        )}>
             <Link href="/">
                 <div className="uppercase">Les Écorcés</div>
             </Link>
@@ -99,7 +104,9 @@ const MainMenu_Small = () => {
                 onClick={() => setIsOpen(!isOpen)}
             />
         </div>
-        <div className="overflow-hidden">
+        <div className={mergeClasses(
+            "overflow-hidden",
+        )}>
             <motion.div
                 className={mergeClasses(
                     "pr-3"

@@ -104,6 +104,8 @@ export type GetActivitesParams = {
     limit: number;
     upcoming: boolean;
     visible: boolean;
+    type: ActiviteType;
+    ville: ActiviteVille;
 }
 
 export async function getActivites(params?: Partial<GetActivitesParams>): Promise<EcorcesActivite[]> {
@@ -111,7 +113,9 @@ export async function getActivites(params?: Partial<GetActivitesParams>): Promis
     const {
         limit,
         upcoming = false,
-        visible = false
+        visible = false,
+        type,
+        ville
     } = params || {};
 
     const path = pathToActivites();
@@ -127,12 +131,22 @@ export async function getActivites(params?: Partial<GetActivitesParams>): Promis
     }
 
     if (upcoming) {
-
         const now = Timestamp.now();
         result = result.filter(activite => {
             return activite.date > now;
         })
+    }
 
+    if (type) {
+        result = result.filter(activite => {
+            return activite.type === type;
+        })
+    }
+
+    if (ville) {
+        result = result.filter(activite => {
+            return activite.city === ville;
+        })
     }
 
     if (limit) {
@@ -294,4 +308,21 @@ export async function listBlocksIds(): Promise<string[]> {
 export async function getBlockContent(id: string): Promise<string> {
     const block = await getBlock(id);
     return block.content;
+}
+
+export type EcorcesEcoleInfos = {
+    cities: string;
+    frequency: string;
+    days: string;
+    hours: number;
+    shows: number;
+    price: [number, number];
+}
+
+const pathToEcole = (name: string) => pathCombine("ecoles", name);
+
+export async function getEcoleInfos(name: string): Promise<EcorcesEcoleInfos> {
+    const path = pathToEcole(name);
+
+    return await getDocument<EcorcesEcoleInfos>(path);
 }

@@ -1,5 +1,6 @@
 import { Area } from "react-easy-crop";
 import { mergeClasses } from "../../lib/utils";
+import { Timestamp } from "firebase/firestore";
 
 export const uiBreakPoints = {
     md: 768,
@@ -55,5 +56,22 @@ export const getImageData = (src: string, area: Area, onImageDataReady: (data: s
             
             onImageDataReady(canvas.toDataURL());
         }
+    }
+}
+
+export function cardDateFormat(date: Timestamp, endDate?: Timestamp) {
+
+    const year = (endDate ?? date).toDate().getFullYear()
+
+    const formatter = new Intl.DateTimeFormat('fr-FR', {
+        month: 'long',
+        day: 'numeric'
+    })
+
+    if (endDate) {
+        return `Du ${formatter.format(date.toDate())} au ${formatter.format(endDate.toDate())} ${year}`;
+    }
+    else {
+        return `Le ${formatter.format(date.toDate())} ${year}`;
     }
 }

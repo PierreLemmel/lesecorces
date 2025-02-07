@@ -44,21 +44,23 @@ const EcorcesFoldable = (props: EcorcesFoldableProps) => {
 
     return <div className={mergeClasses(
         "flex flex-col",
-        "border-y border-golden",
+        "border-b border-golden",
         className
     )}>
-        <div className={mergeClasses(
-            "flex flex-row items-center gap-3",
-            headerClassName,
-            folded ? foldedHeaderClassName : unfoldedHeaderClassName
-        )}>
+        <div onClick={onFoldedClicked}
+            className={mergeClasses(
+                "flex flex-row items-center gap-3",
+                headerClassName,
+                folded ? foldedHeaderClassName : unfoldedHeaderClassName
+            )}
+        >
             <div className="flex-grow">
                 {header}
             </div>
             <motion.div animate={{
                 rotate: folded ? 0 : 90
             }}>
-                <EcorcesIcon icon={faChevronRight} className="text-xl" onClick={onFoldedClicked} />
+                <EcorcesIcon icon={faChevronRight} className="text-xl" />
             </motion.div>
         </div>
         <motion.div

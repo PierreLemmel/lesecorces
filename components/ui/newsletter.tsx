@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useState } from "react";
 import { emailRegex } from "./ecorces-ui";
 import { TextButton } from "./text-button";

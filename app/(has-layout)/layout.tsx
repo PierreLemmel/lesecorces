@@ -1,16 +1,12 @@
-import MainMenu from '../../components/layout/main-menu';
+import EcorcesLayout from '../../components/ui/ecorces-layout';
 import '../globals.css'
 
-type RootLayoutProps = {
+type LayoutProps = {
 	children: React.ReactNode
 }
 
-export default function RootLayout(props: RootLayoutProps) {
-
+export default function RootLayout(props: LayoutProps) {
 	const { children } = props;
 
-	return <body className="w-screen h-screen overflow-x-hidden font-red-hat-display">
-		<MainMenu />
-		{children}
-	</body>
+	return <EcorcesLayout>{children}</EcorcesLayout>
 }

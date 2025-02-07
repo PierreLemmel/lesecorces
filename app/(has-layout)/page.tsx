@@ -1,15 +1,14 @@
 import React from "react";
-import { Footer } from "../../components/layout/footer";
 import { faNewspaper, faPhone, faPhotoFilm } from '@fortawesome/free-solid-svg-icons'
 import { TextLink } from "../../components/ui/text-link";
 import { mergeClasses } from "../../lib/utils";
 import { EcorcesIcon } from "../../components/ui/icon";
 import { proRessources } from "../../lib/res";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { ActivitesBlock } from "../../components/homepage/activites";
-import { NewsLetterBlock } from "../../components/homepage/newsletter-block";
-import { getBlockContent, getOffrePedagogique } from "../../server/server";
+import { getActivites, getBlockContent, getOffrePedagogique } from "../../server/server";
 import EcorcesTabComponent from "../../components/ui/ecorces-tab-component";
+import { ActiviteCard } from "../../components/parts/activite-card";
+import { NewsLetter } from "../../components/ui/newsletter";
 
 const Home = () => {
   	return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
@@ -20,8 +19,6 @@ const Home = () => {
 		<NewsLetterBlock />
 		<CompagnieBlock />
 		<EspaceProBlock />
-
-		<Footer />
 	</div>
 }
 
@@ -32,6 +29,35 @@ const Header = () => <div className="w-full flex flex-col items-stretch pt-[1rem
 	</div>
 </div>
 
+
+export const ActivitesBlock = async () => {
+
+    const activites = await getActivites({
+        upcoming: true,
+        visible: true,
+        limit: 3
+    });
+
+    return <div className={mergeClasses(
+        "flex flex-col items-center",
+        "mb-12 mt-8"
+    )}>
+        <div className="heading-1">Nos prochaines activités</div>
+        
+        <div className="flex flex-col items-stretch gap-2 px-3 w-full mb-4 mt-2">
+            {
+                activites.length > 0 ? activites.map((activite, index) => <ActiviteCard
+                    activite={activite}
+                    key={`Activity-${index.toString().padStart(2, " ")}`}
+                />) : <div className="text-white mt-4">
+                    Aucune activité n&apos;est prévue pour l&apos;instant
+                </div>
+            }
+        </div>
+        
+        <div><TextLink href="/activites" className="underline">Tout voir</TextLink></div>
+    </div>
+}
 
 const OffresPedagogiqueBlock = async () => {
 
@@ -198,7 +224,7 @@ const EspaceProBlockCard = (props: EspaceProBlockCardProps) => {
 
 	return <div className={mergeClasses(
 		"flex flex-col items-center justify-center",
-		"bg-golden/15 gap-2 px-[10%]",
+		"bg-golden/15 gap-2 px-[10%] py-3",
 		"aspect-square min-w-full"
 	)}>
 		<EcorcesIcon icon={icon} className="bg-black text-white text-xl p-2" />
@@ -211,6 +237,20 @@ const EspaceProBlockCard = (props: EspaceProBlockCardProps) => {
 			{actionString}
 		</TextLink>
 	</div>
+}
+
+const NewsLetterBlock = () => {
+
+	return <div className={mergeClasses(
+		"flex flex-col items-stretch px-2",
+		"mb-8"
+	)}>
+		<div className="heading-1 text-center">On se perd pas de vue</div>
+		<div className="heading-2 text-center text-white">On reste en contact, mais de manière non invasive</div>
+		<div className="text-white mt-6 text-center">Stages, tournées, actualités, ne manquez aucune sortie des Écorcés.</div>
+
+		<NewsLetter className="mt-4" />
+	</div>;
 }
 
 export default Home;

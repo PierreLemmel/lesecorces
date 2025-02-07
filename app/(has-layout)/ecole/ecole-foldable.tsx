@@ -13,6 +13,7 @@ export type EcoleFoldableProps = {
         description: string;
     }
     children: React.ReactNode;
+    className?: string;
 }
 
 export const EcoleFoldable = (props: EcoleFoldableProps) => {
@@ -22,7 +23,8 @@ export const EcoleFoldable = (props: EcoleFoldableProps) => {
             title: headerTitle,
             description: headerDescription,
         },
-        children
+        children,
+        className
     } = props;
 
     const [folded, setFolded] = useState(true);
@@ -38,6 +40,7 @@ export const EcoleFoldable = (props: EcoleFoldableProps) => {
         header={foldableHeader}
         headerClassName="py-2 px-3"
         onFolded={setFolded}
+        className={className}
     >
         {children}
     </EcorcesFoldable>

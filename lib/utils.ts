@@ -81,3 +81,14 @@ export function timeStampString(date = new Date()) {
 
     return `${YYYY}${MM}${dd}-${HH}${mm}${ss}`;
 }
+
+export const groupBy = <T, K extends string | number | symbol>(
+	items: T[], 
+	callback: (item: T, index: number, array: T[]) => K
+): Record<K, T[]> => {
+	return items.reduce((acc, item, index) => {
+		const key = callback(item, index, items);
+		(acc[key] ||= []).push(item);
+		return acc;
+	}, {} as Record<K, T[]>);
+};
