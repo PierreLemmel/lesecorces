@@ -33,7 +33,7 @@ type InnerFooterProps = {
 
 const Footer_Small = (props: InnerFooterProps) => <div className={mergeClasses(
     "w-full flex flex-col items-stretch",
-    "mt-2 pt-3 gap-1",
+    "pt-3 gap-1",
     "border-t border-t-golden"
 )}>
     <div className="uppercase text-center font-bold">Les Écorcés</div>

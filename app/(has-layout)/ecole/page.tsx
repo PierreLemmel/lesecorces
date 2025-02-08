@@ -30,7 +30,7 @@ const HeaderBlock = async () => {
 
     return <div className={mergeClasses(
         "flex flex-col items-stretch",
-        "px-2 pt-[4.2rem]",
+        "px-2 pt-[4.2rem] pb-2",
     )}>
         <div className="text-white">Pédagogie</div>
         <div className="uppercase font-semibold">{headerContent}</div>

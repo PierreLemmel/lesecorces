@@ -11,7 +11,8 @@ import { ActiviteCard } from "../../components/parts/activite-card";
 import { NewsLetter } from "../../components/ui/newsletter";
 
 const Home = () => {
-  	return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
+
+	return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
 		<Header />
 
 		<ActivitesBlock />
