@@ -49,7 +49,7 @@ export const allActiviteVilles = [
 ] as const;
 export type ActiviteVille = typeof allActiviteVilles[number];
 
-export type EcorcesBanneer = {
+export type EcorcesImage = {
     url: string;
     cropArea: {
         x: number,
@@ -58,6 +58,8 @@ export type EcorcesBanneer = {
         height: number
     }
 }
+
+export type EcorcesBanneer = EcorcesImage;
 
 export type EcorcesActivite = {
     type: ActiviteType;
@@ -275,10 +277,6 @@ export function createBlock(id: string, content: string): EcorcesBlock {
 }
 
 export function duplicateBlock(block: EcorcesBlock): EcorcesBlock {
-    console.log({
-        ...block,
-        id: block.id + "_COPIE"
-    })
     return {
         ...block,
         id: block.id + "_COPIE"
@@ -325,4 +323,60 @@ export async function getEcoleInfos(name: string): Promise<EcorcesEcoleInfos> {
     const path = pathToEcole(name);
 
     return await getDocument<EcorcesEcoleInfos>(path);
+}
+
+
+export type EcorcesMembre = {
+    name: string;
+    role: string;
+    socials: {
+        instagram?: string;
+        facebook?: string;
+        website?: string;
+        soundcloud?: string;
+    };
+    description: {
+        shortBio: string;
+        paragraph1: string;
+        paragraph2: string;
+        paragraph3: string;
+    }
+    profilePicture: EcorcesImage;
+    gallery: EcorcesImage[];
+}
+
+const pathToMembre = (name: string) => pathCombine("membres", name);
+
+export async function getMembre(name: string): Promise<EcorcesMembre> {
+    const path = pathToMembre(name);
+
+    return await getDocument<EcorcesMembre>(path);
+}
+
+export async function saveMembre(membre: EcorcesMembre): Promise<EcorcesMembre> {
+    const path = pathToMembre(membre.name);
+
+    await setDocument<EcorcesMembre>(path, membre, true);
+
+    return membre;
+}
+
+export async function listMembres(): Promise<string[]> {
+    const ids = await listDocuments("membres");
+    return ids;
+}
+
+export async function deleteMembre(name: string): Promise<void> {
+    const path = pathToMembre(name);
+
+    await deleteDocument(path);
+}
+
+export function duplicateMembre(membre: EcorcesMembre) {
+    const newName = membre.name + " (copie)";
+    
+    const result = structuredClone(membre);
+    result.name = newName;
+
+    return result;
 }

@@ -8,22 +8,12 @@ import EcorcesButton from "./ecorces-button";
 import LoadingSpinner from "./loading-spinner";
 import { pathCombine } from "../../lib/files";
 import { storeFile } from "../../lib/firebase";
+import { EcorcesImage } from "../../server/server";
 
-
-
-export type UploadedFile = {
-	url: string;
-	cropArea: {
-		x: number,
-		y: number,
-		width: number,
-		height: number
-	}
-}
 
 export type EcorcesImageUploaderProps = {
-	onUpload: (file: UploadedFile|undefined) => void;
-	file?: UploadedFile;
+	onUpload: (file: EcorcesImage|undefined) => void;
+	file?: EcorcesImage;
 	acceptedFormats?: string[];
 	className?: string;
 	disabled?: boolean;
