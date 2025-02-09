@@ -1,7 +1,7 @@
 import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 import { EcorcesIcon } from "../../../components/ui/icon";
 import { mergeClasses } from "../../../lib/utils";
-import { getActivites, getBlockContent } from "../../../server/server";
+import { EcorcesMembre, getActivites, getBlockContent, getMembre } from "../../../server/server";
 import { TextLink } from "../../../components/ui/text-link";
 import { ActiviteCard } from "../../../components/parts/activite-card";
 
@@ -112,7 +112,42 @@ const ActualitesBlock = async () => {
 
 const MembresBlock = async () => {
 
-    return <div>MEMBRES</div>
+    const names = [
+        "Alice Rey",
+        "Pierre Lemmel",
+        "Kenan Philbert-Zehani",
+        "Charles-Henri Botton",
+    ]
+
+    const membres = await Promise.all(names.map(async (name) => {
+        const membre = await getMembre(name);
+        return membre;
+    }));
+
+    return <div className={mergeClasses(
+        "flex flex-col items-stretch",
+    )}>
+        {membres.map((membre, index) => <MembreCard
+            membre={membre}
+            key={`Membre-${index.toString().padStart(2, " ")}`}
+        />)}
+    </div>
+}
+
+type MembreCardProps = {
+    membre: EcorcesMembre
+}
+
+const MembreCard = (props: MembreCardProps) => {
+    const {
+        membre
+    } = props;
+
+    return <div className={mergeClasses(
+        "uppercase font-semibold",
+    )}>
+        {membre.name}
+    </div>
 }
 
 const AussiAvecNousBlock = async () => {

@@ -14,9 +14,9 @@ export const baseUiInputClasses = mergeClasses(
     "rounded-md"
 );
 
-export const getButtonClasses = (size: ButtonSize): string => mergeClasses(
+export const getButtonClasses = (size: ButtonSize, enabled: boolean = true): string => mergeClasses(
     getButtonSizeClasses(size),
-    "cursor-pointer",
+    enabled ? "cursor-pointer" : "cursor-not-allowed",
     "bg-golden text-black",
     "rounded px-4 py-2 transition-all focus:outline-none focus:ring-2 focus:ring-opacity-50",
 )

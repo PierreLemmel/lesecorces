@@ -9,8 +9,12 @@ import { EcorcesLabel } from "../../../components/ui/ecorces-label";
 import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
 import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
 import { mergeClasses } from "../../../lib/utils";
+import { useSearchParams } from "next/navigation";
 
 const BlocksManager = () => {
+
+    const searchParams = useSearchParams();
+    const isSuperAdmin = searchParams.get("superadmin")?.toLowerCase() === "true";
 
     const [blockIds, setBlockIds] = useState<string[]>([]);
         
@@ -158,7 +162,8 @@ const BlocksManager = () => {
         onDeleteBlock,
         onDuplicateBlock,
         onCancelChanges,
-        commitChanges
+        commitChanges,
+        isSuperAdmin
     }
 
     return <BlocksEdition {...props} />;
@@ -197,6 +202,7 @@ type BlocksEditionProps = {
     onDuplicateBlock: (blockId: string) => Promise<void>;
     onCancelChanges: () => void;
     commitChanges: () => Promise<void>;
+    isSuperAdmin: boolean;
 }
 
 const BlocksEdition = (props: BlocksEditionProps) => {
@@ -210,7 +216,8 @@ const BlocksEdition = (props: BlocksEditionProps) => {
         commitChanges,
         onDeleteBlock,
         onDuplicateBlock,
-        onCancelChanges
+        onCancelChanges,
+        isSuperAdmin
     } = props;
 
     const [modified, setModified] = useState(false);
@@ -246,12 +253,13 @@ const BlocksEdition = (props: BlocksEditionProps) => {
                         handleEdit={() => handleEdit(blockId)}
                         handleDelete={() => handleDelete(blockId)}
                         handleDuplicate={() => handleDuplicate(blockId)}
+                        isSuperAdmin={isSuperAdmin}
                     />)}
                 </div>
             )}
         </div>
 
-        <div className="p-4 border rounded flex flex-col items-stretch">
+        {!(isNewBlock && !isSuperAdmin) && <div className="p-4 border rounded flex flex-col items-stretch">
             <h2 className="text-xl font-bold mb-4">
                 {isNewBlock ? "Ajouter un bloc" : "Modifier un bloc"}
             </h2>
@@ -287,7 +295,7 @@ const BlocksEdition = (props: BlocksEditionProps) => {
                     Annuler
                 </EcorcesButton>
             </div>
-        </div>
+        </div>}
     </div>
 }
 
@@ -296,6 +304,7 @@ type BlockCardProps = {
     handleEdit: () => void;
     handleDelete: () => void;
     handleDuplicate: () => void;
+    isSuperAdmin: boolean;
 }
 
 const OffreCard = (props: BlockCardProps) => {
@@ -304,7 +313,8 @@ const OffreCard = (props: BlockCardProps) => {
         blockId,
         handleEdit,
         handleDelete,
-        handleDuplicate
+        handleDuplicate,
+        isSuperAdmin
     } = props;
 
     return <div 
@@ -323,8 +333,8 @@ const OffreCard = (props: BlockCardProps) => {
 
         <div className="flex flex-row mt-4 space-x-2">
             <EcorcesButton onClick={handleEdit}>Modifier</EcorcesButton>
-            <EcorcesButton onClick={handleDelete}>Supprimer</EcorcesButton>
-            <EcorcesButton onClick={handleDuplicate}>Dupliquer</EcorcesButton>
+            <EcorcesButton onClick={handleDelete} disabled={!isSuperAdmin}>Supprimer</EcorcesButton>
+            <EcorcesButton onClick={handleDuplicate} disabled={!isSuperAdmin}>Dupliquer</EcorcesButton>
         </div>
     </div>
 }

@@ -29,8 +29,8 @@ const EcorcesButton = (props: EcorcesButtonProps) => {
         onClick={onClick}
         disabled={disabled || loading}
         className={mergeClasses(
-            getButtonClasses(size),
-            (disabled || loading) && "opacity-50 cursor-not-allowed",
+            getButtonClasses(size, !disabled),
+            (disabled || loading) && "opacity-50",
             className
         )}
     >

@@ -19,9 +19,13 @@ import { mergeClasses } from "../../../lib/utils";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
 import { loremIpsumMedium } from "../../../components/ui/ecorces-ui";
+import { useSearchParams } from "next/navigation";
 
 
 const MembresManager = () => {
+    const searchParams = useSearchParams();
+    const isSuperAdmin = searchParams.get("superadmin")?.toLowerCase() === "true";
+
 	const [membreIds, setMembreIds] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSaving, setIsSaving] = useState(false);
@@ -202,6 +206,7 @@ const MembresManager = () => {
 		onCancelChanges,
         canCommitChanges,
 		commitChanges,
+        isSuperAdmin
 	};
 
 	return <MembresEdition {...props} />;
@@ -244,6 +249,8 @@ type MembresEditionProps = {
 
     canCommitChanges: boolean;
 	commitChanges: () => Promise<void>;
+
+    isSuperAdmin: boolean;
 };
 
 const MembresEdition = (props: MembresEditionProps) => {
@@ -258,6 +265,7 @@ const MembresEdition = (props: MembresEditionProps) => {
 		onDeleteMembre,
 		onDuplicateMembre,
 		onCancelChanges,
+        isSuperAdmin
 	} = props;
 
 	const [modified, setModified] = useState(false);
@@ -297,13 +305,14 @@ const MembresEdition = (props: MembresEditionProps) => {
 								handleEdit={() => handleEdit(membreId)}
 								handleDelete={() => handleDelete(membreId)}
 								handleDuplicate={() => handleDuplicate(membreId)}
+                                isSuperAdmin={isSuperAdmin}
 							/>
 						))}
 					</div>
 				)}
 			</div>
 
-			<div className="p-4 border rounded flex flex-col items-stretch">
+			{!(isNewMembre && !isSuperAdmin) && <div className="p-4 border rounded flex flex-col items-stretch">
 				<h2 className="text-xl font-bold mb-4">
 					{isNewMembre ? "Ajouter un membre" : "Modifier un membre"}
 				</h2>
@@ -446,7 +455,7 @@ const MembresEdition = (props: MembresEditionProps) => {
 					</EcorcesButton>
 					<EcorcesButton onClick={handleCancel}>Annuler</EcorcesButton>
 				</div>
-			</div>
+			</div>}
 		</div>
 	);
 };
@@ -456,10 +465,17 @@ type MembreCardProps = {
 	handleEdit: () => void;
 	handleDelete: () => void;
 	handleDuplicate: () => void;
+    isSuperAdmin: boolean;
 };
 
 const MembreCard = (props: MembreCardProps) => {
-	const { membreId, handleEdit, handleDelete, handleDuplicate } = props;
+	const { 
+        membreId,
+        handleEdit,
+        handleDelete,
+        handleDuplicate,
+        isSuperAdmin
+    } = props;
 
 	return (
 		<div className="p-4 border rounded shadow-sm flex flex-col justify-between">
@@ -476,8 +492,8 @@ const MembreCard = (props: MembreCardProps) => {
 
 			<div className="flex flex-row mt-4 space-x-2">
 				<EcorcesButton onClick={handleEdit}>Modifier</EcorcesButton>
-				<EcorcesButton onClick={handleDelete}>Supprimer</EcorcesButton>
-				<EcorcesButton onClick={handleDuplicate}>Dupliquer</EcorcesButton>
+				<EcorcesButton onClick={handleDelete} disabled={!isSuperAdmin}>Supprimer</EcorcesButton>
+				<EcorcesButton onClick={handleDuplicate} disabled={!isSuperAdmin}>Dupliquer</EcorcesButton>
 			</div>
 		</div>
 	);
