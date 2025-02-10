@@ -1,9 +1,10 @@
 import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 import { EcorcesIcon } from "../../../components/ui/icon";
 import { mergeClasses } from "../../../lib/utils";
-import { EcorcesMembre, getActivites, getBlockContent, getMembre } from "../../../server/server";
+import { getActivites, getBlockContent } from "../../../server/server";
 import { TextLink } from "../../../components/ui/text-link";
 import { ActiviteCard } from "../../../components/parts/activite-card";
+import { EcorcesMembre, getMembre } from "../../../server/membres";
 
 const CompagniePage = () => {
 

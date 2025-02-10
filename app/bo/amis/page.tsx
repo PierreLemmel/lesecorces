@@ -3,12 +3,12 @@
 import { useCallback, useMemo, useState } from "react";
 import { useEffectAsync } from "../../../lib/hooks";
 import {
-	getMembre,
-	listMembres,
-	saveMembre,
-	deleteMembre,
-	duplicateMembre,
-	EcorcesMembre,
+	getAmi,
+	listAmis,
+	saveAmi,
+	deleteAmi,
+	duplicateAmi,
+	EcorcesAmi,
 } from "../../../server/membres";
 import { EcorcesImage } from "../../../server/server";
 import LoadingSpinner from "../../../components/ui/loading-spinner";
@@ -17,23 +17,21 @@ import { EcorcesLabel } from "../../../components/ui/ecorces-label";
 import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
 import { mergeClasses } from "../../../lib/utils";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
-import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
-import { loremIpsumMedium } from "../../../components/ui/ecorces-ui";
 import { useSearchParams } from "next/navigation";
 
 
-const MembresManager = () => {
+const AmisManager = () => {
     const searchParams = useSearchParams();
     const isSuperAdmin = searchParams.get("superadmin")?.toLowerCase() === "true";
 
-	const [membreIds, setMembreIds] = useState<string[]>([]);
+	const [amiIds, setAmiIds] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSaving, setIsSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [currentMembre, setCurrentMembre] = useState<EcorcesMembre | null>(
+	const [currentAmi, setCurrentAmi] = useState<EcorcesAmi | null>(
 		null
 	);
-	const [form, setForm] = useState<MembreForm>(createEmptyForm());
+	const [form, setForm] = useState<AmiForm>(createEmptyForm());
 
     const canCommitChanges = useMemo(() => {
         return form.profilePicture !== undefined && form.name !== "";
@@ -47,42 +45,38 @@ const MembresManager = () => {
 			try {
 				setIsSaving(true);
 
-				let membreToSave: EcorcesMembre;
+				let amiToSave: EcorcesAmi;
 
                 let {
-                    gallery,
                     profilePicture,
                     ...restForm
                 } = form;
 
 
-                const safeGallery = gallery.filter(val => val !== undefined)
 
                 if (profilePicture === undefined) {
                     throw new Error("Profile picture is required");
                 }
 
-				if (currentMembre) {
-					membreToSave = {
-                        ...currentMembre,
-                        gallery: safeGallery,
+				if (currentAmi) {
+					amiToSave = {
+                        ...currentAmi,
                         profilePicture,
                         ...restForm
                     };
 				} else {
-					membreToSave = {
-                        gallery: safeGallery,
+					amiToSave = {
                         profilePicture,
                         ...restForm
                     };
 				}
 
-				await saveMembre(membreToSave);
+				await saveAmi(amiToSave);
 
-				setCurrentMembre(null);
+				setCurrentAmi(null);
 				setForm(createEmptyForm());
-				setMembreIds((prevIds) =>
-					currentMembre ? prevIds : [...prevIds, form.name]
+				setAmiIds((prevIds) =>
+					currentAmi ? prevIds : [...prevIds, form.name]
 				);
 
 				setIsSaving(false);
@@ -90,16 +84,16 @@ const MembresManager = () => {
 				setError(err.toString());
 			}
 		},
-		[canCommitChanges, currentMembre, form]
+		[canCommitChanges, currentAmi, form]
 	);
 
-	const onLoadMembre = useCallback(async (membreId: string) => {
+	const onLoadAmi = useCallback(async (amiId: string) => {
 		try {
 			setIsLoading(true);
 
-			const membre = await getMembre(membreId);
-			setCurrentMembre(membre);
-			setForm(createFormFromMembre(membre));
+			const ami = await getAmi(amiId);
+			setCurrentAmi(ami);
+			setForm(createFormFromAmi(ami));
 
 			setIsLoading(false);
 		} catch (err: any) {
@@ -107,35 +101,32 @@ const MembresManager = () => {
 		}
 	}, []);
 
-	const onDeleteMembre = useCallback(
-		async (membreId: string) => {
+	const onDeleteAmi = useCallback(
+		async (amiId: string) => {
 			try {
 				setIsSaving(true);
-				await deleteMembre(membreId);
-				setMembreIds(membreIds.filter((id) => id !== membreId));
-				setCurrentMembre(null);
+				await deleteAmi(amiId);
+				setAmiIds(amiIds.filter((id) => id !== amiId));
+				setCurrentAmi(null);
 				setForm(createEmptyForm());
 				setIsSaving(false);
 			} catch (err: any) {
 				setError(err.toString());
 			}
 		},
-		[membreIds]
+		[amiIds]
 	);
 
-	const onDuplicateMembre = useCallback(async (membreId: string) => {
+	const onDuplicateAmi = useCallback(async (amiId: string) => {
 		try {
 			setIsLoading(true);
 
-			const membre = await getMembre(membreId);
-			const newMembre = duplicateMembre(membre);
+			const ami = await getAmi(amiId);
+			const newAmi = duplicateAmi(ami);
 
-			setCurrentMembre(null);
+			setCurrentAmi(null);
 
-			setForm({
-				...createFormFromMembre(newMembre),
-				name: `${newMembre.name} (copie)`,
-			});
+			setForm(createFormFromAmi(newAmi));
 
 			setIsLoading(false);
 		} catch (err: any) {
@@ -144,7 +135,7 @@ const MembresManager = () => {
 	}, []);
 
 	const setFormValue = useCallback(
-		(key: keyof MembreForm, value: any) => {
+		(key: keyof AmiForm, value: any) => {
 			setForm({
 				...form,
 				[key]: value,
@@ -155,14 +146,14 @@ const MembresManager = () => {
 
 	const onCancelChanges = useCallback(() => {
 		setForm(createEmptyForm());
-		setCurrentMembre(null);
+		setCurrentAmi(null);
 	}, []);
 
 	useEffectAsync(async () => {
 		try {
 			setIsLoading(true);
-			const allIds = await listMembres();
-			setMembreIds(allIds);
+			const allIds = await listAmis();
+			setAmiIds(allIds);
 			setIsLoading(false);
 		} catch (err: any) {
 			setError(err.toString());
@@ -195,56 +186,49 @@ const MembresManager = () => {
 		);
 	}
 
-	const props: MembresEditionProps = {
-		membreIds,
+	const props: AmisEditionProps = {
+		amiIds,
 		form,
 		setFormValue,
-		isNewMembre: currentMembre === null,
-		onLoadMembre,
-		onDeleteMembre,
-		onDuplicateMembre,
+		isNewAmi: currentAmi === null,
+		onLoadAmi,
+		onDeleteAmi,
+		onDuplicateAmi,
 		onCancelChanges,
         canCommitChanges,
 		commitChanges,
         isSuperAdmin
 	};
 
-	return <MembresEdition {...props} />;
+	return <AmisEdition {...props} />;
 };
 
-type MembreForm = Omit<EcorcesMembre, "gallery" | "profilePicture"> & {
+type AmiForm = Omit<EcorcesAmi, "profilePicture"> & {
 	profilePicture: EcorcesImage | undefined;
-	gallery: (EcorcesImage | undefined)[];
 };
 
-function createEmptyForm(): MembreForm {
+function createEmptyForm(): AmiForm {
 	return {
-		name: "Nouveau membre",
+		name: "Nouvel-le ami-e",
 		role: "",
 		socials: {},
 		profilePicture: undefined,
-		gallery: [],
-        description: {
-            shortBio: loremIpsumMedium,
-            paragraph1: loremIpsumMedium,
-            paragraph2: loremIpsumMedium,
-            paragraph3: loremIpsumMedium,
-        }
+        projects: "",
 	};
 }
 
-function createFormFromMembre(membre: EcorcesMembre): MembreForm {
-	return structuredClone(membre);
+function createFormFromAmi(ami: EcorcesAmi): AmiForm {
+	return structuredClone(ami);
 }
 
-type MembresEditionProps = {
-	membreIds: string[];
-	form: MembreForm;
-	setFormValue: (key: keyof MembreForm, value: any) => void;
-	isNewMembre: boolean;
-	onLoadMembre: (membreId: string) => Promise<void>;
-	onDeleteMembre: (membreId: string) => Promise<void>;
-	onDuplicateMembre: (membreId: string) => Promise<void>;
+type AmisEditionProps = {
+	amiIds: string[];
+	form: AmiForm;
+	setFormValue: (key: keyof AmiForm, value: any) => void;
+	isNewAmi: boolean;
+	onLoadAmi: (amiId: string) => Promise<void>;
+	onDeleteAmi: (amiId: string) => Promise<void>;
+	onDuplicateAmi: (amiId: string) => Promise<void>;
 	onCancelChanges: () => void;
 
     canCommitChanges: boolean;
@@ -253,58 +237,58 @@ type MembresEditionProps = {
     isSuperAdmin: boolean;
 };
 
-const MembresEdition = (props: MembresEditionProps) => {
+const AmisEdition = (props: AmisEditionProps) => {
 	const {
-		membreIds,
-		onLoadMembre,
+		amiIds,
+		onLoadAmi,
 		form,
 		setFormValue,
-		isNewMembre,
+		isNewAmi,
         canCommitChanges,
 		commitChanges,
-		onDeleteMembre,
-		onDuplicateMembre,
+		onDeleteAmi,
+		onDuplicateAmi,
 		onCancelChanges,
         isSuperAdmin
 	} = props;
 
 	const [modified, setModified] = useState(false);
 
-	const handleChange = (key: keyof MembreForm, value: any) => {
+	const handleChange = (key: keyof AmiForm, value: any) => {
 		setModified(true);
 		setFormValue(key, value);
 	};
 
 	const handleSave = commitChanges;
 
-	const handleEdit = async (membreId: string) => await onLoadMembre(membreId);
+	const handleEdit = async (amiId: string) => await onLoadAmi(amiId);
 
-	const handleDelete = async (membreId: string) =>
-		await onDeleteMembre(membreId);
+	const handleDelete = async (amiId: string) =>
+		await onDeleteAmi(amiId);
 
-	const handleDuplicate = async (membreId: string) =>
-		await onDuplicateMembre(membreId);
+	const handleDuplicate = async (amiId: string) =>
+		await onDuplicateAmi(amiId);
 
 	const handleCancel = onCancelChanges;
 
 	return (
 		<div className="w-full">
 			<div className="flex flex-row justify-between items-center mb-6">
-				<div className="heading-1">Membres</div>
+				<div className="heading-1">Amis</div>
 			</div>
 
 			<div className="mb-6">
-				{membreIds.length === 0 ? (
-					<p className="">Aucun membre pour l&apos;instant.</p>
+				{amiIds.length === 0 ? (
+					<p className="">Aucun ami pour l&apos;instant. C'est triste 😢</p>
 				) : (
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-						{membreIds.map((membreId, index) => (
-							<MembreCard
-								key={`Membre-${index.toString().padStart(2, "0")}`}
-								membreId={membreId}
-								handleEdit={() => handleEdit(membreId)}
-								handleDelete={() => handleDelete(membreId)}
-								handleDuplicate={() => handleDuplicate(membreId)}
+						{amiIds.map((amiId, index) => (
+							<AmiCard
+								key={`Ami-${index.toString().padStart(2, "0")}`}
+								amiId={amiId}
+								handleEdit={() => handleEdit(amiId)}
+								handleDelete={() => handleDelete(amiId)}
+								handleDuplicate={() => handleDuplicate(amiId)}
                                 isSuperAdmin={isSuperAdmin}
 							/>
 						))}
@@ -312,70 +296,38 @@ const MembresEdition = (props: MembresEditionProps) => {
 				)}
 			</div>
 
-			{!(isNewMembre && !isSuperAdmin) && <div className="p-4 border rounded flex flex-col items-stretch">
+			{!(isNewAmi && !isSuperAdmin) && <div className="p-4 border rounded flex flex-col items-stretch">
 				<h2 className="text-xl font-bold mb-4">
-					{isNewMembre ? "Ajouter un membre" : "Modifier un membre"}
+					{isNewAmi ? "Ajouter un ami" : "Modifier un ami"}
 				</h2>
 				<div className="space-y-4">
 					<div>
 						<EcorcesLabel>
-							Nom{!isNewMembre && " (Non modifiable)"}
+							Nom{!isNewAmi && " (Non modifiable)"}
 						</EcorcesLabel>
 						<EcorcesTextInput
-							placeHolder="Nom du membre"
+							placeHolder="Nom du ami"
 							value={form.name}
 							setValue={(val) => handleChange("name", val)}
-							disabled={!isNewMembre}
+							disabled={!isNewAmi}
 						/>
 					</div>
 					<div>
 						<EcorcesLabel>Role</EcorcesLabel>
 						<EcorcesTextInput
-							placeHolder="Role du membre"
+							placeHolder="Rôle de l'ami-e"
 							value={form.role}
 							setValue={(val) => handleChange("role", val)}
 						/>
 					</div>
                     <div>
-                        <EcorcesLabel>Petite Bio</EcorcesLabel>
-                        <EcorcesTextArea
-                            value={form.description.shortBio}
-                            setValue={(val) => handleChange("description", {
-                                ...form.description,
-                                shortBio: val
-                            } satisfies EcorcesMembre["description"])}
-                        />
-                    </div>
-                    <div>
-                        <EcorcesLabel>Paragraphe 1</EcorcesLabel>
-                        <EcorcesTextArea
-                            value={form.description.paragraph1}
-                            setValue={(val) => handleChange("description", {
-                                ...form.description,
-                                paragraph1: val
-                            } satisfies EcorcesMembre["description"])}
-                        />
-                    </div>
-                    <div>
-                        <EcorcesLabel>Paragraphe 2</EcorcesLabel>
-                        <EcorcesTextArea
-                            value={form.description.paragraph2}
-                            setValue={(val) => handleChange("description", {
-                                ...form.description,
-                                paragraph2: val
-                            } satisfies EcorcesMembre["description"])}
-                        />
-                    </div>
-                    <div>
-                        <EcorcesLabel>Paragraphe 3</EcorcesLabel>
-                        <EcorcesTextArea
-                            value={form.description.paragraph3}
-                            setValue={(val) => handleChange("description", {
-                                ...form.description,
-                                paragraph3: val
-                            } satisfies EcorcesMembre["description"])}
-                        />
-                    </div>
+						<EcorcesLabel>Projets</EcorcesLabel>
+						<EcorcesTextInput
+							placeHolder="Projets sur lesquels l'ami-e a travaillé"
+							value={form.projects}
+							setValue={(val) => handleChange("projects", val)}
+						/>
+					</div>
 					<div>
 						<EcorcesLabel>Instagram</EcorcesLabel>
 						<EcorcesTextInput
@@ -424,30 +376,6 @@ const MembresEdition = (props: MembresEditionProps) => {
 							imageSize={{ width: 200, height: 200 }} // Example size
 						/>
 					</div>
-					<div>
-						<EcorcesLabel>Gallery</EcorcesLabel>
-						
-						{form.gallery.map((image, index) => (
-							<div key={index} className="mb-2">
-								<EcorcesImageUploader
-									onUpload={(file) => {
-										const newGallery = [...form.gallery];
-										newGallery[index] = file;
-										handleChange("gallery", newGallery);
-									}}
-									file={image}
-									imageSize={{ width: 100, height: 100 }} // Example size
-								/>
-							</div>
-						))}
-						<EcorcesButton
-							onClick={() =>
-								handleChange("gallery", [...form.gallery, undefined])
-							}
-						>
-							Add Image
-						</EcorcesButton>
-					</div>
 				</div>
 				<div className="mt-4 flex space-x-2">
 					<EcorcesButton onClick={handleSave} disabled={!modified && canCommitChanges}>
@@ -460,17 +388,17 @@ const MembresEdition = (props: MembresEditionProps) => {
 	);
 };
 
-type MembreCardProps = {
-	membreId: string;
+type AmiCardProps = {
+	amiId: string;
 	handleEdit: () => void;
 	handleDelete: () => void;
 	handleDuplicate: () => void;
     isSuperAdmin: boolean;
 };
 
-const MembreCard = (props: MembreCardProps) => {
+const AmiCard = (props: AmiCardProps) => {
 	const { 
-        membreId,
+        amiId,
         handleEdit,
         handleDelete,
         handleDuplicate,
@@ -487,7 +415,7 @@ const MembreCard = (props: MembreCardProps) => {
 					"flex-grow"
 				)}
 			>
-				<div className="font-bold text-xl text-golden">{membreId}</div>
+				<div className="font-bold text-xl text-golden">{amiId}</div>
 			</div>
 
 			<div className="flex flex-row mt-4 space-x-2">
@@ -499,4 +427,4 @@ const MembreCard = (props: MembreCardProps) => {
 	);
 };
 
-export default MembresManager;
+export default AmisManager;
