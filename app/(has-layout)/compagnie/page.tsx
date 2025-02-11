@@ -93,11 +93,14 @@ const ActualitesBlock = async () => {
     
         return <div className={mergeClasses(
             "flex flex-col items-center",
-            "mb-12 mt-8"
+            "mb-8 mt-8",
         )}>
             <div className="heading-1">Nos actualités</div>
             
-            <div className="flex flex-col items-stretch gap-2 px-3 w-full mb-4 mt-2">
+            <div className={mergeClasses(
+                "flex flex-col items-stretch w-full",
+                "gap-2 px-3 mb-4 mt-2",
+            )}>
                 {
                     activites.length > 0 ? activites.map((activite, index) => <ActiviteCard
                         activite={activite}
@@ -128,7 +131,8 @@ const MembresBlock = async () => {
 
     return <div className={mergeClasses(
         "flex flex-col items-stretch",
-        "gap-14"
+        "gap-8 pt-6",
+        "border-t border-golden"
     )}>
         {membres.map((membre, index) => <MembreCard
             membre={membre}
