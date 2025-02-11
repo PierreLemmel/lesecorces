@@ -243,6 +243,7 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
                     <EcorcesImageUploader
                         onUpload={f => handleChange("banneer", f)}
                         file={form.banneer}
+                        destinationFolder="activites"
                     />
                 </div>
                 <div>

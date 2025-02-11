@@ -20,6 +20,7 @@ import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader"
 import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
 import { loremIpsumMedium } from "../../../components/ui/ecorces-ui";
 import { useSearchParams } from "next/navigation";
+import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
 
 
 const MembresManager = () => {
@@ -56,7 +57,7 @@ const MembresManager = () => {
                 } = form;
 
 
-                const safeGallery = gallery.filter(val => val !== undefined)
+                const safeGallery = gallery.filter(val => val !== undefined) as EcorcesImage[];
 
                 if (profilePicture === undefined) {
                     throw new Error("Profile picture is required");
@@ -421,7 +422,7 @@ const MembresEdition = (props: MembresEditionProps) => {
 						<EcorcesImageUploader
 							onUpload={(file) => handleChange("profilePicture", file)}
 							file={form.profilePicture}
-							imageSize={{ width: 200, height: 200 }} // Example size
+							destinationFolder="membres"
 						/>
 					</div>
 					<div>
@@ -436,7 +437,7 @@ const MembresEdition = (props: MembresEditionProps) => {
 										handleChange("gallery", newGallery);
 									}}
 									file={image}
-									imageSize={{ width: 100, height: 100 }} // Example size
+									destinationFolder="membres"
 								/>
 							</div>
 						))}
@@ -499,4 +500,6 @@ const MembreCard = (props: MembreCardProps) => {
 	);
 };
 
-export default MembresManager;
+export default () => <EcorcesSuspense>
+	<MembresManager />
+</EcorcesSuspense>;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { Suspense, useCallback, useMemo, useState } from "react";
 import { useEffectAsync } from "../../../lib/hooks";
 import {
 	getAmi,
@@ -18,6 +18,7 @@ import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
 import { mergeClasses } from "../../../lib/utils";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import { useSearchParams } from "next/navigation";
+import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
 
 
 const AmisManager = () => {
@@ -279,7 +280,7 @@ const AmisEdition = (props: AmisEditionProps) => {
 
 			<div className="mb-6">
 				{amiIds.length === 0 ? (
-					<p className="">Aucun ami pour l&apos;instant. C'est triste 😢</p>
+					<p className="">Aucun ami pour l&apos;instant. C&apos;est triste 😢</p>
 				) : (
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 						{amiIds.map((amiId, index) => (
@@ -373,7 +374,7 @@ const AmisEdition = (props: AmisEditionProps) => {
 						<EcorcesImageUploader
 							onUpload={(file) => handleChange("profilePicture", file)}
 							file={form.profilePicture}
-							imageSize={{ width: 200, height: 200 }} // Example size
+							destinationFolder="amis"
 						/>
 					</div>
 				</div>
@@ -427,4 +428,6 @@ const AmiCard = (props: AmiCardProps) => {
 	);
 };
 
-export default AmisManager;
+export default () => <EcorcesSuspense>
+	<AmisManager />
+</EcorcesSuspense>;

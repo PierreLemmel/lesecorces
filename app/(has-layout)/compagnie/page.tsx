@@ -5,10 +5,11 @@ import { getActivites, getBlockContent } from "../../../server/server";
 import { TextLink } from "../../../components/ui/text-link";
 import { ActiviteCard } from "../../../components/parts/activite-card";
 import { EcorcesMembre, getMembre } from "../../../server/membres";
+import { MembreCard } from "./membre-card";
 
 const CompagniePage = () => {
 
-    return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
+    return <div className="w-full min-h-screen flex flex-col bg-water text-golden">
 
         <HeaderBlock />
 
@@ -127,6 +128,7 @@ const MembresBlock = async () => {
 
     return <div className={mergeClasses(
         "flex flex-col items-stretch",
+        "gap-14"
     )}>
         {membres.map((membre, index) => <MembreCard
             membre={membre}
@@ -135,21 +137,7 @@ const MembresBlock = async () => {
     </div>
 }
 
-type MembreCardProps = {
-    membre: EcorcesMembre
-}
 
-const MembreCard = (props: MembreCardProps) => {
-    const {
-        membre
-    } = props;
-
-    return <div className={mergeClasses(
-        "uppercase font-semibold",
-    )}>
-        {membre.name}
-    </div>
-}
 
 const AussiAvecNousBlock = async () => {
 

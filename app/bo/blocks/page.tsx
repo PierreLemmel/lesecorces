@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, useCallback, useEffect, useState } from "react";
+import { Dispatch, Suspense, useCallback, useEffect, useState } from "react";
 import { useEffectAsync } from "../../../lib/hooks";
 import { addVersionToBlock, createBlock, createEmptyBlock, deleteBlock, duplicateBlock,  EcorcesBlock, getBlock, listBlocksIds, saveBlock } from "../../../server/server";
 import LoadingSpinner from "../../../components/ui/loading-spinner";
@@ -10,6 +10,7 @@ import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
 import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
 import { mergeClasses } from "../../../lib/utils";
 import { useSearchParams } from "next/navigation";
+import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
 
 const BlocksManager = () => {
 
@@ -339,4 +340,6 @@ const OffreCard = (props: BlockCardProps) => {
     </div>
 }
 
-export default BlocksManager;
+export default () => <EcorcesSuspense>
+    <BlocksManager />
+</EcorcesSuspense>;

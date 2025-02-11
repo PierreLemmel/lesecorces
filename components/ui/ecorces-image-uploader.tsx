@@ -20,7 +20,9 @@ export type EcorcesImageUploaderProps = {
     imageSize?: {
         width: number;
         height: number;
-    }
+    },
+	hasCropping?: boolean;
+	destinationFolder: string;
 };
 
 const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
@@ -30,7 +32,9 @@ const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
 		disabled = false,
 		className,
         imageSize = { width: 800, height: 300 },
-		file
+		file,
+		hasCropping = true,
+		destinationFolder
 	} = props;
 
 	const fileRef = useRef<File | null>(null);
@@ -47,12 +51,17 @@ const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
 		if (file) {
 			setCropArea(file.cropArea);
 			setImageSrc(file.url);
-
-			setLoading(true);
-			getImageData(file.url, file.cropArea, (result) => {
-				setCroppedPreview(result);
-				setLoading(false);
-			});
+			
+			if (hasCropping) {
+				setLoading(true);
+				getImageData(file.url, file.cropArea, (result) => {
+					setCroppedPreview(result);
+					setLoading(false);
+				});
+			}
+			else {
+				setCroppedPreview(file.url);
+			}
 		}
 		else {
 			setCroppedPreview(null);
@@ -81,7 +90,12 @@ const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
 			setImageSrc(null);
 		}
 
-		setIsCropping(true);
+		if (hasCropping) {
+			setIsCropping(true);
+		}
+		else {
+			sendFile(file!);
+		}
 	};
 
 	const onCropComplete = useCallback((relCroppedArea: Area, pixelsCroppedArea: Area) => {
@@ -89,39 +103,41 @@ const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
 	}, []);
 
 
+	const sendFile = async (file: File) => {
+		setLoading(true);
+
+		const type = file.type.split("/")[1];
+		const timestamp = timeStampString();
+		const path = pathCombine(destinationFolder, `${timestamp}.${type}`);
+
+		await storeFile(file, path);
+		onUpload({
+			url: "/" + pathCombine("res", encodeURIComponent(path)),
+			cropArea
+		});
+
+		fileRef.current = null;
+		setLoading(false);
+	}
+
+	const setPreview = (src: string) => {
+		setLoading(true);
+		getImageData(src, cropArea, (result) => {
+			setCroppedPreview(result);
+			setLoading(false);
+		});
+	}
+
 	const cropImage = async () => {
 		if (!imageSrc) return;
 
 		setIsCropping(false);
 
 		if (fileRef.current) {
-
-			setLoading(true);
-			const file = fileRef.current;
-	
-			const type = file.type.split("/")[1];
-			const timestamp = timeStampString();
-			const path = pathCombine("activites", `${timestamp}.${type}`);
-	
-			await storeFile(file, path);
-			onUpload({
-				url: "/" + pathCombine("res", encodeURIComponent(path)),
-				cropArea
-			});
-	
-			fileRef.current = null;
-			setLoading(false);
+			sendFile(fileRef.current);
 		}
 		else {
-			setLoading(true);
-			getImageData(imageSrc, cropArea, (result) => {
-				setCroppedPreview(result);
-				onUpload({
-					url: imageSrc,
-					cropArea
-				});
-				setLoading(false);
-			});
+			setPreview(imageSrc);
 		}
 	};
 
@@ -193,9 +209,9 @@ const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
 					alt="Cropped Image"
 				/>
 				<div className="flex flex-row gap-2">
-					<EcorcesButton onClick={onCropPreviewEdit}>
+					{hasCropping && <EcorcesButton onClick={onCropPreviewEdit}>
 						Modifier
-					</EcorcesButton>
+					</EcorcesButton>}
 					<EcorcesButton onClick={onCropPreviewRemove}>
 						Retirer
 					</EcorcesButton>

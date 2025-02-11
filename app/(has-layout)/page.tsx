@@ -31,7 +31,7 @@ const Header = () => <div className="w-full flex flex-col items-stretch pt-[1rem
 </div>
 
 
-export const ActivitesBlock = async () => {
+const ActivitesBlock = async () => {
 
     const activites = await getActivites({
         upcoming: true,

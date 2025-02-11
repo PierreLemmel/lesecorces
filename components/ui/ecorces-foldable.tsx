@@ -4,7 +4,7 @@ import { useState } from "react";
 import { mergeClasses } from "../../lib/utils";
 import { motion } from "framer-motion";
 import { EcorcesIcon } from "./icon";
-import { faChevronDown, faChevronRight, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 type EcorcesFoldableProps = {
     className?: string;

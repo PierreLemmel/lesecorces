@@ -18,6 +18,7 @@ import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
 import { mergeClasses } from "../../../lib/utils";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import { useSearchParams } from "next/navigation";
+import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
 
 
 const PartenairesManager = () => {
@@ -290,7 +291,7 @@ const PartenairesEdition = (props: PartenairesEditionProps) => {
 
 			<div className="mb-6">
 				{partenaireIds.length === 0 ? (
-					<p className="">Aucun partenaire pour l&apos;instant. C'est triste 😢</p>
+					<p className="">Aucun partenaire pour l&apos;instant. C&apos;est triste 😢</p>
 				) : (
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 						{partenaireIds.map((partenaireId, index) => (
@@ -353,9 +354,10 @@ const PartenairesEdition = (props: PartenairesEditionProps) => {
 					<div>
 						<EcorcesLabel>Image</EcorcesLabel>
 						<EcorcesImageUploader
+							hasCropping={false}
 							onUpload={(file) => handleChange("image", file)}
 							file={form.image}
-							imageSize={{ width: 200, height: 200 }}
+							destinationFolder="partenaires"
 						/>
 					</div>
 				</div>
@@ -409,4 +411,6 @@ const PartenaireCard = (props: PartenaireCardProps) => {
 	);
 };
 
-export default PartenairesManager;
+export default () => <EcorcesSuspense>
+	<PartenairesManager />
+</EcorcesSuspense>;
