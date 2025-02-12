@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { mergeClasses } from "../../../lib/utils";
+import { mergeClasses, sequence } from "../../../lib/utils";
 import { EcorcesMembre } from "../../../server/membres";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { EcorcesIcon, EcorcesIconProps } from "../../../components/ui/icon";
 import { faFacebook, faInstagram, faSoundcloud } from "@fortawesome/free-brands-svg-icons";
-import { faChevronLeft, faChevronRight, faGlobe } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faCircle, faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { TextButton } from "../../../components/ui/text-button";
 import IconSvg from "../../../components/ui/icon-svg";
 import Link from "next/link";
-import { getImageData } from "../../../components/ui/ecorces-ui";
+import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-ui";
 
 export type MembreCardProps = {
     membre: EcorcesMembre
@@ -40,12 +40,7 @@ export const MembreCard = (props: MembreCardProps) => {
 
     const [folded, setFolded] = useState(true);
 
-    const [profileImgData, setProfileImgData] = useState<string>();
-    useEffect(() => {
-        getImageData(profilePicture.url, profilePicture.cropArea, (data) => {
-            setProfileImgData(data);
-        });
-    }, [])
+    const croppedUrl = croppedImageUrl(profilePicture.url, profilePicture.cropArea);
 
     return <div className={mergeClasses(
         "flex flex-col items-stretch z-20",
@@ -96,7 +91,10 @@ export const MembreCard = (props: MembreCardProps) => {
                 "aspect-square",
                 "bg-cover bg-right bg-no-repeat bg-blend-multiply mix-blend-lighten",
             )} style={{
-                backgroundImage: "linear-gradient(to left, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 1) 100%)" + (profileImgData ? `, url(${profileImgData})` : "")
+                backgroundImage: [
+                    "linear-gradient(to left, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 1) 100%)",
+                    backgroundUrl(croppedUrl)
+                ].join(", ")
             }} >
 
             </div>
@@ -217,16 +215,24 @@ const Gallery = (props: GelleryProps) => {
     const [index, setIndex] = useState(0);
 
     return <div className={mergeClasses(
-        "w-full",
-        "relative"
+        "w-screen h-[calc(min(82vw,82vh))]",
+        "relative",
+        "-left-2"
     )}>
         <motion.div className={mergeClasses(
+            "left-0 h-full",
             "flex flex-row items-stretch",
-            "gap-[calc(min(10vw,10vh))]",
-        )}>
+            "gap-[calc(min(18vh,18vw))]"
+        )} animate={{
+            translateX: `calc((18 / 2 - 100 * ${index}) * min(1vh, 1vw))`
+        }} transition={{
+            type: "spring",
+            stiffness: 100,
+            damping: 20
+        }}>
             {gallery.map((img, idx) => {
                 return <div key={idx} className={mergeClasses(
-                    "aspect-square h-[calc(min(75vw,75vh))]",
+                    "aspect-square h-full",
                     "bg-cover bg-center bg-no-repeat",
                     "cursor-pointer"
                 )} style={{
@@ -234,28 +240,36 @@ const Gallery = (props: GelleryProps) => {
                 }}>
                 </div>
             })}
-
-            <GalleryArrow
-                className="left-0"
-                icon={faChevronLeft}
-                enabled={index > 0}
-                onClick={() => setIndex(Math.max(0, index - 1))}
-            />
-
-            <GalleryArrow
-                className="left-0"
-                icon={faChevronLeft}
-                enabled={index > 0}
-                onClick={() => setIndex(Math.max(0, index - 1))}
-            />
-            <GalleryArrow
-                className="right-0"
-                icon={faChevronRight}
-                enabled={index < gallery.length - 1}
-                onClick={() => setIndex(Math.min(gallery.length - 1, index + 1))}
-            />
+            
         </motion.div>
-        
+
+        <GalleryArrow
+            className="left-0"
+            icon={faChevronLeft}
+            enabled={index > 0}
+            onClick={() => setIndex(Math.max(0, index - 1))}
+        />
+        <GalleryArrow
+            className="right-0"
+            icon={faChevronRight}
+            enabled={index < gallery.length - 1}
+            onClick={() => setIndex(Math.min(gallery.length - 1, index + 1))}
+        />
+
+        <div className={mergeClasses(
+            "flex flex-row items-center justify-center",
+            "gap-3",
+            "absolute bottom-1 left-0 right-0",
+        )}>
+            {sequence(gallery.length).map(i => <div
+                key={`Bullet-${i.toString().padStart(2, "0")}`}
+                className={mergeClasses(
+                    i === index ? "text-white" : "text-white/20"
+                )}
+            >
+                <EcorcesIcon icon={faCircle} className="text-[0.68rem]" />
+            </div>)}
+        </div>
     </div>
 }
 
@@ -268,8 +282,8 @@ type GalleryArrowProps = {
 
 
 
-const gaEnabledClass = "";
-const gaDisabledClass = "";
+const gaEnabledClass = "cursor-pointer opacity-80 hover:opacity-100";
+const gaDisabledClass = "opacity-20 hover:opacity-20";
 
 const GalleryArrow = (props: GalleryArrowProps) => {
     const {
@@ -287,10 +301,9 @@ const GalleryArrow = (props: GalleryArrowProps) => {
 
     return <div className={mergeClasses(
         "flex flex-col items-center justify-center",
-        "absolute top-0 bottom-0",
+        "absolute top-0 bottom-0 z-10",
         "w-8",
-        "bg-gradient-to-l from-transparent to-white",
-        "opacity-0 hover:opacity-60",
+        "text-white",
         enabled ? gaEnabledClass : gaDisabledClass,
         className
     )} onClick={handleClick}>

@@ -1,9 +1,6 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import { mergeClasses } from "../../lib/utils";
 import { EcorcesBanneer } from "../../server/server";
-import { getImageData } from "../ui/ecorces-ui";
+import { backgroundUrl, croppedImageUrl } from "../ui/ecorces-ui";
 
 export type BanneerBackgroundProps = {
     banneer: EcorcesBanneer;
@@ -20,11 +17,7 @@ export const BanneerBackground = (props: BanneerBackgroundProps) => {
         className
     } = props;
 
-    const [imgData, setImgData] = useState<string | null>(null);
-
-    useEffect(() => {
-        getImageData(url, cropArea, setImgData)
-    }, [url, cropArea])
+    const croppedUrl = croppedImageUrl(url, cropArea);
 
     return <div
         className={mergeClasses(
@@ -34,7 +27,7 @@ export const BanneerBackground = (props: BanneerBackgroundProps) => {
             className
         )}
         style={{
-            backgroundImage: imgData ? `url(${imgData})` : undefined,
+            backgroundImage: backgroundUrl(croppedUrl),
         }}
     >
         <div className={mergeClasses(

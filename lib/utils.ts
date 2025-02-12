@@ -92,3 +92,8 @@ export const groupBy = <T, K extends string | number | symbol>(
 		return acc;
 	}, {} as Record<K, T[]>);
 };
+
+export function sequence(count: number, start?: number) {
+    const startIndex = start ?? 0;
+    return Array(count).fill(0).map((_, i) => startIndex + i);
+}

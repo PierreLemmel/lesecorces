@@ -49,14 +49,16 @@ export const allActiviteVilles = [
 ] as const;
 export type ActiviteVille = typeof allActiviteVilles[number];
 
+export type EcorcesCropArea = {
+    x: number,
+    y: number,
+    width: number,
+    height: number
+}
+
 export type EcorcesImage = {
     url: string;
-    cropArea: {
-        x: number,
-        y: number,
-        width: number,
-        height: number
-    }
+    cropArea: EcorcesCropArea;
 }
 
 export type EcorcesBanneer = EcorcesImage;

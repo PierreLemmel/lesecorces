@@ -6,6 +6,10 @@ export const uiBreakPoints = {
     md: 768,
 } as const;
 
+export const croppedImageUrl = (url: string, cropArea: Area) => url + "?crop=" + encodeURIComponent(JSON.stringify(cropArea));
+
+export const backgroundUrl = (url: string) => `url(${url})`;
+
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const baseUiInputClasses = mergeClasses(

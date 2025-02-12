@@ -14,7 +14,7 @@ import EcorcesSelectMenu from "../../../components/ui/ecorces-select-menu";
 import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import { mergeClasses } from "../../../lib/utils";
-import { getImageData } from "../../../components/ui/ecorces-ui";
+import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-ui";
 
 
 const EcorcesActiviteManager = () => {
@@ -288,21 +288,7 @@ const ActivityCard = (props: ActivityCardProps) => {
         handleDuplicate
     } = props;
 
-    const [banneerData, setBanneerData] = useState<string | null>(null);
-    useEffect(() => {
-        if (activity.banneer) {
-            const {
-                url,
-                cropArea
-            } = activity.banneer;
-
-            getImageData(url, cropArea, setBanneerData);
-        }
-        else {
-            setBanneerData(null);
-        }
-        
-    }, [activity.banneer]);
+    const bgUrl = activity.banneer ? croppedImageUrl(activity.banneer.url, activity.banneer.cropArea) : null;
 
     return (
         <div 
@@ -316,12 +302,12 @@ const ActivityCard = (props: ActivityCardProps) => {
             )}
 
             >
-                {banneerData && <div className={mergeClasses(
+                {bgUrl && <div className={mergeClasses(
                     "bg-cover bg-center bg-no-repeat",
                     "absolute top-0 left-0 right-0 bottom-0 -z-10",
                     "opacity-45 rounded"
                 )} style={{
-                    backgroundImage: `url(${banneerData})`,
+                    backgroundImage: backgroundUrl(bgUrl),
                 }} />}
 
                 <div className="font-bold text-xl text-golden">{activity.title}{activity.full && " (Complet)"}</div>

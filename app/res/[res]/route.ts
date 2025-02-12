@@ -1,20 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFileFromStorage } from "../../../lib/firebase-server";
+import { addCroppedVersionToStorage, getCroppedPathForImage, getFileFromStorage } from "../../../lib/firebase-server";
+import { EcorcesImage } from "../../../server/server";
 
-export async function GET(req: NextRequest, { params }: { params: { res: string } }) {
+type Params = {
+	res: string;
+	crop?: string;
+}
+
+export async function GET(req: NextRequest, { params }: { params: Params }) {
 	
 	try {
 		const {
-			res
+			searchParams
+		} = req.nextUrl;
+
+		const {
+			res,
 		} = params;
 
 		if (!res || res.length === 0) {
 			return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
 		}
 
-		const url = decodeURIComponent(params.res);
+		const crop = searchParams.get("crop");
+		const area = crop ? <EcorcesImage["cropArea"]> JSON.parse(decodeURIComponent(crop)) : undefined;
 
-		const file = await getFileFromStorage(url);
+		const url = decodeURIComponent(params.res);
+		let file;
+		if (area) {
+			const croppedPath = getCroppedPathForImage(url, area);
+			file = await getFileFromStorage(croppedPath);
+
+			const [exists] = await file.exists();
+
+			if (!exists) {
+				await addCroppedVersionToStorage(url, area);
+				
+				file = await getFileFromStorage(croppedPath);
+			}
+
+		}
+		else {
+			file = await getFileFromStorage(url);
+		}
 
 		const [exists] = await file.exists();
 
@@ -39,6 +67,10 @@ export async function GET(req: NextRequest, { params }: { params: { res: string 
 
 	} catch (error) {
 		console.error('Error fetching image:', error);
-		return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+		return NextResponse.json({
+			error: 'Internal server error'
+		}, {
+			status: 500 
+		});
 	}
 }
