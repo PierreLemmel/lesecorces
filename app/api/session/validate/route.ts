@@ -10,9 +10,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Session cookie is missing" }, { status: 400 });
         }
     
-        
+        console.log("pre verifyThatSessionCookieIsAdmin");
         const isAdmin = await verifyThatSessionCookieIsAdmin(sessionCookie);
-    
+        console.log("post verifyThatSessionCookieIsAdmin", isAdmin);
+
         if (isAdmin) {
             return NextResponse.json({ isAdmin });
         } else {
