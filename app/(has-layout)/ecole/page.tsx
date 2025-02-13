@@ -6,10 +6,11 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { EcoleFoldable } from "./ecole-foldable";
 import StagesBlockContent from "./stages-block-content";
 import Link from "next/link";
+import { Footer } from "../../../components/layout/footer";
 
 const EcolePage = () => {
 
-    return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
+    return <div className="w-full min-h-screen flex flex-col bg-trunk text-golden">
 
         <HeaderBlock />
 
@@ -20,6 +21,8 @@ const EcolePage = () => {
         <CoursHebdoBlock />
 
         <ContactBlock />
+
+        <Footer />
     </div>
 }
 
@@ -40,11 +43,17 @@ const HeaderBlock = async () => {
 
 const ValeursBlock = async () => {
 
-    const valeursDescription = await getBlockContent("ECOLE_DESCRIPTION");
-
-    const niveauCardText = await getBlockContent("ECOLE_NIVEAU_CARD");
-    const valeursCardText = await getBlockContent("ECOLE_VALEURS_CARD");
-    const consentementCardText = await getBlockContent("ECOLE_CONSENTEMENT_CARD");
+    const [
+        valeursDescription,
+        niveauCardText,
+        valeursCardText,
+        consentementCardText,
+    ] = await Promise.all([
+        getBlockContent("ECOLE_DESCRIPTION"),
+        getBlockContent("ECOLE_NIVEAU_CARD"),
+        getBlockContent("ECOLE_VALEURS_CARD"),
+        getBlockContent("ECOLE_CONSENTEMENT_CARD"),
+    ])
     
     const cards = [
         {
@@ -127,12 +136,16 @@ const ValeursCard = (props: ValeursCardProps) => {
 
 const StagesBlock = async () => {
     
-    const headerDescription = await getBlockContent("ECOLE_STAGE_FOLDABLE_HEADER")
-
-    const stages = await getActivites({
-        type: "Stage",
-        upcoming: true
-    })
+    const [
+        headerDescription,
+        stages
+    ] = await Promise.all([
+        getBlockContent("ECOLE_STAGE_FOLDABLE_HEADER"),
+        getActivites({
+            type: "Stage",
+            upcoming: true
+        })
+    ])
 
     const {
         "Lyon": stagesLyon,

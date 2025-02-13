@@ -117,34 +117,42 @@ export type EcorcesPartenaire = {
     projects: string;
     image: EcorcesImage;
     url: string;
+    enabled: boolean;
 }
 
-
-const pathToPartenaire = (name: string) => pathCombine("partenaires", name);
-
-export async function getPartenaire(name: string): Promise<EcorcesPartenaire> {
-    const path = pathToPartenaire(name);
-
-    return await getDocument<EcorcesPartenaire>(path);
+type PartenairesDbModel = {
+    partenaires: EcorcesPartenaire[];
 }
 
-export async function savePartenaire(partenaire: EcorcesPartenaire): Promise<EcorcesPartenaire> {
-    const path = pathToPartenaire(partenaire.name);
+const pathToPartenaires = () => pathCombine("partenaires", "default");
 
-    await setDocument<EcorcesPartenaire>(path, partenaire, true);
-
-    return partenaire;
+export type GetPartenairesOptions = {
+    enabledOnly: boolean;
 }
 
-export async function listPartenaires(): Promise<string[]> {
-    const ids = await listDocuments("partenaires");
-    return ids;
+export async function getPartenaires(options: Partial<GetPartenairesOptions> = {}): Promise<EcorcesPartenaire[]> {
+
+    const {
+        enabledOnly = false
+    } = options;
+
+    const path = pathToPartenaires();
+    let { partenaires } = await getDocument<PartenairesDbModel>(path);
+
+    if (enabledOnly) {
+        partenaires = partenaires.filter(p => p.enabled);
+    }
+
+
+    return partenaires;
 }
 
-export async function deletePartenaire(name: string): Promise<void> {
-    const path = pathToPartenaire(name);
+export async function savePartenaires(partenaires: EcorcesPartenaire[]): Promise<EcorcesPartenaire[]> {
+    const path = pathToPartenaires();
 
-    await deleteDocument(path);
+    await setDocument<PartenairesDbModel>(path, { partenaires }, true);
+
+    return partenaires;
 }
 
 export function duplicatePartenaire(partenaire: EcorcesPartenaire) {

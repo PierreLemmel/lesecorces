@@ -122,6 +122,7 @@ const MainMenu_Small = () => {
                     {items.map(({ href, label }, index) => <MenuElement_Small
                         key={`Menu-0${index}`}
                         href={href}
+                        onClick={() => setIsOpen(false)}
                     >
                         {label}
                     </MenuElement_Small>)}
@@ -135,15 +136,21 @@ const MainMenu_Small = () => {
 type MenuElement_SmallProps = {
     href: string;
     children: string;
+    onClick: () => void;
 }
 
 const MenuElement_Small = (props: MenuElement_SmallProps) => {
     const {
         href,
-        children
+        children,
+        onClick
     } = props;
 
-    return <Link href={href} className="hover:scale-110 transition-transform">
+    return <Link
+        href={href}
+        className="hover:scale-110 transition-transform"
+        onClick={onClick}
+    >
         {children}
     </Link>
 } 

@@ -2,27 +2,20 @@ import { Timestamp } from "firebase/firestore";
 import { pathCombine } from "../lib/files";
 import { deleteDocument, documentExists, getDocument, listDocuments, setDocument } from "../lib/firebase";
 
-type NewsLetterData = {
+export type NewsLetterData = {
     mails: string[];
+    lastModified: Timestamp;
 }
+
+const pathToNewsLetterCollection = (collection: string) => pathCombine("newsletter", collection);
 
 export async function saveNewsLetterMail(mail: string): Promise<boolean> {
 
     const cleanMail = mail.trim().toLowerCase();
 
-    const date = new Date();
-    const formattedDate = date.toISOString().split('T')[0];
-    const path = pathCombine("newsletter", formattedDate);
+    const path = pathToNewsLetterCollection("default");
 
-    let data: NewsLetterData;
-    if (await documentExists(path)) {
-        data = await getDocument<NewsLetterData>(path);
-    }
-    else {
-        data = {
-            mails: []
-        }
-    }
+    const data = await getDocument<NewsLetterData>(path);
 
     if (!data.mails.includes(cleanMail)) {
         data.mails.push(cleanMail);
@@ -33,6 +26,56 @@ export async function saveNewsLetterMail(mail: string): Promise<boolean> {
     return true;
 }
 
+export async function getNewsLetterMails(): Promise<NewsLetterData> {
+    const path = pathToNewsLetterCollection("default");
+
+    const data = await getDocument<NewsLetterData>(path);
+
+    return data;
+}
+
+export async function getArchiveNewsLetterMails(): Promise<NewsLetterData> {
+    const path = pathToNewsLetterCollection("archive");
+
+    const data = await getDocument<NewsLetterData>(path);
+
+    return data;
+}
+
+export async function archiveNewsLetterMails(): Promise<{
+    archiveData: NewsLetterData,
+    defaultData: NewsLetterData
+}> {
+
+    const defaultPath = pathToNewsLetterCollection("default");
+    const archivePath = pathToNewsLetterCollection("archive");
+
+    const defaultData = await getDocument<NewsLetterData>(defaultPath);
+    const archiveData = await getDocument<NewsLetterData>(archivePath);
+
+    const newArchive: NewsLetterData = {
+        mails: [
+            ...defaultData.mails,
+            ...archiveData.mails
+        ],
+        lastModified: Timestamp.now()
+    }
+
+    const newDefault: NewsLetterData = {
+        mails: [],
+        lastModified: Timestamp.now()
+    }
+
+    await Promise.all([
+        setDocument<NewsLetterData>(defaultPath, newDefault, true),
+        setDocument<NewsLetterData>(archivePath, newArchive, true)
+    ]);
+
+    return {
+        archiveData: newArchive,
+        defaultData: newDefault
+    }
+}
 
 export const allActivityTypes = [
     "Spectacle",

@@ -9,6 +9,7 @@ import { getActivites, getBlockContent, getOffrePedagogique } from "../../server
 import EcorcesTabComponent from "../../components/ui/ecorces-tab-component";
 import { ActiviteCard } from "../../components/parts/activite-card";
 import { NewsLetter } from "../../components/ui/newsletter";
+import { Footer } from "../../components/layout/footer";
 
 const Home = () => {
 
@@ -20,6 +21,8 @@ const Home = () => {
 		<NewsLetterBlock />
 		<CompagnieBlock />
 		<EspaceProBlock />
+
+		<Footer />
 	</div>
 }
 
@@ -62,8 +65,13 @@ const ActivitesBlock = async () => {
 
 const OffresPedagogiqueBlock = async () => {
 
-	const offrePedaText = await getBlockContent("HOMEPAGE_OFFRE_PEDA");
-	const offrePeda = await getOffrePedagogique();
+	const [
+		offrePedaText,
+		offrePeda
+	] = await Promise.all([
+		getBlockContent("HOMEPAGE_OFFRE_PEDA"),
+		getOffrePedagogique()
+	]);
 
 	const tabs = offrePeda.map(offre => ({
 		title: offre.name,

@@ -1,416 +1,322 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { useEffectAsync } from "../../../lib/hooks";
-import {
-	getPartenaire,
-	listPartenaires,
-	savePartenaire,
-	deletePartenaire,
-	duplicatePartenaire,
-	EcorcesPartenaire,
-} from "../../../server/membres";
-import { EcorcesImage } from "../../../server/server";
+import { Dispatch, useCallback, useState } from "react";
 import LoadingSpinner from "../../../components/ui/loading-spinner";
+import { useEffectAsync } from "../../../lib/hooks";
 import EcorcesButton from "../../../components/ui/ecorces-button";
-import { EcorcesLabel } from "../../../components/ui/ecorces-label";
+import { TextLink } from "../../../components/ui/text-link";
 import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
-import { mergeClasses } from "../../../lib/utils";
+import { EcorcesLabel } from "../../../components/ui/ecorces-label";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
-import { useSearchParams } from "next/navigation";
-import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
+import { mergeClasses } from "../../../lib/utils";
+import { backgroundUrl } from "../../../components/ui/ecorces-ui";
+import { EcorcesPartenaire, savePartenaires, getPartenaires, duplicatePartenaire } from "../../../server/membres";
+import { EcorcesImage } from "../../../server/server";
+import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
 
 
-const PartenairesManager = () => {
-    const searchParams = useSearchParams();
-    const isSuperAdmin = searchParams.get("superadmin")?.toLowerCase() === "true";
+const EcorcesPartenaireManager = () => {
+    const [partenaires, setPartenaires] = useState<EcorcesPartenaire[]>([]);
+    
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-	const [partenaireIds, setPartenaireIds] = useState<string[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [isSaving, setIsSaving] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [currentPartenaire, setCurrentPartenaire] = useState<EcorcesPartenaire | null>(
-		null
-	);
-	const [form, setForm] = useState<PartenaireForm>(createEmptyForm());
-
-    const canCommitChanges = useMemo(() => {
-        return form.image !== undefined
-            && form.name !== ""
-            && form.url !== "";
-    }, [form]);
-	const commitChanges = useCallback(
-		async () => {
-            if (!canCommitChanges) {
-                throw new Error("Cannot commit changes");
-            }
-
-			try {
-				setIsSaving(true);
-
-				let partenaireToSave: EcorcesPartenaire;
-
-                let {
-                    image,
-                    ...restForm
-                } = form;
+    const commitChanges = useCallback(async () => {
+        try {
+            setIsSaving(true);
+            const updated = await savePartenaires(partenaires);
+            setPartenaires(updated);
+            setIsSaving(false);
+        }
+        catch (err: any) {
+            setError(err.toString());
+        }
+    }, [partenaires]);
 
 
+    useEffectAsync(async () => {
+        try {
+            setIsLoading(true);
+            const allPartenaires = await getPartenaires();
+            setPartenaires(allPartenaires);
+            setIsLoading(false);
+        }
+        catch (err: any) {
+            setError(err.toString());
+        }
+    }, [])
 
-                if (image === undefined) {
-                    throw new Error("Profile picture is required");
-                }
+    if (error) {
+        return <div>
+            <div>Erreur : {error}</div>
+        </div>;
+    }
 
-                if (form.name === "") {
-                    throw new Error("Name is required");
-                }
+    if (isLoading) {
+        return <div>
+            <div>Chargement...</div>
+            <LoadingSpinner />
+        </div>;
+    }
 
-                if (form.url === "") {
-                    throw new Error("URL is required");
-                }
+    if (isSaving) {
+        return <div>
+            <div>Sauvegarde...</div>
+            <LoadingSpinner />
+        </div>;
+    }
 
+    const props: PartenairesEditionProps = {
+        partenaires,
+        setPartenaires,
+        commitChanges
+    }
 
-				if (currentPartenaire) {
-					partenaireToSave = {
-                        ...currentPartenaire,
-                        image,
-                        ...restForm
-                    };
-				} else {
-					partenaireToSave = {
-                        image,
-                        ...restForm
-                    };
-				}
-
-				await savePartenaire(partenaireToSave);
-
-				setCurrentPartenaire(null);
-				setForm(createEmptyForm());
-				setPartenaireIds((prevIds) =>
-					currentPartenaire ? prevIds : [...prevIds, form.name]
-				);
-
-				setIsSaving(false);
-			} catch (err: any) {
-				setError(err.toString());
-			}
-		},
-		[canCommitChanges, currentPartenaire, form]
-	);
-
-	const onLoadPartenaire = useCallback(async (partenaireId: string) => {
-		try {
-			setIsLoading(true);
-
-			const partenaire = await getPartenaire(partenaireId);
-			setCurrentPartenaire(partenaire);
-			setForm(createFormFromPartenaire(partenaire));
-
-			setIsLoading(false);
-		} catch (err: any) {
-			setError(err.toString());
-		}
-	}, []);
-
-	const onDeletePartenaire = useCallback(
-		async (partenaireId: string) => {
-			try {
-				setIsSaving(true);
-				await deletePartenaire(partenaireId);
-				setPartenaireIds(partenaireIds.filter((id) => id !== partenaireId));
-				setCurrentPartenaire(null);
-				setForm(createEmptyForm());
-				setIsSaving(false);
-			} catch (err: any) {
-				setError(err.toString());
-			}
-		},
-		[partenaireIds]
-	);
-
-	const onDuplicatePartenaire = useCallback(async (partenaireId: string) => {
-		try {
-			setIsLoading(true);
-
-			const partenaire = await getPartenaire(partenaireId);
-			const newPartenaire = duplicatePartenaire(partenaire);
-
-			setCurrentPartenaire(null);
-
-			setForm(createFormFromPartenaire(newPartenaire));
-
-			setIsLoading(false);
-		} catch (err: any) {
-			setError(err.toString());
-		}
-	}, []);
-
-	const setFormValue = useCallback(
-		(key: keyof PartenaireForm, value: any) => {
-			setForm({
-				...form,
-				[key]: value,
-			});
-		},
-		[form]
-	);
-
-	const onCancelChanges = useCallback(() => {
-		setForm(createEmptyForm());
-		setCurrentPartenaire(null);
-	}, []);
-
-	useEffectAsync(async () => {
-		try {
-			setIsLoading(true);
-			const allIds = await listPartenaires();
-			setPartenaireIds(allIds);
-			setIsLoading(false);
-		} catch (err: any) {
-			setError(err.toString());
-		}
-	}, []);
-
-	if (error) {
-		return (
-			<div>
-				<div>Erreur : {error}</div>
-			</div>
-		);
-	}
-
-	if (isLoading) {
-		return (
-			<div>
-				<div>Chargement...</div>
-				<LoadingSpinner />
-			</div>
-		);
-	}
-
-	if (isSaving) {
-		return (
-			<div>
-				<div>Sauvegarde...</div>
-				<LoadingSpinner />
-			</div>
-		);
-	}
-
-	const props: PartenairesEditionProps = {
-		partenaireIds,
-		form,
-		setFormValue,
-		isNewPartenaire: currentPartenaire === null,
-		onLoadPartenaire,
-		onDeletePartenaire,
-		onDuplicatePartenaire,
-		onCancelChanges,
-        canCommitChanges,
-		commitChanges,
-        isSuperAdmin
-	};
-
-	return <PartenairesEdition {...props} />;
+    return <PartenairesEdition {...props} />;
 };
+
 
 type PartenaireForm = Omit<EcorcesPartenaire, "image"> & {
 	image: EcorcesImage | undefined;
-};
-
-function createEmptyForm(): PartenaireForm {
-	return {
-		name: "Nouvel-le partenaire-e",
-		role: "",
-		image: undefined,
-        url: "",
-        projects: "",
-	};
 }
 
-function createFormFromPartenaire(partenaire: EcorcesPartenaire): PartenaireForm {
-	return structuredClone(partenaire);
-}
+const createEmptyForm = (): PartenaireForm => ({ 
+	name: "",
+	role: "",
+	projects: "",
+	image: undefined,
+    enabled: true,
+	url: ""
+});
 
 type PartenairesEditionProps = {
-	partenaireIds: string[];
-	form: PartenaireForm;
-	setFormValue: (key: keyof PartenaireForm, value: any) => void;
-	isNewPartenaire: boolean;
-	onLoadPartenaire: (partenaireId: string) => Promise<void>;
-	onDeletePartenaire: (partenaireId: string) => Promise<void>;
-	onDuplicatePartenaire: (partenaireId: string) => Promise<void>;
-	onCancelChanges: () => void;
-
-    canCommitChanges: boolean;
-	commitChanges: () => Promise<void>;
-
-    isSuperAdmin: boolean;
-};
+    partenaires: EcorcesPartenaire[];
+    setPartenaires: Dispatch<EcorcesPartenaire[]>;
+    commitChanges: () => Promise<void>;
+}
 
 const PartenairesEdition = (props: PartenairesEditionProps) => {
-	const {
-		partenaireIds,
-		onLoadPartenaire,
-		form,
-		setFormValue,
-		isNewPartenaire,
-        canCommitChanges,
-		commitChanges,
-		onDeletePartenaire,
-		onDuplicatePartenaire,
-		onCancelChanges,
-        isSuperAdmin
-	} = props;
 
-	const [modified, setModified] = useState(false);
-
-	const handleChange = (key: keyof PartenaireForm, value: any) => {
-		setModified(true);
-		setFormValue(key, value);
-	};
-
-	const handleSave = commitChanges;
-
-	const handleEdit = async (partenaireId: string) => await onLoadPartenaire(partenaireId);
-
-	const handleDelete = async (partenaireId: string) =>
-		await onDeletePartenaire(partenaireId);
-
-	const handleDuplicate = async (partenaireId: string) =>
-		await onDuplicatePartenaire(partenaireId);
-
-	const handleCancel = onCancelChanges;
-
-	return (
-		<div className="w-full">
-			<div className="flex flex-row justify-between items-center mb-6">
-				<div className="heading-1">Partenaires</div>
-			</div>
-
-			<div className="mb-6">
-				{partenaireIds.length === 0 ? (
-					<p className="">Aucun partenaire pour l&apos;instant. C&apos;est triste 😢</p>
-				) : (
-					<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-						{partenaireIds.map((partenaireId, index) => (
-							<PartenaireCard
-								key={`Partenaire-${index.toString().padStart(2, "0")}`}
-								partenaireId={partenaireId}
-								handleEdit={() => handleEdit(partenaireId)}
-								handleDelete={() => handleDelete(partenaireId)}
-								handleDuplicate={() => handleDuplicate(partenaireId)}
-                                isSuperAdmin={isSuperAdmin}
-							/>
-						))}
-					</div>
-				)}
-			</div>
-
-			{!(isNewPartenaire && !isSuperAdmin) && <div className="p-4 border rounded flex flex-col items-stretch">
-				<h2 className="text-xl font-bold mb-4">
-					{isNewPartenaire ? "Ajouter un partenaire" : "Modifier un partenaire"}
-				</h2>
-				<div className="space-y-4">
-					<div>
-						<EcorcesLabel>
-							Nom{!isNewPartenaire && " (Non modifiable)"}
-						</EcorcesLabel>
-						<EcorcesTextInput
-							placeHolder="Nom du partenaire"
-							value={form.name}
-							setValue={(val) => handleChange("name", val)}
-							disabled={!isNewPartenaire}
-						/>
-					</div>
-					<div>
-						<EcorcesLabel>Role</EcorcesLabel>
-						<EcorcesTextInput
-							placeHolder="Rôle du partenaire"
-							value={form.role}
-							setValue={(val) => handleChange("role", val)}
-						/>
-					</div>
-                    <div>
-						<EcorcesLabel>Projets</EcorcesLabel>
-						<EcorcesTextInput
-							placeHolder="Projets mené avec le ou la partenaire"
-							value={form.projects}
-							setValue={(val) => handleChange("projects", val)}
-						/>
-					</div>
-					<div>
-						<EcorcesLabel>Url</EcorcesLabel>
-						<EcorcesTextInput
-							placeHolder="Url"
-							value={form.url}
-							setValue={(val) =>
-								handleChange("url", val)
-							}
-						/>
-					</div>
-
-					<div>
-						<EcorcesLabel>Image</EcorcesLabel>
-						<EcorcesImageUploader
-							hasCropping={false}
-							onUpload={(file) => handleChange("image", file)}
-							file={form.image}
-							destinationFolder="partenaires"
-						/>
-					</div>
-				</div>
-				<div className="mt-4 flex space-x-2">
-					<EcorcesButton onClick={handleSave} disabled={!modified && canCommitChanges}>
-						Sauvegarder
-					</EcorcesButton>
-					<EcorcesButton onClick={handleCancel}>Annuler</EcorcesButton>
-				</div>
-			</div>}
-		</div>
-	);
-};
-
-type PartenaireCardProps = {
-	partenaireId: string;
-	handleEdit: () => void;
-	handleDelete: () => void;
-	handleDuplicate: () => void;
-    isSuperAdmin: boolean;
-};
-
-const PartenaireCard = (props: PartenaireCardProps) => {
-	const { 
-        partenaireId,
-        handleEdit,
-        handleDelete,
-        handleDuplicate,
-        isSuperAdmin
+    const {
+        partenaires,
+        setPartenaires,
+        commitChanges,
     } = props;
 
-	return (
-		<div className="p-4 border rounded shadow-sm flex flex-col justify-between">
-			<div
-				className={mergeClasses(
-					"flex flex-col text-gray-300",
-					"relative",
-					"p-3",
-					"flex-grow"
-				)}
-			>
-				<div className="font-bold text-xl text-golden">{partenaireId}</div>
-			</div>
+    const [form, setForm] = useState<PartenaireForm>(createEmptyForm());
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [modified, setModified] = useState(false);
 
-			<div className="flex flex-row mt-4 space-x-2">
-				<EcorcesButton onClick={handleEdit}>Modifier</EcorcesButton>
-				<EcorcesButton onClick={handleDelete} disabled={!isSuperAdmin}>Supprimer</EcorcesButton>
-				<EcorcesButton onClick={handleDuplicate} disabled={!isSuperAdmin}>Dupliquer</EcorcesButton>
-			</div>
-		</div>
-	);
-};
 
-export default () => <EcorcesSuspense>
-	<PartenairesManager />
-</EcorcesSuspense>;
+    const handleChange = (key: keyof EcorcesPartenaire, value: any) => {
+        setModified(true);
+        setForm((prev) => {
+            const base: PartenaireForm = prev ?? createEmptyForm();
+            const result = { ...base, [key]: value };
+
+            return result;
+        });
+    };
+
+    const handleSave = () => {
+        if (form.image === undefined) {
+            throw new Error("L'image est obligatoire");
+        }
+
+        const newPartenaire: EcorcesPartenaire = {
+            ...form,
+            image: form.image
+        }
+
+        if (editingIndex !== null) {
+            const updatedPartenaires = [...partenaires];
+            updatedPartenaires[editingIndex] = newPartenaire;
+            setPartenaires(updatedPartenaires);
+        } else {
+            setPartenaires([...partenaires, newPartenaire]);
+        }
+        setForm(createEmptyForm());
+        setEditingIndex(null);
+    };
+
+    const handleEdit = (index: number) => {
+        setForm(partenaires[index]);
+        setEditingIndex(index);
+    };
+
+    const handleDelete = (index: number) => {
+        setModified(true);
+        const updatedPartenaires = partenaires.filter((_, i) => i !== index);
+        setPartenaires(updatedPartenaires);
+    };
+
+    const handleDuplicate = (index: number) => {
+
+        const newActivity = duplicatePartenaire(partenaires[index]);
+        setPartenaires([...partenaires, newActivity]);
+        setForm(newActivity);
+        setEditingIndex(partenaires.length);
+    };
+
+    const handleCancel = () => {
+        setEditingIndex(null);
+        setForm(createEmptyForm());
+    }
+
+    return <div className="w-full">
+        <div className="flex flex-row justify-between items-center mb-6">
+            <div className="heading-1">Partenaires</div>
+            <EcorcesButton
+                onClick={commitChanges}
+                disabled={!modified}
+            >
+                Sauvegarder
+            </EcorcesButton>
+        </div>
+
+        <div className="mb-6">
+            {partenaires.length === 0 ? (
+                <p className="">Aucun partenaire pour l&apos;instant, c&apos;est triste 😢</p>
+            ) : (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {partenaires.map((partner, index) => <ActivityCard
+                        key={`Partenaire-${index.toString().padStart(2, "0")}`}
+                        partner={partner}
+                        handleEdit={() => handleEdit(index)}
+                        handleDelete={() => handleDelete(index)}
+                        handleDuplicate={() => handleDuplicate(index)}
+                    />)}
+                </div>
+            )}
+        </div>
+
+        <div className="p-4 border rounded flex flex-col items-stretch">
+            <h2 className="text-xl font-bold mb-4">
+                {editingIndex !== null ? "Modifier un partenaire" : "Ajouter un partenaire"}
+            </h2>
+            <div className="space-y-4">
+                <div>
+                    <EcorcesLabel>Nom</EcorcesLabel>
+                    <EcorcesTextInput
+                        placeHolder="Nom du partenaire"
+                        value={form.name}
+                        setValue={val => handleChange("name", val)}
+                    />
+                </div>
+                <div>
+                    <EcorcesLabel>Rôle</EcorcesLabel>
+                    <EcorcesTextInput
+                        placeHolder="Rôle du partenaire"
+                        value={form.role}
+                        setValue={val => handleChange("role", val)}
+                    />
+                </div>
+                <div>
+                    <EcorcesLabel>Projets</EcorcesLabel>
+                    <EcorcesTextInput
+                        placeHolder="Projets menés avec le partenaire"
+                        value={form.projects}
+                        setValue={val => handleChange("projects", val)}
+                    />
+                </div>
+                <div>
+                    <EcorcesLabel>{"Image"}</EcorcesLabel>
+                    <EcorcesImageUploader
+                        onUpload={f => handleChange("image", f)}
+                        file={form.image}
+                        hasCropping={false}
+                        destinationFolder="partenaires"
+                    />
+                </div>
+                <div>
+                    <EcorcesLabel>Visible</EcorcesLabel>
+                    <EcorcesCheckbox
+                        checked={form.enabled}
+                        onChange={val => handleChange("enabled", val)}
+                    />
+                </div>
+                <div>
+                    <EcorcesLabel>Lien</EcorcesLabel>
+                    <EcorcesTextInput
+                        placeHolder="www.google.com"
+                        value={form.url}
+                        setValue={val => handleChange("url", val)}
+                    />
+                </div>
+            </div>
+            <div className="mt-4 flex space-x-2">
+                <EcorcesButton
+                    onClick={handleSave}
+                >
+                    Sauvegarder
+                </EcorcesButton>
+                <EcorcesButton
+                    onClick={handleCancel}
+                >
+                    Annuler
+                </EcorcesButton>
+            </div>
+        </div>
+    </div>
+}
+
+
+type ActivityCardProps = {
+    partner: EcorcesPartenaire;
+    handleEdit: () => void;
+    handleDelete: () => void;
+    handleDuplicate: () => void;
+}
+
+const ActivityCard = (props: ActivityCardProps) => {
+
+    const {
+        partner: {
+            name,
+            role,
+            projects,
+            image,
+            enabled,
+            url
+        },
+        handleEdit,
+        handleDelete,
+        handleDuplicate
+    } = props;
+
+    return (
+        <div 
+            className="p-4 border rounded shadow-sm flex flex-col justify-between"
+        >
+            <div className={mergeClasses(
+                "flex flex-col text-gray-300",
+                "relative",
+                "p-3",
+                "flex-grow"
+            )}>
+                <div className="font-bold text-xl text-golden">{name}{enabled ? "" : " (Masqué)"}</div>
+                <div className="text-sm italic mb-2">{role}</div>
+                <div className="">{projects}</div>
+                <div className={mergeClasses(
+                    "w-16 h-16 rounded-sm",
+                    "bg-contain bg-center bg-no-repeat",
+                    "bg-gray-500",
+                )} style={{
+                    backgroundImage: backgroundUrl(image.url)
+                }}/>
+                {url !== "" && <TextLink href={url} className="mt-2" target="_blank">
+                    Visiter le lien
+                </TextLink>}
+            </div>
+
+            <div className="flex flex-row mt-4 space-x-2">
+                <EcorcesButton onClick={handleEdit}>Modifier</EcorcesButton>
+                <EcorcesButton onClick={handleDelete}>Supprimer</EcorcesButton>
+                <EcorcesButton onClick={handleDuplicate}>Dupliquer</EcorcesButton>
+            </div>
+        </div>
+    );
+}
+
+export default EcorcesPartenaireManager;

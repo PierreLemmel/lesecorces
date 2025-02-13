@@ -500,6 +500,8 @@ const MembreCard = (props: MembreCardProps) => {
 	);
 };
 
-export default () => <EcorcesSuspense>
+const ExportedMembresManager = () => <EcorcesSuspense>
 	<MembresManager />
 </EcorcesSuspense>;
+
+export default ExportedMembresManager;

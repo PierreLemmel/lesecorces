@@ -340,6 +340,8 @@ const OffreCard = (props: BlockCardProps) => {
     </div>
 }
 
-export default () => <EcorcesSuspense>
+const ExportedBlocksManager = () => <EcorcesSuspense>
     <BlocksManager />
 </EcorcesSuspense>;
+
+export default ExportedBlocksManager;

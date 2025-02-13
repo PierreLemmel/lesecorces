@@ -18,7 +18,5 @@ export default function EcorcesLayout(props: EcorcesLayoutProps) {
 		<MainMenu />
 		
 		{children}
-
-		<Footer />
 	</body>
 }

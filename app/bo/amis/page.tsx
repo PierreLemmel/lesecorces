@@ -428,6 +428,8 @@ const AmiCard = (props: AmiCardProps) => {
 	);
 };
 
-export default () => <EcorcesSuspense>
+const ExportedAmisManager = () => <EcorcesSuspense>
 	<AmisManager />
 </EcorcesSuspense>;
+
+export default ExportedAmisManager;
