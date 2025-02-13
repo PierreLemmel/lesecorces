@@ -3,7 +3,10 @@ import { verifyThatSessionCookieIsAdmin } from "../../../../server/admin";
 
 export async function POST(req: Request) {
     try {
+        console.log("pre req.json()");
+        console.log(req);
         const body = await req.json();
+        console.log(body)
         const { sessionCookie } = body;
     
         if (!sessionCookie) {
