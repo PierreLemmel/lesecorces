@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 
  
 export async function middleware(req: NextRequest) {
-
+console.log(req)
     if (req.nextUrl.pathname.startsWith("/bo")) {
         const pathChunks = req.nextUrl.pathname
             .split("/")
@@ -13,6 +13,7 @@ export async function middleware(req: NextRequest) {
 
             const sessionCookie = req.cookies.get("session");
 console.log("sessionCookie", sessionCookie);
+
             if (sessionCookie) {
 
                 const result = await fetch(req.nextUrl.origin + "/api/session/validate", {
@@ -25,7 +26,7 @@ console.log("sessionCookie", sessionCookie);
 
                 console.log(5)
 console.log(result);
-console.log(readBody(result.body!))
+console.log(await readBody(result.body!))
 
 
                 if (result.status === 200) {
