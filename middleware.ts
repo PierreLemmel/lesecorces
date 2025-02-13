@@ -16,7 +16,7 @@ console.log("sessionCookie", sessionCookie);
 
             if (sessionCookie) {
 
-                const result = await fetch(req.nextUrl.origin + "/api/session/validate", {
+                const result = await fetch(req.nextUrl.origin + "/session/validate", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
