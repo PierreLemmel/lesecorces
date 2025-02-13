@@ -5,16 +5,17 @@ import type { NextRequest } from 'next/server'
 export async function middleware(req: NextRequest) {
 console.log(1)
     if (req.nextUrl.pathname.startsWith("/bo")) {
-        console.log(2)
         const pathChunks = req.nextUrl.pathname
             .split("/")
             .filter(c => c !== "");
-console.log("pathChunks", pathChunks);
+
         if (!(pathChunks.length >= 2 && pathChunks[1] === "login")) {
             console.log(3)
             const sessionCookie = req.cookies.get("session");
 console.log("sessionCookie", sessionCookie);
             if (sessionCookie) {
+                console.log(4)
+
                 const result = await fetch(req.nextUrl.origin + "/api/session/validate", {
                     method: "POST",
                     headers: {
@@ -23,6 +24,8 @@ console.log("sessionCookie", sessionCookie);
                     body: JSON.stringify({ sessionCookie: sessionCookie.value }),
                 })
 
+                console.log(5)
+console.log(result);
                 if (result.status === 200) {
                     const { isAdmin } = await result.json();
                     if (isAdmin) {
