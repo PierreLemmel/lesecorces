@@ -12,7 +12,6 @@ export async function middleware(req: NextRequest) {
         if (!(pathChunks.length >= 2 && pathChunks[1] === "login")) {
 
             const sessionCookie = req.cookies.get("session");
-console.log("sessionCookie", sessionCookie);
 
             if (sessionCookie) {
 
@@ -24,10 +23,6 @@ console.log("sessionCookie", sessionCookie);
                     body: JSON.stringify({ sessionCookie: sessionCookie.value }),
                 })
 
-                console.log(5)
-console.log(result);
-
-
                 if (result.status === 200) {
                     const { isAdmin } = await result.json();
                     if (isAdmin) {
@@ -38,7 +33,7 @@ console.log(result);
                     console.log("Failed to authenticate session cookie:", result.status, await result.json());
                 }
             }
-console.log("out");
+
             const redirectUrl = req.nextUrl.clone();
             redirectUrl.pathname = "/bo/login";
             redirectUrl.searchParams.set("redirect", req.nextUrl.pathname);
