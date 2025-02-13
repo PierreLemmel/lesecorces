@@ -1,8 +1,7 @@
 import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getStorage } from "firebase-admin/storage";
-import { EcorcesCropArea, EcorcesImage } from "../server/server";
-import { SaveOptions } from "@google-cloud/storage";
+import { EcorcesCropArea } from "../server/server";
 import { cropImage } from "../server/images";
 
 
