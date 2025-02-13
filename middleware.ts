@@ -25,7 +25,9 @@ console.log("sessionCookie", sessionCookie);
 
                 console.log(5)
 console.log(result);
-console.log(result.body)
+console.log(readBody(result.body!))
+
+
                 if (result.status === 200) {
                     const { isAdmin } = await result.json();
                     if (isAdmin) {
@@ -59,3 +61,26 @@ export const config = {
         '/((?!_next/static|img|fonts|videos|api|redirect|favicon.ico).*)'
     ],
 }
+
+async function readBody(stream: ReadableStream) {
+    const reader = stream.getReader();
+    let result = '';
+  
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+  
+        if (done) {
+          break; // Stream is finished
+        }
+  
+        // Assuming the stream contains text data encoded as UTF-8
+        const chunk = new TextDecoder().decode(value);
+        result += chunk;
+      }
+    } finally {
+      reader.releaseLock(); // Release the lock when done
+    }
+  
+    return result;
+  }
