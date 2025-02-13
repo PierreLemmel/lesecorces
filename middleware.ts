@@ -16,7 +16,7 @@ console.log("sessionCookie", sessionCookie);
 
             if (sessionCookie) {
 
-                const result = await fetch(req.nextUrl.origin + "/session/validate", {
+                const result = await fetch(req.nextUrl.origin + "api/session/validate", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -26,7 +26,6 @@ console.log("sessionCookie", sessionCookie);
 
                 console.log(5)
 console.log(result);
-console.log(await readBody(result.body!))
 
 
                 if (result.status === 200) {
@@ -46,14 +45,14 @@ console.log("out");
             return NextResponse.redirect(redirectUrl);
         }
     }
-console.log(66)
+
     const maintenance = process.env.MAINTENANCE === 'true';
     if (maintenance) {
         const rewriteUrl = req.nextUrl.clone();
         rewriteUrl.pathname = '/maintenance';
         return NextResponse.rewrite(rewriteUrl);
     }
-console.log(100)
+
     return NextResponse.next()
 }
 

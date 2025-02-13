@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { verifyThatSessionCookieIsAdmin } from "../../../server/admin";
-import { verifySessionCookie } from "../../../lib/firebase-server";
+import { verifyThatSessionCookieIsAdmin } from "../../../../server/admin";
+import { verifySessionCookie } from "../../../../lib/firebase-server";
 
 export async function POST(req: Request) {
     try {
@@ -10,14 +10,13 @@ export async function POST(req: Request) {
         if (!sessionCookie) {
             return NextResponse.json({ error: "Session cookie is missing" }, { status: 400 });
         }
-    
+    console.log(body)
         const isAdmin = await verifyThatSessionCookieIsAdmin(sessionCookie);
 
         if (isAdmin) {
             return NextResponse.json({ isAdmin });
         } else {
             return NextResponse.json({ error: "Unauthorized",
-                debug: await verifySessionCookie(sessionCookie)
             }, { status: 401 });
         }
     } catch (error) {
