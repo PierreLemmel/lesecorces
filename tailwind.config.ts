@@ -1,4 +1,14 @@
 import type { Config } from 'tailwindcss'
+import { ecorcesColor } from './components/ui/ecorces-ui'
+
+const {
+  golden,
+  golden2,
+  flower,
+  water,
+  trunk,
+  leaves,
+} = ecorcesColor
 
 const config: Config = {
   content: [
@@ -12,12 +22,12 @@ const config: Config = {
         'red-hat-display': ['RedHatDisplay', 'sans-serif'],
       },
       colors: {
-        golden: '#F3BC77',
-        golden2: '#FA5B17',
-        flower: '#150808',
-        water: '#081215',
-        trunk: '#151108',
-        leaves: '#0C1508'
+        golden,
+        golden2,
+        flower,
+        water,
+        trunk,
+        leaves,
       },
     },
   },

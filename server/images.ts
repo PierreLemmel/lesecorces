@@ -13,10 +13,10 @@ export async function cropImage(buffer: Buffer, cropArea: EcorcesCropArea) {
     const s = sharp(buffer);
 
     const croppedBuffer = await s.extract({
-            left,
-            top,
-            width,
-            height
+            left: Math.round(left),
+            top: Math.round(top),
+            width: Math.round(width),
+            height: Math.round(height)
         })
         .toBuffer()
 

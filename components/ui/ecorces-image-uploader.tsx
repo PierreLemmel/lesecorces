@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import Cropper, { Area, Point } from "react-easy-crop";
 import { mergeClasses, timeStampString } from "../../lib/utils";
-import { baseUiInputClasses, getButtonClasses, getImageData } from "./ecorces-ui";
+import { backgroundUrl, baseUiInputClasses, getButtonClasses, getImageData } from "./ecorces-ui";
 import EcorcesButton from "./ecorces-button";
 import LoadingSpinner from "./loading-spinner";
 import { pathCombine } from "../../lib/files";
@@ -157,6 +157,7 @@ const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
 
 	if (loading) {
 		return <div className={mergeClasses(
+			"min-w-96",
 			baseUiInputClasses,
 			"flex flex-col items-center h-48",
 			className
@@ -168,6 +169,7 @@ const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
 	if (imageSrc && isCropping) {
 
 		return <div className={mergeClasses(
+			"min-w-96",
 			baseUiInputClasses,
 			"flex flex-col items-center",
 			className
@@ -198,16 +200,19 @@ const EcorcesImageUploader = (props: EcorcesImageUploaderProps) => {
 	if (imageSrc) {
 
 		return <div className={mergeClasses(
+			"min-w-96",
 			baseUiInputClasses,
 			"flex flex-col items-center",
 			className
 		)}>
 			<div className="w-full flex flex-col items-center gap-3 p-2" >
-				<img
-					className="max-w-[75%] rounded-md"
-					src={croppedPreview ?? ""}
-					alt="Cropped Image"
-				/>
+				<div className={mergeClasses(
+					"w-3/4 rounded-md h-64",
+					"bg-center bg-contain bg-no-repeat",
+				)} style={{
+					backgroundImage: backgroundUrl(croppedPreview ?? "")
+				}}/>
+
 				<div className="flex flex-row gap-2">
 					{hasCropping && <EcorcesButton onClick={onCropPreviewEdit}>
 						Modifier

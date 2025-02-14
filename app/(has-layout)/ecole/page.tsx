@@ -271,7 +271,7 @@ const EcoleInfoGrid = (props: EcoleInfoProps) => {
     ]
 
     return <div className={mergeClasses(
-        "grid grid-cols-[auto_auto_auto] grid-cols columns-",
+        "grid grid-cols-[auto_auto_auto] grid-cols",
         "font-semibold",
         "p-4 gap-x-6 gap-y-2"
     )}>

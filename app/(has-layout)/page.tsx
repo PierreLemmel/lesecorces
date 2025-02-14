@@ -176,7 +176,7 @@ const EspaceProBlock = () => <div className={mergeClasses(
 	"flex flex-col items-stretch",
 	"gap-1 mt-8",
 	"bg-no-repeat bg-[size:auto_200%] bg-[position:100%_20%]"
-)}  style={{
+)} style={{
 	backgroundImage: "url(/img/misc/homepage-pro-bg.png)"
 }}>
 	<div className="heading-1 text-golden text-center">

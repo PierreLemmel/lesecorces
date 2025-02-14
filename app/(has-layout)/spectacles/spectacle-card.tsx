@@ -2,55 +2,62 @@
 
 import { motion } from "framer-motion";
 import { mergeClasses, sequence } from "../../../lib/utils";
-import { EcorcesMembre } from "../../../server/membres";
+import { EcorcesSpectacle } from "../../../server/spectacles";
 import { useState } from "react";
 import { EcorcesIcon, EcorcesIconProps } from "../../../components/ui/icon";
-import { faFacebook, faInstagram, faSoundcloud } from "@fortawesome/free-brands-svg-icons";
 import { faChevronLeft, faChevronRight, faCircle, faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { TextButton } from "../../../components/ui/text-button";
-import IconSvg from "../../../components/ui/icon-svg";
-import Link from "next/link";
-import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-ui";
+import { backgroundUrl, croppedImageUrl, ecorcesColor } from "../../../components/ui/ecorces-ui";
 
-export type MembreCardProps = {
-    membre: EcorcesMembre
+export type SpectacleCardProps = {
+    spectacle: EcorcesSpectacle
 }
 
-export const MembreCard = (props: MembreCardProps) => {
+export const SpectacleCard = (props: SpectacleCardProps) => {
     const {
-        membre: {
+        spectacle: {
             name,
-            role,
+            ficheTechnique: {
+                creation,
+                duree,
+                artistes,
+                genres
+            },
             description: {
-                shortBio,
                 paragraph1,
                 paragraph2,
                 paragraph3,
             },
+            affiche,
+            teaser,
             socials: {
-                facebook,
-                instagram,
-                website,
-                soundcloud
+                billetreduc
             },
-            profilePicture,
             gallery
         }
     } = props;
 
+    const ficheElements: [string, string, number][] = [
+        ["Création", creation, 1],
+        ["Durée", duree, 1],
+        ["Artistes", artistes, 1],
+        ["Genres", genres, 3],
+    ]
+
     const [folded, setFolded] = useState(true);
 
-    const croppedUrl = croppedImageUrl(profilePicture.url, profilePicture.cropArea);
+    const croppedUrl = croppedImageUrl(affiche.url, affiche.cropArea);
 
     return <div className={mergeClasses(
         "flex flex-col items-stretch z-20",
-        "border-b border-golden",
-        "px-2",
+        "border-t border-golden",
+        "pt-6",
         "overflow-hidden",
         "relative"
     )}>
         <div className={mergeClasses(
-            "absolute top-0 left-2 right-2",
+            "absolute left-2 right-2",
+            "top-6",
             "flex flex-col items-center",
             "aspect-square",
             "overflow-hidden",
@@ -58,8 +65,15 @@ export const MembreCard = (props: MembreCardProps) => {
         )} onClick={
             () => setFolded(!folded)
         }>
-            <div className="text-white text-2xl uppercase mt-1">{name}</div>
-            <div className="text-white text-lg">{role}</div>
+            <motion.div className={mergeClasses(
+                "text-2xl uppercase text-center font-bold mt-1",
+            )} animate={{
+                color: folded ? "#FFFFFF" : ecorcesColor.golden
+            }} transition={{
+                delay: folded ? 0 : 0.45
+            }}>
+                {name}
+            </motion.div>
 
             <motion.div className={mergeClasses(
                 "text-transparent bg-clip-text",
@@ -72,7 +86,7 @@ export const MembreCard = (props: MembreCardProps) => {
             }} transition={{
                 delay: folded ? 0.52 : 0
             }}>
-                {shortBio}
+                {paragraph1}
             </motion.div>
         </div>
         
@@ -80,60 +94,33 @@ export const MembreCard = (props: MembreCardProps) => {
                 "-z-10",
                 "bg-water",
             )}  animate={{
-                transform: folded ? "translateY(0)" : "translateY(4rem)"
+                transform: folded ? "translateY(0)" : "translateY(4.7rem)"
             }} transition={{
                 duration: 0.4,
                 delay: folded ? 0 : 0.52
             }}
             
         >
-            <div className={mergeClasses(
+            <motion.div className={mergeClasses(
                 "aspect-square",
                 "bg-cover bg-right bg-no-repeat bg-blend-multiply mix-blend-lighten",
-            )} style={{
+                "transition-all"
+            )} animate={{
                 backgroundImage: [
-                    "linear-gradient(to left, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 1) 100%)",
+                    folded ? 
+                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.8) 90%, rgba(0, 0, 0, 1) 100%)" :
+                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.0) 0%, rgba(0, 0, 0, 0.0) 50%, rgba(0, 0, 0, 0.0) 90%, rgba(0, 0, 0, 0.0) 100%)",
                     backgroundUrl(croppedUrl)
                 ].join(", ")
             }} >
 
-            </div>
+            </motion.div>
 
-            <div className={mergeClasses(
-                "flex flex-row items-center justify-center",
-                "my-6 gap-4"
-            )}>
-                {instagram && <Link href={instagram} target="_blank">
-                    <EcorcesIcon icon={faInstagram} className={mergeClasses(
-                        "text-3xl",
-                        "hover:scale-105"
-                    )} />
-                </Link>}
-                {facebook && <Link href={facebook} target="_blank">
-                    <EcorcesIcon icon={faFacebook} className={mergeClasses(
-                        "text-3xl",
-                        "hover:scale-105"
-                    )} />
-                </Link>}
-                {soundcloud && <Link href={soundcloud} target="_blank">
-                    <EcorcesIcon icon={faSoundcloud} className={mergeClasses(
-                        "text-3xl",
-                        "hover:scale-105"
-                    )} />
-                </Link>}
-                {website && <Link href={website} target="_blank">
-                    <EcorcesIcon icon={faGlobe} className={mergeClasses(
-                        "text-3xl",
-                        "hover:scale-105"
-                    )} />
-                </Link>}
-            </div>
-     
             <div className="overflow-hidden">
                 <motion.div
                     className={mergeClasses(
                         "flex flex-col w-full items-stretch",
-                        "gap-6",
+                        "gap-6 pt-8 px-2",
                         folded && "overflow-hidden"
                     )}
                     animate={{
@@ -152,39 +139,35 @@ export const MembreCard = (props: MembreCardProps) => {
                         Replier la fiche
                     </TextButton>
 
-                    <div className="text-white">
-                        {shortBio}
-                    </div>
-
                     <div className={mergeClasses(
-                        "flex flex-row",
-                        "gap-3"
+                        "flex flex-col items-stretch",
+                        "mt-4"
                     )}>
-                        <IconSvg className="w-6 pt-2" />
-                        <div className="text-white">
-                            {paragraph1}
+                        <div className="text-2xl font-bold">Fiche technique</div>
+
+                        <div className={mergeClasses(
+                            "grid",
+                            "grid-cols-[auto_auto_auto]",
+                            "font-semibold",
+                            "p-4 gap-x-6 gap-y-2"
+                        )}>
+                            {ficheElements.map(([label, value, colSpan]) => {
+                                return <div
+                                    key={label} className="flex flex-col"
+                                    style={{
+                                        gridColumn: `span ${colSpan}`,
+                                    }}
+                                >
+                                    <div className="text-golden/40">{label}</div>
+                                    <div className="font-semibold">{value}</div>
+                                </div>
+                            })}
                         </div>
                     </div>
 
-                    <div className={mergeClasses(
-                        "flex flex-row",
-                        "gap-3"
-                    )}>
-                        <IconSvg className="w-6 pt-2" />
-                        <div className="text-white">
-                            {paragraph2}
-                        </div>
-                    </div>
-
-                    <div className={mergeClasses(
-                        "flex flex-row",
-                        "gap-3"
-                    )}>
-                        <IconSvg className="w-6 pt-2" />
-                        <div className="text-white">
-                            {paragraph3}
-                        </div>
-                    </div>
+                    <div className="text-white">{paragraph1}</div>
+                    <div className="text-white">{paragraph2}</div>
+                    <div className="text-white">{paragraph3}</div>
 
                     <Gallery gallery={gallery} />
 
@@ -203,11 +186,11 @@ export const MembreCard = (props: MembreCardProps) => {
     </div>
 }
 
-type GelleryProps = {
-    gallery: EcorcesMembre["gallery"]
+type GalleryProps = {
+    gallery: EcorcesSpectacle["gallery"]
 }
 
-const Gallery = (props: GelleryProps) => {
+const Gallery = (props: GalleryProps) => {
     const {
         gallery
     } = props;
@@ -215,7 +198,7 @@ const Gallery = (props: GelleryProps) => {
     const [index, setIndex] = useState(0);
 
     return <div className={mergeClasses(
-        "w-screen h-[calc(min(82vw,82vh))]",
+        "w-screen h-[calc(0.75*min(82vw,82vh))]",
         "relative",
         "-left-2"
     )}>
@@ -231,12 +214,15 @@ const Gallery = (props: GelleryProps) => {
             damping: 20
         }}>
             {gallery.map((img, idx) => {
+
+                const croppedUrl = croppedImageUrl(img.url, img.cropArea);
+
                 return <div key={idx} className={mergeClasses(
-                    "aspect-square h-full",
+                    "h-full aspect-[4/3]",
                     "bg-cover bg-center bg-no-repeat",
                     "cursor-pointer"
                 )} style={{
-                    backgroundImage: `url(${img.url})`
+                    backgroundImage: backgroundUrl(croppedUrl)
                 }}>
                 </div>
             })}
@@ -267,7 +253,7 @@ const Gallery = (props: GelleryProps) => {
                     i === index ? "text-white" : "text-white/20"
                 )}
             >
-                <EcorcesIcon icon={faCircle} className="text-[0.68rem]" />
+                <EcorcesIcon icon={faCircle} className="text-[0.60rem]" />
             </div>)}
         </div>
     </div>

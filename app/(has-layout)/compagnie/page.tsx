@@ -335,7 +335,10 @@ const ContactBlock = async () => {
         "flex flex-col items-center",
         "px-6 pt-8 mt-4",
         "border-t border-golden",
-    )}>
+        "bg-no-repeat bg-[size:auto_130%] bg-[position:100%_20%]"
+    )} style={{
+        backgroundImage: "url(/img/misc/homepage-pro-bg.png)"
+    }}>
         <div className="text-center heading-1">Contact</div>
         <div className="text-center heading-2 text-white">Selon si vous êtes...</div>
 

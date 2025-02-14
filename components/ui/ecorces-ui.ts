@@ -6,7 +6,13 @@ export const uiBreakPoints = {
     md: 768,
 } as const;
 
-export const croppedImageUrl = (url: string, cropArea: Area) => url + "?crop=" + encodeURIComponent(JSON.stringify(cropArea));
+const roundArea = (area: Area): Area => ({
+    x: Math.round(area.x),
+    y: Math.round(area.y),
+    width: Math.round(area.width),
+    height: Math.round(area.height)
+});
+export const croppedImageUrl = (url: string, cropArea: Area) => url + "?crop=" + encodeURIComponent(JSON.stringify(roundArea(cropArea)));
 
 export const backgroundUrl = (url: string) => `url(${url})`;
 
@@ -81,3 +87,12 @@ export function cardDateFormat(date: Timestamp, endDate?: Timestamp) {
 }
 
 export const loremIpsumMedium = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+export const ecorcesColor = {
+    golden: '#F3BC77',
+    golden2: '#FA5B17',
+    flower: '#150808',
+    water: '#081215',
+    trunk: '#151108',
+    leaves: '#0C1508'
+} as const;

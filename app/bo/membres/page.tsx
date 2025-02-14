@@ -418,7 +418,7 @@ const MembresEdition = (props: MembresEditionProps) => {
 						/>
 					</div>
 					<div>
-						<EcorcesLabel>Profile Picture</EcorcesLabel>
+						<EcorcesLabel>Photo de profil</EcorcesLabel>
 						<EcorcesImageUploader
 							onUpload={(file) => handleChange("profilePicture", file)}
 							file={form.profilePicture}
