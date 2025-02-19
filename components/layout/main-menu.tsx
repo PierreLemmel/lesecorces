@@ -111,6 +111,9 @@ const MainMenu_Small = () => {
                 className={mergeClasses(
                     "pr-3"
                 )}
+                initial={{
+                    transform: "translateY(-100%)",
+                }}
                 animate={{
                     transform: isOpen ? "translateY(0)" : "translateY(-100%)",
                 }}

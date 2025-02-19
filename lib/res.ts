@@ -14,5 +14,6 @@ export const siteMakers = {
     loupLacaille: "https://www.instagram.com/l.lacaille.design/",
     pierreLemmel: "https://www.instagram.com/p_lemmel/",
     christianDeHericourt: "https://www.instagram.com/theatredansechrisdeher/",
-    janisAroling: "https://www.instagram.com/janisaroling_photographe/"
+    janisAroling: "https://www.instagram.com/janisaroling_photographe/",
+    laureDegroote: "https://www.instagram.com/laure.dgrt/",
 } as const;

@@ -8,6 +8,7 @@ const {
   water,
   trunk,
   leaves,
+  bark,
 } = ecorcesColor
 
 const config: Config = {
@@ -28,6 +29,7 @@ const config: Config = {
         water,
         trunk,
         leaves,
+        bark
       },
     },
   },

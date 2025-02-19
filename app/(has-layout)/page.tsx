@@ -59,7 +59,7 @@ const ActivitesBlock = async () => {
             }
         </div>
         
-        <div><TextLink href="/activites" className="underline">Tout voir</TextLink></div>
+        <div><TextLink href="/actualites" className="underline">Tout voir</TextLink></div>
     </div>
 }
 

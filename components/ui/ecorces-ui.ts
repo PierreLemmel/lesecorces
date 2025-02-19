@@ -94,5 +94,6 @@ export const ecorcesColor = {
     flower: '#150808',
     water: '#081215',
     trunk: '#151108',
-    leaves: '#0C1508'
+    leaves: '#0C1508',
+    bark: '#0A0A0A'
 } as const;

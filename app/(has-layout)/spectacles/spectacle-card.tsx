@@ -45,6 +45,7 @@ export const SpectacleCard = (props: SpectacleCardProps) => {
     ]
 
     const [folded, setFolded] = useState(true);
+    console.log(teaser)
 
     const croppedUrl = croppedImageUrl(affiche.url, affiche.cropArea);
 
@@ -123,6 +124,7 @@ export const SpectacleCard = (props: SpectacleCardProps) => {
                         "gap-6 pt-8 px-2",
                         folded && "overflow-hidden"
                     )}
+                    initial={{ height: "0" }}
                     animate={{
                         translateY: folded ? "-100%" : "0%",
                         height: folded ? "0" : "auto"
@@ -165,6 +167,14 @@ export const SpectacleCard = (props: SpectacleCardProps) => {
                         </div>
                     </div>
 
+                    {teaser && <iframe
+                        className="w-full aspect-[4/3]"
+                        src={teaser}
+                        title="Teaser"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen={true}
+                    />}
+                    
                     <div className="text-white">{paragraph1}</div>
                     <div className="text-white">{paragraph2}</div>
                     <div className="text-white">{paragraph3}</div>

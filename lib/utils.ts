@@ -97,3 +97,7 @@ export function sequence(count: number, start?: number) {
     const startIndex = start ?? 0;
     return Array(count).fill(0).map((_, i) => startIndex + i);
 }
+
+export function isNullOrEmpty(s: string|null|undefined) {
+    return s === null || s === undefined || s === ""
+}

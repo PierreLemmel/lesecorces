@@ -1,11 +1,13 @@
 import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 import { Footer } from "../../../components/layout/footer";
 import { EcorcesIcon } from "../../../components/ui/icon";
-import { mergeClasses } from "../../../lib/utils";
+import { isNullOrEmpty, mergeClasses, sequence } from "../../../lib/utils";
 import { getBlockContent } from "../../../server/server";
 import { TextLink } from "../../../components/ui/text-link";
 import { EcorcesSpectacle, getSpectacle, getSpectacleIndex } from "../../../server/spectacles";
 import { SpectacleCard } from "./spectacle-card";
+import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-ui";
+import Link from "next/link";
 
 const ShowsPage = async () => {
 
@@ -139,6 +141,54 @@ const BilletReducBlock = async (props: WithSpectaclesProps) => {
             backgroundImage: "url('/img/misc/billet-reduc.png')"
         }}></div>
         <div className="text-right mt-1 text-golden/70">{br}</div>
+        <div className={mergeClasses(
+            "w-full",
+            "grid",
+            "grid-cols-[auto_auto] md:grid-cols-[auto_auto_auto]",
+            "gap-x-3 gap-y-3"
+        )} style={{
+            direction: "rtl"
+        }}>
+            {spectacles
+                .filter(s => !isNullOrEmpty(s.socials.billetreduc))
+                .map((spectacle, index) => {
+
+                const {
+                    name,
+                    socials: {
+                        billetreduc
+                    },
+                    affiche: {
+                        url,
+                        cropArea
+                    }
+                } = spectacle
+
+                const croppedUrl = croppedImageUrl(url, cropArea);
+
+                return <Link
+                    key={`BR-${index}`}
+                    href={billetreduc ?? ""}
+                    target="_blank"
+                >
+                    <div key={`BilletReduc-${index}`} className={mergeClasses(
+                        "relative",
+                        "aspect-square w-full",
+                        "bg-center bg-no-repeat bg-cover"
+                    )} style={{
+                        backgroundImage: backgroundUrl(croppedUrl)
+                    }}>
+                        <div className={mergeClasses(
+                            "absolute",
+                            "bottom-1 left-1",
+                            "text-white"
+                        )}>
+                            {name}
+                        </div>
+                    </div>
+                </Link>;
+            })}
+        </div>
     </div>
 }
 

@@ -81,5 +81,5 @@ const MentionsLegales = () => <div className={mergeClasses(
     <TextLink href="/mentions-legales" emphasis={false} className="text-sm">Mentions légales</TextLink>
     <div className="italic opacity-70 text-xs">Site désigné dans la joie par <Link href={siteMakers.loupLacaille}>Loup Lacaille</Link>...</div>
     <div className="italic opacity-70 text-xs">... et développé dans la bonne humeur par <Link href={siteMakers.pierreLemmel}>Pierre Lemmel</Link>.</div>
-    <div className="italic opacity-70 text-xs">Crédits photo <Link href={siteMakers.janisAroling}>Janis Aroling</Link> et <Link href={siteMakers.christianDeHericourt}>Christian De Héricourt</Link></div>
+    <div className="italic opacity-70 text-xs">Crédits photo <Link href={siteMakers.janisAroling}>Janis Aroling</Link>, <Link href={siteMakers.laureDegroote}>Laure Degroote</Link> et <Link href={siteMakers.christianDeHericourt}>Christian De Héricourt</Link></div>
 </div>
