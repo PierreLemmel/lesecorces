@@ -30,12 +30,22 @@ const HeaderBlock = async () => {
     const headerContent = await getBlockContent("ESPACE_PRO_HEADER");
 
     return <div className={mergeClasses(
-        "flex flex-col items-stretch",
-        "px-2 pt-[4.2rem] pb-2",
+        "flex items-stretch",
+        "flex-col justify-between",
+        "md:flex-row",
+        "pt-[4.2rem] pb-2 md:pb-4 lg:pb-6",
+        "px-2 sm:px-6 md:px-12"
     )}>
-        <div className="text-white">Espace Pro</div>
-        <div className="uppercase font-semibold">{headerContent}</div>
-        <EcorcesIcon icon={faArrowTurnDown} className="mt-4 text-2xl" />
+        <div className={mergeClasses(
+            "flex flex-col items-stretch",
+        )}>
+            <div className="text-white">Espace Pro</div>
+            <div className="uppercase font-semibold">{headerContent}</div>
+        </div>
+        <EcorcesIcon icon={faArrowTurnDown} className={mergeClasses(
+            "text-2xl md:text-3xl",
+            "mt-4 mr-6",
+        )} />
     </div>
 }
 
@@ -150,7 +160,7 @@ const DocumentsBlock = async () => {
 }
 
 
-export const ServicesBlock = async () => {
+const ServicesBlock = async () => {
 
     const [
         services,

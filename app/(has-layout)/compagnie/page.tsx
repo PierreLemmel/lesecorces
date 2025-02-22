@@ -6,7 +6,7 @@ import { TextLink } from "../../../components/ui/text-link";
 import { ActiviteCard } from "../../../components/parts/activite-card";
 import { EcorcesPartenaire, getAmi, getMembre, getPartenaires } from "../../../server/membres";
 import { MembreCard } from "./membre-card";
-import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-ui";
+import { backgroundUrl, croppedImageUrl, layoutClasses } from "../../../components/ui/ecorces-ui";
 import { faInstagram, faFacebook, faSoundcloud } from "@fortawesome/free-brands-svg-icons";
 import Link from "next/link";
 import { Footer } from "../../../components/layout/footer";
@@ -40,12 +40,22 @@ const HeaderBlock = async () => {
     const headerContent = await getBlockContent("COMPAGNIE_HEADER");
 
     return <div className={mergeClasses(
-        "flex flex-col items-stretch",
-        "px-2 pt-[4.2rem] pb-8",
+        "flex items-stretch",
+        "flex-col justify-between",
+        "md:flex-row",
+        "pt-[4.2rem] pb-2 md:pb-4 lg:pb-6",
+        layoutClasses.mainColumnPadding
     )}>
-        <div className="text-white">Compagnie</div>
-        <div className="uppercase font-semibold">{headerContent}</div>
-        <EcorcesIcon icon={faArrowTurnDown} className="mt-4 text-2xl" />
+        <div className={mergeClasses(
+            "flex flex-col items-stretch",
+        )}>
+            <div className="text-white">Compagnie</div>
+            <div className="uppercase font-semibold">{headerContent}</div>
+        </div>
+        <EcorcesIcon icon={faArrowTurnDown} className={mergeClasses(
+            "text-2xl md:text-3xl",
+            "mt-4 mr-6",
+        )} />
     </div>
 }
 
@@ -112,7 +122,10 @@ const ActualitesBlock = async () => {
         <div className="heading-1">Nos actualités</div>
         
         <div className={mergeClasses(
-            "flex flex-col items-stretch w-full",
+            "w-full",
+            "grid",
+            "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+            "gap-2",
             "gap-2 px-3 mb-4 mt-2",
         )}>
             {
