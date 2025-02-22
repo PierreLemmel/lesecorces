@@ -117,7 +117,7 @@ const ContactCard = (props: ContactCardProps) => {
     )
 }
 
-export const DocumentsBlock = async () => {
+const DocumentsBlock = async () => {
 
     const [
         espaceProDiffusion,

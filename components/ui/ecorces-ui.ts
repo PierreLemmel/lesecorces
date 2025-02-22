@@ -124,3 +124,7 @@ export const ecorcesColor = {
     leaves: '#0C1508',
     bark: '#0A0A0A'
 } as const;
+
+export const layoutClasses = {
+    mainColumnPadding: "px-2 sm:px-6 md:px-12",
+} as const;

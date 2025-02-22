@@ -259,7 +259,10 @@ const SpectacleCard_Large = (props: SpectacleCardProps) => {
                 "flex flex-col items-stretch justify-between",
             )}>
                 <motion.div
-                    className="text-white text-7xl uppercase font-bold"
+                    className={mergeClasses(
+                        "text-white uppercase font-bold",
+                        "text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl"
+                    )}
                     animate={{
                         width: folded ? "100%" : "200%"
                     }}

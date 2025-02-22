@@ -6,7 +6,7 @@ import { getBlockContent } from "../../../server/server";
 import { TextLink } from "../../../components/ui/text-link";
 import { EcorcesSpectacle, getSpectacle, getSpectacleIndex } from "../../../server/spectacles";
 import { SpectacleCard } from "./spectacle-card";
-import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-ui";
+import { backgroundUrl, croppedImageUrl, layoutClasses } from "../../../components/ui/ecorces-ui";
 import Link from "next/link";
 import MainMenu from "../../../components/layout/main-menu";
 
@@ -83,10 +83,12 @@ const QuiNousSommesBlock = async () => {
 
     return <div className={mergeClasses(
         "flex flex-col items-center justify-center",
-        "aspect-square min-h-[calc(100vh,100vw)] min-w-[calc(100vh,100vw)]",
+        "aspect-square sm:aspect-[4/3] md:aspect-[16/9] lg:aspect-[22/9] xl:aspect-[36/10]",
+        "bg-center sm:bg-[50%_15%] md:bg-[50%_19%] lg:bg-[50%_10%] xl:bg-[50%_8%]",
+        "w-full",
         "border-t border-golden",
-        "bg-cover bg-center bg-no-repeat",
-        "bg-blend-multiply bg-gradient-to-b from-black/50 via-black/50 to-black/10",
+        "bg-cover bg-no-repeat",
+        "bg-blend-multiply",
         "px-5"
     )} style={{
         backgroundImage: [
@@ -111,29 +113,40 @@ const ProBlock = async () => {
     ])
 
     return <div className={mergeClasses(
-        "flex flex-col items-center",
+        "flex items-center",
+        "flex-col lg:flex-row",
+        "justify-center lg:justify-around",
         "px-2 pt-10",
         "border-t border-golden",
-    )}>
+        "aspect-square sm:aspect-[4/3] md:aspect-[16/9] lg:aspect-[22/9] xl:aspect-[36/10]",
+        "bg-[21%_40%] sm:bg-[50%_50%] md:bg-[50%_50%] lg:bg-[50%_50%] xl:bg-[50%_39%]",
+        "border-t border-golden",
+        "bg-cover bg-no-repeat",
+        "bg-blend-multiply",
+    )} style={{
+        backgroundImage:[
+            "url('/img/qacda/qacda-05.jpeg')",
+            "linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 40%, rgba(0, 0, 0, 0.8) 90%, rgba(0, 0, 0, 0.92) 100%)",
+        ].join(", ")
+    }}>
         <div className={mergeClasses(
-            "h-36 w-full",
+            "size-[5.4rem] sm:size-[7rem] md:size-[8rem] lg:size-[12.5rem]",
             "bg-contain bg-center bg-no-repeat",
             "relative",
             "mb-8",
-        )} style={{
-            backgroundImage: "url('/img/misc/old-logo-white.png')"
-        }}>
-            <div className={mergeClasses(
-                "absolute inset-0",
-                "bg-golden mix-blend-multiply"
-            )}/>
-        </div>
-        <div className="w-full text-2xl uppercase font-semibold text-center">{pro01}</div>
-        <div className="w-full text-lg text-center text-white font-semibold">{pro02}</div>
+            "bg-[url('/img/misc/old-logo-golden.png')]"
+        )} />
+        
+        <div className={mergeClasses(
+            "flex flex-col items-center"
+        )}>
+            <div className="w-full text-2xl uppercase font-semibold text-center">{pro01}</div>
+            <div className="w-full text-lg text-center text-white font-semibold">{pro02}</div>
 
-        <TextLink href="/espace-pro" className="mt-6 mb-14">
-            Espace professionnels
-        </TextLink>
+            <TextLink href="/espace-pro" className="mt-6 mb-14">
+                Espace professionnels
+            </TextLink>
+        </div>
     </div>
 }
 
@@ -144,7 +157,8 @@ const BilletReducBlock = async (props: WithSpectaclesProps) => {
 
     return <div className={mergeClasses(
         "flex flex-col items-stretch",
-        "px-2"
+        layoutClasses.mainColumnPadding,
+        "mb-4 md:mb-6 lg:mb-8"
     )}>
         <div className="text-right font-semibold text-lg">Voir les avis</div>
         <div className={mergeClasses(
@@ -153,11 +167,16 @@ const BilletReducBlock = async (props: WithSpectaclesProps) => {
         )} style={{
             backgroundImage: "url('/img/misc/billet-reduc.png')"
         }}></div>
-        <div className="text-right mt-1 text-golden/70">{br}</div>
+        <div className={mergeClasses(
+            "text-right mt-1 text-golden/70",
+            "mb-2 md:mb-3 lg:mb-4"
+        )}>
+            {br}
+        </div>
         <div className={mergeClasses(
             "w-full",
             "grid",
-            "grid-cols-[auto_auto] md:grid-cols-[auto_auto_auto]",
+            "grid-cols-[repeat(2,auto)] md:grid-cols-[repeat(3,auto)] lg:grid-cols-[repeat(4,auto)] xl:grid-cols-[repeat(6,auto)] 2xl:grid-cols-[repeat(8,auto)]",
             "gap-x-3 gap-y-3"
         )} style={{
             direction: "rtl"
@@ -187,7 +206,8 @@ const BilletReducBlock = async (props: WithSpectaclesProps) => {
                     <div key={`BilletReduc-${index}`} className={mergeClasses(
                         "relative",
                         "aspect-square w-full",
-                        "bg-center bg-no-repeat bg-cover"
+                        "bg-center bg-no-repeat bg-cover",
+                        "hover:scale-[1.03] transition-transform"
                     )} style={{
                         backgroundImage: backgroundUrl(croppedUrl)
                     }}>
