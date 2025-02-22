@@ -13,6 +13,8 @@ type EcorcesFoldableProps = {
     foldedHeaderClassName?: string;
     unfoldedHeaderClassName?: string;
 
+    canFold?: boolean;
+
     header: React.ReactNode;
     children: React.ReactNode;
 
@@ -28,7 +30,8 @@ const EcorcesFoldable = (props: EcorcesFoldableProps) => {
         unfoldedHeaderClassName,
         header,
         children,
-        onFolded
+        onFolded,
+        canFold = true
     } = props;
 
     const [folded, setFolded] = useState(true);
@@ -57,11 +60,11 @@ const EcorcesFoldable = (props: EcorcesFoldableProps) => {
             <div className="flex-grow">
                 {header}
             </div>
-            <motion.div animate={{
+            {canFold && <motion.div animate={{
                 rotate: folded ? 0 : 90
             }}>
                 <EcorcesIcon icon={faChevronRight} className="text-xl" />
-            </motion.div>
+            </motion.div>}
         </div>
         <motion.div
             className={mergeClasses(
@@ -69,7 +72,7 @@ const EcorcesFoldable = (props: EcorcesFoldableProps) => {
                 contentClassName
             )}
             animate={{
-                height: folded ? 0 : "auto"
+                height: folded && canFold ? 0 : "auto"
             }}
         >
             {children}

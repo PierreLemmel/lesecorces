@@ -7,10 +7,13 @@ import { EcoleFoldable } from "./ecole-foldable";
 import StagesBlockContent from "./stages-block-content";
 import Link from "next/link";
 import { Footer } from "../../../components/layout/footer";
+import MainMenu from "../../../components/layout/main-menu";
 
 const EcolePage = () => {
 
     return <div className="w-full min-h-screen flex flex-col bg-trunk text-golden">
+
+        <MainMenu />
 
         <HeaderBlock />
 
@@ -32,12 +35,22 @@ const HeaderBlock = async () => {
     const headerContent = await getBlockContent("ECOLE_HEADER");
 
     return <div className={mergeClasses(
-        "flex flex-col items-stretch",
-        "px-2 pt-[4.2rem] pb-2",
+        "flex items-stretch",
+        "flex-col justify-between",
+        "md:flex-row",
+        "pt-[4.2rem] pb-2",
+        "px-2 sm:px-6 md:px-12"
     )}>
-        <div className="text-white">Pédagogie</div>
-        <div className="uppercase font-semibold">{headerContent}</div>
-        <EcorcesIcon icon={faArrowTurnDown} className="mt-4 text-2xl" />
+        <div className={mergeClasses(
+            "flex flex-col items-stretch",
+        )}>
+            <div className="text-white">Pédagogie</div>
+            <div className="uppercase font-semibold">{headerContent}</div>
+        </div>
+        <EcorcesIcon icon={faArrowTurnDown} className={mergeClasses(
+            "text-2xl md:text-3xl",
+            "mt-4 mr-6",
+        )} />
     </div>
 }
 
@@ -74,9 +87,10 @@ const ValeursBlock = async () => {
     ]
 
     return <div className={mergeClasses(
-        "flex flex-col items-stretch px-2",
+        "flex flex-col items-stretch",
         "mt-12",
-        "relative z-10"
+        "relative z-10",
+        "px-2 sm:px-6 md:px-12"
     )}>
         
 
@@ -86,26 +100,31 @@ const ValeursBlock = async () => {
         )}>
             {valeursDescription}
         </div>
-        <div className={mergeClasses(
-            "flex flex-col",
-            "gap-6 mt-6 px-4 mb-10"
-        )}>
-            {cards.map((card, index) => {
-                return <ValeursCard key={`Valeurs-${index.toString().padStart(2, "0")}`} {...card} />
-            })}
-        </div>
+        <div className="flex justify-center items-center">
+            <div className={mergeClasses(
+                "grid items-stretch",
+                "grid-cols-1 md:grid-cols-2",
+                "gap-6 mt-6 px-4 mb-10",
+                "max-w-[800px]"
+            )}>
+                {cards.map((card, index) => {
+                    return <ValeursCard key={`Valeurs-${index.toString().padStart(2, "0")}`} {...card} />
+                })}
+            </div>
 
-        <div className={mergeClasses(
-            "w-full h-full absolute inset-0",
-            "bg-cover bg-center bg-no-repeat -z-10",
-        )}
-        style={{
-            backgroundImage: "url(/img/qacda/qacda-03.jpeg)",
-        }}
-        >
-            <div className="bg-black/70 w-full h-full"
-            />
+            <div className={mergeClasses(
+                "w-full h-full absolute inset-0",
+                "bg-cover bg-center bg-no-repeat -z-10",
+            )}
+            style={{
+                backgroundImage: "url(/img/qacda/qacda-03.jpeg)",
+            }}
+            >
+                <div className="bg-black/70 w-full h-full"
+                />
+            </div>
         </div>
+        
     </div>
 }
 
@@ -273,7 +292,7 @@ const EcoleInfoGrid = (props: EcoleInfoProps) => {
     return <div className={mergeClasses(
         "grid grid-cols-[auto_auto_auto] grid-cols",
         "font-semibold",
-        "p-4 gap-x-6 gap-y-2"
+        "py-4 gap-x-6 gap-y-2"
     )}>
         {elements.map(([label, value]) => {
             return <div key={label} className="flex flex-col">

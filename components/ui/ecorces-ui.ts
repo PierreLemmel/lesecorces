@@ -3,8 +3,35 @@ import { mergeClasses } from "../../lib/utils";
 import { Timestamp } from "firebase/firestore";
 
 export const uiBreakPoints = {
+    sm: 640,
     md: 768,
+    lg: 1024,
+    xl: 1280,
+    xxl: 1536
 } as const;
+
+export const mainMenuItems = [
+    {
+        href: "/",
+        label: "Accueil",
+    },
+    {
+        href: "/spectacles",
+        label: "Spectacles",
+    },
+    {
+        href: "/compagnie",
+        label: "Compagnie",
+    },
+    {
+        href: "/ecole",
+        label: "Offre pédagogique",
+    },
+    {
+        href: "/espace-pro",
+        label: "Espace Professionnels",
+    },
+]
 
 const roundArea = (area: Area): Area => ({
     x: Math.round(area.x),

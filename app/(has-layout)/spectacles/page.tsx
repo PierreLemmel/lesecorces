@@ -8,6 +8,7 @@ import { EcorcesSpectacle, getSpectacle, getSpectacleIndex } from "../../../serv
 import { SpectacleCard } from "./spectacle-card";
 import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-ui";
 import Link from "next/link";
+import MainMenu from "../../../components/layout/main-menu";
 
 const ShowsPage = async () => {
 
@@ -19,6 +20,8 @@ const ShowsPage = async () => {
 
     return <div className="w-full min-h-screen flex flex-col bg-flower text-golden">
     
+        <MainMenu />
+
         <IntroBlock />
 
         <SpectaclesBlock {...props} />
@@ -40,12 +43,22 @@ const IntroBlock = async () => {
     const intro = await getBlockContent("SPECTACLES_INTRO");
 
     return <div className={mergeClasses(
-        "flex flex-col items-stretch",
-        "px-2 pb-6 pt-[4.2rem]"
+        "flex items-stretch",
+        "flex-col justify-between",
+        "md:flex-row",
+        "pt-[4.2rem] pb-2 md:pb-4 lg:pb-6",
+        "px-2 sm:px-6 md:px-12"
     )}>
-        <div className="text-white">Spectacles</div>
-        <div className="uppercase font-semibold text-lg">{intro}</div>
-        <EcorcesIcon icon={faArrowTurnDown} className="text-2xl mt-2" />
+        <div className={mergeClasses(
+            "flex flex-col items-stretch",
+        )}>
+            <div className="text-white">Spectacles</div>
+            <div className="uppercase font-semibold">{intro}</div>
+        </div>
+        <EcorcesIcon icon={faArrowTurnDown} className={mergeClasses(
+            "text-2xl md:text-3xl",
+            "mt-4 mr-6",
+        )} />
     </div>
 }
 

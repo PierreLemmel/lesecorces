@@ -3,17 +3,30 @@
 import { motion } from "framer-motion";
 import { mergeClasses, sequence } from "../../../lib/utils";
 import { EcorcesSpectacle } from "../../../server/spectacles";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { EcorcesIcon, EcorcesIconProps } from "../../../components/ui/icon";
-import { faChevronLeft, faChevronRight, faCircle, faGlobe } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faCircle, faCross, faGlobe, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { TextButton } from "../../../components/ui/text-button";
 import { backgroundUrl, croppedImageUrl, ecorcesColor } from "../../../components/ui/ecorces-ui";
+import { useElementSize } from "../../../lib/hooks";
 
 export type SpectacleCardProps = {
     spectacle: EcorcesSpectacle
 }
 
 export const SpectacleCard = (props: SpectacleCardProps) => {
+
+    const rootRef = useRef<HTMLDivElement>(null);
+
+    const [width, setWidth] = useState(0);
+    useElementSize(rootRef, ({ width}) => setWidth(width));
+
+    return <div ref={rootRef}>
+        {width > 768 ? <SpectacleCard_Large {...props} /> : <SpectacleCard_Small {...props} />}
+    </div>
+}
+
+const SpectacleCard_Small = (props: SpectacleCardProps) => {
     const {
         spectacle: {
             name,
@@ -45,7 +58,6 @@ export const SpectacleCard = (props: SpectacleCardProps) => {
     ]
 
     const [folded, setFolded] = useState(true);
-    console.log(teaser)
 
     const croppedUrl = croppedImageUrl(affiche.url, affiche.cropArea);
 
@@ -179,7 +191,7 @@ export const SpectacleCard = (props: SpectacleCardProps) => {
                     <div className="text-white">{paragraph2}</div>
                     <div className="text-white">{paragraph3}</div>
 
-                    <Gallery gallery={gallery} />
+                    <Gallery_Small gallery={gallery} />
 
                     <TextButton
                         onClick={() => setFolded(true)}
@@ -196,11 +208,212 @@ export const SpectacleCard = (props: SpectacleCardProps) => {
     </div>
 }
 
+const SpectacleCard_Large = (props: SpectacleCardProps) => {
+    const {
+        spectacle: {
+            name,
+            ficheTechnique: {
+                creation,
+                duree,
+                artistes,
+                genres
+            },
+            description: {
+                paragraph1,
+                paragraph2,
+                paragraph3,
+            },
+            affiche,
+            teaser,
+            socials: {
+                billetreduc
+            },
+            gallery
+        }
+    } = props;
+
+    const ficheElements: [string, string, number][] = [
+        ["Création", creation, 1],
+        ["Durée", duree, 1],
+        ["Artistes", artistes, 1],
+        ["Genres", genres, 3],
+    ]
+
+    const [folded, setFolded] = useState(true);
+
+    const croppedUrl = croppedImageUrl(affiche.url, affiche.cropArea);
+
+    return <div className={mergeClasses(
+        "flex flex-col items-stretch",
+        "border-t border-golden",
+        "py-6 lg:py-10",
+        "px-6 lg:px-12",
+        "gap-6 lg:gap-10",
+        "overflow-hidden",
+    )}>
+        <div className={mergeClasses(
+            "grid grid-cols-3",
+            "gap-6 lg:gap-10",
+        )}>
+            <div className={mergeClasses(
+                "flex flex-col items-stretch justify-between",
+            )}>
+                <motion.div
+                    className="text-white text-7xl uppercase font-bold"
+                    animate={{
+                        width: folded ? "100%" : "200%"
+                    }}
+                    initial={{
+                        width: "100%"
+                    }}
+                    transition={{
+                        duration: 0.05,
+                        delay: folded ? 0. : 0.12
+                    }}
+                >
+                    {name}
+                </motion.div>
+                <motion.div
+                    animate={{
+                        translateX: folded ? 0 : "90%"
+                    }}
+                    initial={{
+                        translateX: 0
+                    }}
+                    transition={{
+                        duration: 0.2,
+                    }}
+                >
+                    <TextButton
+                        className={mergeClasses(
+                            "pb-4 text-lg",
+                        )}
+                        onClick={() => setFolded(!folded)}
+                    >
+                        {folded ? "Consulter la fiche" : "Replier la fiche"}
+                    </TextButton>
+                </motion.div>
+            </div>
+            <motion.div className={mergeClasses(
+                "text-white"
+            )} animate={{
+                opacity: folded ? 1 : 0
+            }} initial={{
+                opacity: 1
+            }}>
+                {paragraph1}
+            </motion.div>
+            <div className={mergeClasses(
+                "bg-cover bg-center bg-no-repeat",
+                "aspect-[4/3]"
+            )} style={{
+                backgroundImage: backgroundUrl(croppedUrl)
+            }}/>
+        </div>
+
+        <div className="overflow-hidden">
+            <motion.div className={mergeClasses(
+                "w-full",
+                "grid grid-cols-3",
+                "gap-6 lg:gap-10",
+            )} animate={{
+                height: folded ? 0 : "auto",
+            }} initial={{
+                height: 0
+            }}>
+
+                <div className={mergeClasses(
+                    "grid",
+                    "grid-cols-3",
+                    "grid-rows-[repeat(3,auto)]",
+                    "font-semibold",
+                    "px-3",
+                    "gap-y-4"
+                )}>
+                    <div className={mergeClasses(
+                        "col-span-3",
+                        "text-2xl font-bold",
+                    )}>
+                        Fiche technique
+                    </div>
+                    {ficheElements.map(([label, value, colSpan]) => {
+                        return <div
+                            key={label} className="flex flex-col"
+                            style={{
+                                gridColumn: `span ${colSpan}`,
+                            }}
+                        >
+                            <div className="text-golden/40">{label}</div>
+                            <div className="font-semibold">{value}</div>
+                        </div>
+                    })}
+                </div>
+                
+                <div />
+
+                <div className={mergeClasses()}>
+                    {teaser && <iframe
+                        className="w-full aspect-[4/3]"
+                        src={teaser}
+                        title="Teaser"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen={true}
+                    />}
+                </div>
+
+
+                <div className={mergeClasses(
+                    "p-3",
+                    "text-white",
+                )}>
+                    {paragraph1}
+                </div>
+                <div className={mergeClasses(
+                    "p-3",
+                    "text-white",
+                )}>
+                    {paragraph2}
+                </div>
+                <div className={mergeClasses(
+                    "p-3",
+                    "text-white",
+                    "bg-golden/30"
+                )}>
+                    {paragraph3}
+                </div>
+
+                <div className={mergeClasses(
+                    "col-span-3",
+                    
+                )}>
+                    <Gallery_Large gallery={gallery} />
+                </div>
+
+                <div className={mergeClasses(
+                    "flex items-center justify-center",
+                    "col-span-3",
+                )}>
+                    <TextButton
+                        className={mergeClasses(
+                            "text-lg"
+                        )}
+                        onClick={() => setFolded(true)}
+                    >
+                        Replier la fiche
+                    </TextButton>
+                </div>
+                
+
+            </motion.div>
+        </div>
+    </div>
+}
+
 type GalleryProps = {
     gallery: EcorcesSpectacle["gallery"]
 }
 
-const Gallery = (props: GalleryProps) => {
+const Gallery_Small = (props: GalleryProps) => {
     const {
         gallery
     } = props;
@@ -304,5 +517,126 @@ const GalleryArrow = (props: GalleryArrowProps) => {
         className
     )} onClick={handleClick}>
         <EcorcesIcon icon={icon} className="text-xl hover:scale-105" />
+    </div>
+}
+
+
+
+const Gallery_Large = (props: GalleryProps) => {
+
+    const {
+        gallery
+    } = props;
+
+    const [display, setDispay] = useState(false);
+    const [index, setIndex] = useState<number>(0);
+
+    const displayedImg = gallery[index];
+
+    return <div className={mergeClasses(
+        "grid",
+        "grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6",
+        "gap-6"
+    )}>
+        <motion.div className={mergeClasses(
+            "fixed inset-0 z-50",
+            "bg-black/50",
+            (!display) && "pointer-events-none",
+            "backdrop-blur-sm"
+        )} animate={{
+            opacity: display ? 1 : 0
+        }}
+        >
+            <div className={mergeClasses(
+                "fixed inset-0",
+                "flex items-center justify-center",
+            )}>
+                <GalleryArrow_Large
+                    className=""
+                    icon={faChevronLeft}
+                    enabled={index > 0}
+                    onClick={() => setIndex(Math.max(0, index - 1))}
+                />
+                <div className={mergeClasses(
+                    "flex flex-row items-end justify-center",
+                    "gap-4 pb-2",
+                    "w-[80%] h-[80%] xl:w-[85%] xl:h-[90%]",
+                    "bg-contain bg-center bg-no-repeat",
+                    "pointer-events-none"
+                )} style={{
+                    backgroundImage: backgroundUrl(croppedImageUrl(displayedImg.url, displayedImg.cropArea))
+                }}>
+                    {sequence(gallery.length).map(i => <div
+                        key={`Bullet-${i.toString().padStart(2, "0")}`}
+                        className={mergeClasses(
+                            i === index ? "text-white/80" : "text-white/30"
+                        )}
+                    >
+                        <EcorcesIcon icon={faCircle} className="text-[0.75rem]" />
+                    </div>)}
+                </div>
+                <GalleryArrow_Large
+                    className=""
+                    icon={faChevronRight}
+                    enabled={index < gallery.length - 1}
+                    onClick={() => setIndex(Math.min(gallery.length - 1, index + 1))}
+                />
+                
+            </div>
+            
+            <div className={mergeClasses(
+                "absolute",
+                "top-6 right-6",
+                "hover:scale-105 transition-transform",
+                "cursor-pointer",
+            )} onClick={() => setDispay(false)}>
+                <EcorcesIcon icon={faXmark} className="text-4xl text-white hover:scale-105" maxSize="4rem" />
+            </div>
+        </motion.div>
+
+        {gallery.map((img, idx) => {
+            return <div key={idx} className={mergeClasses(
+                "aspect-square",
+                "bg-cover bg-center bg-no-repeat",
+                "cursor-pointer",
+                "hover:scale-[1.025] transition-transform",
+            )} style={{
+                backgroundImage: backgroundUrl(croppedImageUrl(img.url, img.cropArea))
+            }} onClick={() => {
+                setDispay(true);
+                setIndex(idx);
+            }}/>
+        })}
+    </div>
+}
+
+
+const GalleryArrow_Large = (props: GalleryArrowProps) => {
+    const {
+        enabled,
+        icon,
+        className,
+        onClick
+    } = props;
+
+    const handleClick = () => {
+        if (enabled) {
+            onClick();
+        }
+    }
+
+    return <div className={mergeClasses(
+        "flex flex-col items-center justify-center",
+        "z-10",
+        "w-16",
+        "text-white",
+        enabled ? gaEnabledClass : gaDisabledClass,
+        className
+    )} onClick={handleClick}>
+        <EcorcesIcon
+            icon={icon}
+            className="text-4xl hover:scale-105"
+            maxSize="4rem"
+        />
     </div>
 }

@@ -3,8 +3,10 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
 import EcorcesFoldable from "../../../components/ui/ecorces-foldable"
 import { EcorcesIcon } from "../../../components/ui/icon"
-import { mergeClasses } from "../../../lib/utils"
-import { useState } from "react";
+import { match, mergeClasses } from "../../../lib/utils"
+import { useMemo, useRef, useState } from "react";
+import { useElementSize } from "../../../lib/hooks";
+import { uiBreakPoints } from "../../../components/ui/ecorces-ui";
 
 export type EcoleFoldableProps = {
     header: {
@@ -17,6 +19,14 @@ export type EcoleFoldableProps = {
 }
 
 export const EcoleFoldable = (props: EcoleFoldableProps) => {
+
+    const rootRef = useRef<HTMLDivElement>(null);
+
+    const [width, setWidth] = useState(0);
+    useElementSize(rootRef, ({ width }) => setWidth(width));
+
+    const canFold = useMemo(() => width < uiBreakPoints.md, [width]);
+
     const {
         header: {
             icon: headerIcon,
@@ -33,17 +43,27 @@ export const EcoleFoldable = (props: EcoleFoldableProps) => {
         icon={headerIcon}
         title={headerTitle}
         description={headerDescription}
-        folded={folded}
+        folded={folded && canFold}
     />
 
-    return <EcorcesFoldable
-        header={foldableHeader}
-        headerClassName="py-2 px-3"
-        onFolded={setFolded}
-        className={className}
-    >
-        {children}
-    </EcorcesFoldable>
+    return <div ref={rootRef}>
+        <EcorcesFoldable
+            header={foldableHeader}
+            headerClassName={mergeClasses(
+                "py-2 md:py-4",
+                "px-2 md:px-6 xl:px-12"
+            )}
+            contentClassName={mergeClasses(
+                "px-2 md:px-6 xl:px-12",
+                "md:pb-2"
+            )}
+            onFolded={setFolded}
+            canFold={canFold}
+            className={className}
+        >
+            {children}
+        </EcorcesFoldable>
+    </div>
 }
 
 type FoldableBlockHeaderProps = {
@@ -63,7 +83,7 @@ const FoldableBlockHeader = (props: FoldableBlockHeaderProps) => {
 
     return <div className={mergeClasses(
         "flex flex-col",
-        "gap-1"
+        "gap-1",
     )}>
         <div className={mergeClasses(
             "flex flex-row items-center gap-3"

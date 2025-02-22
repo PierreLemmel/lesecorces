@@ -5,10 +5,13 @@ import { EcorcesActivite, getActivites, getBlockContent } from "../../../server/
 import { Footer } from "../../../components/layout/footer";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { ActiviteCard } from "../../../components/parts/activite-card";
+import MainMenu from "../../../components/layout/main-menu";
 
 const ContactPage = () => {
 
     return <div className="w-full min-h-screen flex flex-col bg-bark text-golden">
+
+        <MainMenu />
 
         <HeaderBlock />
 
@@ -23,12 +26,22 @@ const HeaderBlock = async () => {
     const headerContent = await getBlockContent("ACTUALITES_HEADER");
 
     return <div className={mergeClasses(
-        "flex flex-col items-stretch",
-        "px-2 pt-[4.2rem] pb-2",
+        "flex items-stretch",
+        "flex-col justify-between",
+        "md:flex-row",
+        "pt-[4.2rem] pb-2",
+        "px-2 sm:px-6 md:px-12"
     )}>
-        <div className="text-white">Actualités</div>
-        <div className="uppercase font-semibold">{headerContent}</div>
-        <EcorcesIcon icon={faArrowTurnDown} className="mt-4 text-2xl" />
+        <div className={mergeClasses(
+            "flex flex-col items-stretch",
+        )}>
+            <div className="text-white">Actualités</div>
+            <div className="uppercase font-semibold">{headerContent}</div>
+        </div>
+        <EcorcesIcon icon={faArrowTurnDown} className={mergeClasses(
+            "text-2xl md:text-3xl",
+            "mt-4 mr-6",
+        )} />
     </div>
 }
 
@@ -61,6 +74,7 @@ const ActualitesBlock = async () => {
         "flex flex-col items-stretch",
         "gap-6",
         "pt-3 mt-8 mb-8",
+        "px-0 sm:px-6 md:px-12",
         "border-t border-golden",
     )}>
         <ActualitesSubBlock
@@ -114,7 +128,8 @@ const ActualitesSubBlock = (props: SubblockProps) => {
 
         {activites ?
             <div className={mergeClasses(
-                "flex flex-col items-stretch",
+                "grid",
+                "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
                 "gap-2"
             )}>
                 {activites.map((activite, index) => <ActiviteCard

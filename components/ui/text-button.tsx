@@ -19,7 +19,7 @@ export const TextButton = (props: TextButtonProps) => {
         onClick={() => enabled && onClick()}
         className={mergeClasses(
             "italic text-golden2 font-semibold",
-            enabled && "cursor-pointer hover:scale-110 transition-transform",
+            enabled && "cursor-pointer origin-left hover:scale-105 transition-transform",
             className
         )}
     >

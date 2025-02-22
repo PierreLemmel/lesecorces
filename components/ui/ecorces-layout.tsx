@@ -1,5 +1,3 @@
-import { Footer } from '../layout/footer';
-import MainMenu from '../layout/main-menu';
 import { mergeClasses } from '../../lib/utils';
 
 type EcorcesLayoutProps = {
@@ -14,9 +12,7 @@ export default function EcorcesLayout(props: EcorcesLayoutProps) {
 		"w-screen h-screen overflow-x-hidden",
 		"text-golden font-red-hat-display",
 		"bg-black"
-	)}>
-		<MainMenu />
-		
+	)}>	
 		{children}
 	</body>
 }

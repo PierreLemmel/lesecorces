@@ -1,46 +1,31 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { mergeClasses } from "../../lib/utils"
-import Link from "next/link";
-import { faBars, faSquareXmark } from '@fortawesome/free-solid-svg-icons'
-import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
-import { EcorcesIcon } from "../ui/icon";
 import { useElementSize } from "../../lib/hooks";
-import { uiBreakPoints } from "../ui/ecorces-ui";
+import { mainMenuItems, uiBreakPoints } from "../ui/ecorces-ui";
+import Link from "next/link";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { faSquareXmark, faBars } from "@fortawesome/free-solid-svg-icons";
+import { EcorcesIcon } from "../ui/icon";
+import { TextLink } from "../ui/text-link";
 
 export type MainMenuProps = {
-
+    shadow?: boolean;
 }
 
+const tagline = "Vivez l'expérience unique de l'improvisation théâtrale avec Les Écorcés";
 
-
-const items = [
-    {
-        href: "/",
-        label: "Accueil",
-    },
-    {
-        href: "/spectacles",
-        label: "Spectacles",
-    },
-    {
-        href: "/compagnie",
-        label: "Compagnie",
-    },
-    {
-        href: "/ecole",
-        label: "Offre pédagogique",
-    },
-    {
-        href: "/espace-pro",
-        label: "Espace Professionnels",
-    },
-]
-
-
+const defaultProps: Required<MainMenuProps> = {
+    shadow: false
+}
 
 const MainMenu = (props: MainMenuProps) => {
+
+    const propsWithDefault: MainMenuProps = {
+        ...defaultProps,
+        ...props
+    }
 
     const [width, setWidth] = useState<number>(0);
 
@@ -51,14 +36,21 @@ const MainMenu = (props: MainMenuProps) => {
         "w-full",
         "text-golden font-bold",
     )} ref={rootRef}>
-        {width > uiBreakPoints.md ? <MainMenu_Large /> : <MainMenu_Small />}
+        {width > uiBreakPoints.md ? <MainMenu_Large
+            {...propsWithDefault}
+        /> : <MainMenu_Small
+            {...propsWithDefault}
+        />}
     </div>
 }
 
-
 const MAX_SCROLL_SMALL = 100;
 
-const MainMenu_Small = () => {
+const MainMenu_Small = (props: MainMenuProps) => {
+
+    const {
+        shadow
+    } = props;
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -84,6 +76,9 @@ const MainMenu_Small = () => {
             className={mergeClasses(
                 "w-screen h-screen fixed top-0 left-0 bg-black -z-10",
             )}
+            initial={{
+                opacity: 0,
+            }}
             animate={{
                 opacity: isOpen ? 0.75 : 0,
             }}
@@ -93,13 +88,14 @@ const MainMenu_Small = () => {
         <div className={mergeClasses(
             "flex justify-between items-center",
             "py-2 px-4",
-            "bg-gradient-to-b from-black to-black/40",
+            shadow && "bg-gradient-to-b from-black to-black/40",
             "pointer-events-auto"
         )}>
             <Link href="/">
                 <div className="uppercase">Les Écorcés</div>
             </Link>
             <EcorcesIcon
+                className="text-2xl"
                 icon={isOpen ? faSquareXmark : faBars}
                 onClick={() => setIsOpen(!isOpen)}
             />
@@ -122,7 +118,7 @@ const MainMenu_Small = () => {
                     "flex flex-col items-end gap-3",
                     "border-t border-golden pt-4"
                 )}>
-                    {items.map(({ href, label }, index) => <MenuElement_Small
+                    {mainMenuItems.map(({ href, label }, index) => <MenuElement_Small
                         key={`Menu-0${index}`}
                         href={href}
                         onClick={() => setIsOpen(false)}
@@ -158,9 +154,41 @@ const MenuElement_Small = (props: MenuElement_SmallProps) => {
     </Link>
 } 
 
-const MainMenu_Large = () => {
-    return <div>
-        Main Menu Large
+
+const MainMenu_Large = (props: MainMenuProps) => {
+
+    return <div className={mergeClasses(
+        "grid grid-cols-3",
+        "grid-cols-[2fr_2fr_1fr]",
+        "gap-6 pt-6 px-12"
+    )}>
+        <div className={mergeClasses(
+            "border-t border-golden",
+            "px-2 pt-1",
+        )}>
+            Les Écorcés
+        </div>
+        
+        <div className={mergeClasses(
+            "border-t border-golden",
+            "text-center",
+            "px-4 pt-1"
+        )}>
+            {tagline}
+        </div>
+        
+        <div className={mergeClasses(
+            "flex flex-col items-stretch",
+            "border-t border-golden",
+            "px-2 pt-1",
+        )}>
+            {mainMenuItems.map(({ href, label }, index) => <MenuElement_Large
+                key={`Menu-0${index}`}
+                href={href}
+            >
+                {label}
+            </MenuElement_Large>)}
+        </div>
     </div>
 }
 
@@ -176,9 +204,12 @@ const MenuElement_Large = (props: MenuElement_LargeProps) => {
         children
     } = props;
 
-    return <Link href={href}>
-        <div className="hover:text-white transition-colors duration-300">{children}</div>
-    </Link>
+    return <TextLink
+        className="text-right"
+        href={href}
+    >
+        {children}
+    </TextLink>
 } 
 
 export default MainMenu;

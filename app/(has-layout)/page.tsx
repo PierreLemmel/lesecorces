@@ -10,10 +10,14 @@ import EcorcesTabComponent from "../../components/ui/ecorces-tab-component";
 import { ActiviteCard } from "../../components/parts/activite-card";
 import { NewsLetter } from "../../components/ui/newsletter";
 import { Footer } from "../../components/layout/footer";
+import MainMenu from "../../components/layout/main-menu";
 
 const Home = () => {
 
 	return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
+		
+		<MainMenu shadow={true} />
+		
 		<Header />
 
 		<ActivitesBlock />
@@ -248,15 +252,25 @@ const EspaceProBlockCard = (props: EspaceProBlockCardProps) => {
 	</div>
 }
 
-const NewsLetterBlock = () => {
+const NewsLetterBlock = async () => {
+
+	const [
+		newsLetter01,
+		newsLetter02,
+		newsLetter03,
+	] = await Promise.all([
+		getBlockContent("HOMEPAGE_NEWSLETTER_01"),
+		getBlockContent("HOMEPAGE_NEWSLETTER_02"),
+		getBlockContent("HOMEPAGE_NEWSLETTER_03"),
+	]);
 
 	return <div className={mergeClasses(
 		"flex flex-col items-stretch px-2",
 		"mb-8"
 	)}>
-		<div className="heading-1 text-center">On se perd pas de vue</div>
-		<div className="heading-2 text-center text-white">On reste en contact, mais de manière non invasive</div>
-		<div className="text-white mt-6 text-center">Stages, tournées, actualités, ne manquez aucune sortie des Écorcés.</div>
+		<div className="heading-1 text-center">{newsLetter01}</div>
+		<div className="heading-2 text-center text-white">{newsLetter02}</div>
+		<div className="text-white mt-6 text-center">{newsLetter03}</div>
 
 		<NewsLetter className="mt-4" />
 	</div>;

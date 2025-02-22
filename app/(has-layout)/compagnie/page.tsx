@@ -10,10 +10,13 @@ import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-u
 import { faInstagram, faFacebook, faSoundcloud } from "@fortawesome/free-brands-svg-icons";
 import Link from "next/link";
 import { Footer } from "../../../components/layout/footer";
+import MainMenu from "../../../components/layout/main-menu";
 
 const CompagniePage = () => {
 
     return <div className="w-full min-h-screen flex flex-col bg-water text-golden">
+
+        <MainMenu />
 
         <HeaderBlock />
 
