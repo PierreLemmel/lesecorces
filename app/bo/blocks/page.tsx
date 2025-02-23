@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, Suspense, useCallback, useEffect, useState } from "react";
+import { Dispatch, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useEffectAsync } from "../../../lib/hooks";
 import { addVersionToBlock, createBlock, createEmptyBlock, deleteBlock, duplicateBlock,  EcorcesBlock, getBlock, listBlocksIds, saveBlock } from "../../../server/server";
 import LoadingSpinner from "../../../components/ui/loading-spinner";
@@ -25,6 +25,8 @@ const BlocksManager = () => {
 
     const [currentBlock, setCurrentBlock] = useState<EcorcesBlock | null>(null);
     const [form, setForm] = useState<BlockForm>(createEmptyForm());
+
+    const [search, setSearch] = useState("");
 
     const commitChanges = useCallback(async () => {
         
@@ -164,7 +166,9 @@ const BlocksManager = () => {
         onDuplicateBlock,
         onCancelChanges,
         commitChanges,
-        isSuperAdmin
+        isSuperAdmin,
+        search,
+        setSearch
     }
 
     return <BlocksEdition {...props} />;
@@ -204,6 +208,8 @@ type BlocksEditionProps = {
     onCancelChanges: () => void;
     commitChanges: () => Promise<void>;
     isSuperAdmin: boolean;
+    search: string;
+    setSearch: Dispatch<string>;
 }
 
 const BlocksEdition = (props: BlocksEditionProps) => {
@@ -218,7 +224,9 @@ const BlocksEdition = (props: BlocksEditionProps) => {
         onDeleteBlock,
         onDuplicateBlock,
         onCancelChanges,
-        isSuperAdmin
+        isSuperAdmin,
+        search,
+        setSearch
     } = props;
 
     const [modified, setModified] = useState(false);
@@ -238,9 +246,23 @@ const BlocksEdition = (props: BlocksEditionProps) => {
 
     const handleCancel = onCancelChanges;
 
+    const displayedBlocks = useMemo(() => {
+        return blockIds.filter(id => id.includes(search));
+    }, [blockIds, search]);
+
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
             <div className="heading-1">Blocs</div>
+        </div>
+
+        <div className="flex flex-row items-center gap-4 mb-4">
+            <div>Rechercher</div>
+            <EcorcesTextInput
+                className="min-w-[20rem]"
+                placeHolder="Rechercher..."
+                value={search}
+                setValue={setSearch}
+            />
         </div>
 
         <div className="mb-6">
@@ -248,7 +270,7 @@ const BlocksEdition = (props: BlocksEditionProps) => {
                 <p className="">Aucun offre pour l&apos;instant.</p>
             ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {blockIds.map((blockId, index) => <OffreCard
+                    {displayedBlocks.map((blockId, index) => <OffreCard
                         key={`Block-${index.toString().padStart(2, "0")}`}
                         blockId={blockId}
                         handleEdit={() => handleEdit(blockId)}
@@ -327,7 +349,6 @@ const OffreCard = (props: BlockCardProps) => {
             "p-3",
             "flex-grow"
         )}>
-
             <div className="font-bold text-xl text-golden">{blockId}</div>
         </div>
 

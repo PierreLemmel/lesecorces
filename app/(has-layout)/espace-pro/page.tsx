@@ -4,9 +4,12 @@ import { EcorcesIcon } from "../../../components/ui/icon";
 import { isNullOrEmpty, mergeClasses } from "../../../lib/utils";
 import { getBlockContent } from "../../../server/server";
 import { EcorcesContact, getContacts } from "../../../server/contacts";
-import { EcorcesService, getServices } from "../../../server/services";
+import { getServices } from "../../../server/services";
 import { TextLink } from "../../../components/ui/text-link";
 import MainMenu from "../../../components/layout/main-menu";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
+import Link from "next/link";
+import EcorcesTabComponent, { TabContent } from "../../../components/ui/ecorces-tab-component";
 
 const EspaceProPage = () => {
 
@@ -51,10 +54,12 @@ const HeaderBlock = async () => {
 
 const ContactBlock = async () => {
 
-    const contacts = await getContacts("espace-pro");
+    const contacts = await getContacts("espace-pro", {
+        visible: true
+    });
 
     return <div className={mergeClasses(
-        "flex flex-col items-stretch",
+        "flex flex-col items-center",
         "gap-8",
         "mt-8 mb-8 pt-8",
         "border-t border-golden"
@@ -66,12 +71,16 @@ const ContactBlock = async () => {
             Nous contacter
         </div>
 
-        {contacts
-            .filter(contact => contact.visible)
-            .map((contact, index) => <ContactCard
-                key={`Contact-${index.toString().padStart(2, "0")}`}
-                contact={contact}
-            />)}
+        <div className={mergeClasses(
+            "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3",
+            "gap-8"
+        )}>
+            {contacts
+                .map((contact, index) => <ContactCard
+                    key={`Contact-${index.toString().padStart(2, "0")}`}
+                    contact={contact}
+                />)}
+        </div>
     </div>
 }
 
@@ -94,7 +103,9 @@ const ContactCard = (props: ContactCardProps) => {
         <div className={mergeClasses(
             "flex flex-col items-center justify-center",
             "bg-golden/30",
-            "mx-8 px-6 py-6 gap-1",
+            "max-w-[25rem]",
+            "min-h-[10rem]",
+            "px-6 py-6 gap-1",
         )}>
             <div className={mergeClasses(
                 "font-bold text-golden",
@@ -109,20 +120,24 @@ const ContactCard = (props: ContactCardProps) => {
             )}>
                 {name}
             </div>
-            {!isNullOrEmpty(email) && <div className={mergeClasses(
+            {!isNullOrEmpty(email) && <Link href={`mailto:${email}`} target="_blank">
+            <div className={mergeClasses(
                 "flex flex-row",
                 "gap-2"
             )}>
                 <EcorcesIcon icon={faEnvelope} className="text-xl" />
                 <div className="text-white">{email}</div>
-            </div>}
-            {!isNullOrEmpty(tel) && <div className={mergeClasses(
-                "flex flex-row items-center",
-                "gap-2"
-            )}>
-                <EcorcesIcon icon={faPhone} className="text-xl" />
-                <div className="text-white">{tel}</div>
-            </div>}
+            </div>
+            </Link>}
+            {!isNullOrEmpty(tel) && <Link href={`tel:${tel}`} target="_blank">
+                <div className={mergeClasses(
+                    "flex flex-row items-center",
+                    "gap-2"
+                )}>
+                    <EcorcesIcon icon={faPhone} className="text-xl" />
+                    <div className="text-white">{tel}</div>
+                </div>
+            </Link>}
         </div>
     )
 }
@@ -130,10 +145,12 @@ const ContactCard = (props: ContactCardProps) => {
 const DocumentsBlock = async () => {
 
     const [
+        espaceProDownload,
         espaceProDiffusion,
         espaceProPresse,
         espaceProVisuels
     ] = await Promise.all([
+        getBlockContent("ESPACE_PRO_DOWNLOAD_HEADER"),
         getBlockContent("ESPACE_PRO_DIFFUSION"),
         getBlockContent("ESPACE_PRO_PRESSE"),
         getBlockContent("ESPACE_PRO_VISUELS"),
@@ -142,19 +159,86 @@ const DocumentsBlock = async () => {
     return <div className={mergeClasses(
         "flex flex-col items-stretch",
         "border-t border-golden",
-        "pt-8",
+        "pt-8 pb-6",
+        layoutClasses.mainColumnPadding
     )}>
         <div className={mergeClasses(
-            "flex flex-row items-center justify-center",
-            "gap-2"
+            "grid grid-cols-[repeat(auto,2)] lg:grid-cols-[auto,1fr]",
+            "items-center",
+            "gap-2 lg:gap-0"
         )}>
-            <EcorcesIcon icon={faDownload} className="text-xl" />
+            <EcorcesIcon icon={faDownload} className={mergeClasses(
+                "justify-self-end lg:justify-self-auto",
+                "lg:mr-4",
+                "lg:row-span-2",
+                "text-xl lg:text-4xl",
+             )} />
             <div className={mergeClasses(
-                "uppercase font-semibold text-xl",
-                
+                "uppercase font-semibold",
+                "text-xl lg:text-3xl",
+                "lg:col-start-2"
             )}>
                 Télécharger
             </div>
+            <div className={mergeClasses(
+                "col-span-2 lg:col-span-1",
+                "lg:col-start-2",
+                "text-white",
+            )}>
+                {espaceProDownload}
+            </div>
+        </div>
+
+        <div className={mergeClasses(
+            "grid",
+            "grid-cols-1 lg:grid-cols-3",
+            "gap-x-4 gap-y-4",
+            "mt-4"
+        )}>
+            <Link href="/redirect/espace-pro-diffusion" target="_blank">
+            <div className={mergeClasses(
+                "flex flex-col items-stretch justify-center",
+                "h-[7.2rem]",
+                "cursor-pointer hover:scale-[1.03] transition-transform",
+                "bg-center bg-no-repeat bg-cover bg-blend-multiply",
+                "px-4 py-3",
+                "bg-[url('/img/espace-pro/espace-pro-01.jpg')]",
+                "bg-black/50",
+            )}>
+                <div className="text-white text-xl font-semibold">Espace diffusion</div>
+                <div className="text-white/70 text-sm italic">{espaceProDiffusion}</div>
+            </div>
+            </Link>
+
+            <Link href="/redirect/espace-pro-presse" target="_blank">
+            <div className={mergeClasses(
+                "flex flex-col items-stretch justify-center",
+                "h-[7.2rem]",
+                "cursor-pointer hover:scale-[1.03] transition-transform",
+                "bg-center bg-no-repeat bg-cover bg-blend-multiply",
+                "px-4 py-3",
+                "bg-[url('/img/espace-pro/espace-pro-02.jpg')]",
+                "bg-black/55",
+            )}>
+                <div className="text-white text-xl font-semibold">Espace Presse</div>
+                <div className="text-white/70 text-sm italic">{espaceProPresse}</div>
+            </div>
+            </Link>
+
+            <Link href="/redirect/espace-pro-visuels" target="_blank">
+            <div className={mergeClasses(
+                "flex flex-col items-stretch justify-center",
+                "h-[7.2rem]",
+                "cursor-pointer hover:scale-[1.03] transition-transform",
+                "bg-center bg-no-repeat bg-cover bg-blend-multiply",
+                "px-4 py-3",
+                "bg-[url('/img/espace-pro/espace-pro-03.jpg')]",
+                "bg-black/55",
+            )}>
+                <div className="text-white text-xl font-semibold">Charte graphique / Visuels</div>
+                <div className="text-white/70 text-sm italic">{espaceProVisuels}</div>
+            </div>
+            </Link>
         </div>
     </div>
 }
@@ -165,38 +249,38 @@ const ServicesBlock = async () => {
     const [
         services,
         autresActivites
-     ] = await Promise.all([
+    ] = await Promise.all([
         getServices("espace-pro", {
             visible: true
         }),
         getBlockContent("ESPACE_PRO_AUTRES_ACTIVITES"),
-     ]);
+    ]);
+
+    const tabs: TabContent[] = services.map(service => ({
+        title: service.name,
+        content: service.content
+    }));
 
     return <div className={mergeClasses(
         "flex flex-col items-stretch",
         "border-t border-golden",
         "pt-2",
+        layoutClasses.mainColumnPadding
     )}>
         <div className={mergeClasses(
             "uppercase font-semibold text-3xl",
             "text-white",
-            "mb-2 px-1"
+            "mb-2",
         )}>
             Autres activités
         </div>
         <div className="px-1">
             {autresActivites}
         </div>
-        
-        <div className={mergeClasses(
-            "flex flex-col items-center",
-            "gap-4 mt-8"
-        )}>
-            {services.map((service, index) => <ServiceCard
-                key={`Service-${index.toString().padStart(2, "0")}`}
-                service={service}
-            />)}
-        </div>
+        <EcorcesTabComponent
+            className="mt-6"
+            tabs={tabs}
+        />
 
         <div className={mergeClasses(
             "bg-center bg-no-repeat bg-cover",
@@ -214,23 +298,5 @@ const ServicesBlock = async () => {
 
     </div>
 }
-
-const ServiceCard = ({ service }: { service: EcorcesService }) => {
-
-    const {
-        name,
-        content,
-    } = service;
-
-    return <div className={mergeClasses(
-        "flex flex-col items-stretch",
-        "gap-2 pl-4 pr-6 pt-3 pb-4",
-        "border-t border-golden",
-    )}>
-        <div className="text-white text-lg font-semibold">{name}</div>
-        <div className="">{content}</div>
-    </div>
-}
-
 
 export default EspaceProPage;

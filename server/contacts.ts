@@ -15,12 +15,24 @@ type ContactsDataModel = {
 
 const pathToContacts = (collection: string) => pathCombine("contacts", collection);
 
-export async function getContacts(collection: string): Promise<EcorcesContact[]> {
+type GetServicesParams = {
+    visible: boolean;
+}
+
+export async function getContacts(collection: string, options: Partial<GetServicesParams> = {}): Promise<EcorcesContact[]> {
+    const {
+        visible
+    } = options;
+
     const path = pathToContacts(collection);
 
-    const data = await getDocument<ContactsDataModel>(path);
+    let { contacts } = await getDocument<ContactsDataModel>(path);
 
-    return data.contacts;
+    if (visible === true) {
+        contacts = contacts.filter(contact => contact.visible);
+    }
+
+    return contacts;
 }
 
 export async function saveContacts(contacts: EcorcesContact[], collection: string): Promise<EcorcesContact[]> {

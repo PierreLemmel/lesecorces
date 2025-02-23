@@ -48,7 +48,7 @@ const EcorcesTabComponent = (props: TabComponentProps) => {
         </div>
         <div className={mergeClasses(
             "flex flex-col",
-            "px-4 py-3 gap-2"
+            "py-3 gap-2"
         )}>
             <div className="flex flex-row gap-6 items-center">
                 <EcorcesIcon icon={faPuzzlePiece} />

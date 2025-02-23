@@ -25,6 +25,7 @@ const BackOfficePage = () => {
         <TextLink href={"/bo/newsletter" + searchParams} className="text-lg">Newsletter</TextLink>
         <TextLink href={"/bo/contacts" + searchParams} className="text-lg">Contacts</TextLink>
         <TextLink href={"/bo/services" + searchParams} className="text-lg">Services</TextLink>
+        <TextLink href={"/bo/redirects" + searchParams} className="text-lg">Redirects</TextLink>
         
         <div className="flex flex-row gap-2 items-center">
             <div>Super admin :</div>

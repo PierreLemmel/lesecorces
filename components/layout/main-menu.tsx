@@ -38,9 +38,9 @@ const MainMenu = (props: MainMenuProps) => {
     )} ref={rootRef}>
         {width > uiBreakPoints.md ? <MainMenu_Large
             {...propsWithDefault}
-        /> : <MainMenu_Small
+        /> : ( width > 0 ? <MainMenu_Small
             {...propsWithDefault}
-        />}
+        /> : <></>)}
     </div>
 }
 

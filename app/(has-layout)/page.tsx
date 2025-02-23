@@ -11,6 +11,7 @@ import { ActiviteCard } from "../../components/parts/activite-card";
 import { NewsLetter } from "../../components/ui/newsletter";
 import { Footer } from "../../components/layout/footer";
 import MainMenu from "../../components/layout/main-menu";
+import { layoutClasses } from "../../components/ui/ecorces-ui";
 
 const Home = () => {
 
@@ -88,14 +89,11 @@ const OffresPedagogiqueBlock = async () => {
 		"relative z-20",
 	)}>
 		<div className={mergeClasses(
-				"absolute inset-0",
-				"bg-cover bg-top bg-no-repeat",
-				"-z-10"
-			)}
-			style={{
-				backgroundImage: "url(/img/qacda/qacda-02.jpeg)",
-			}}
-		>
+			"absolute inset-0",
+			"bg-[100%_auto] bg-top bg-no-repeat",
+			"bg-[url(/img/qacda/qacda-02.jpeg)]",
+			"-z-10"
+		)}>
 			<div className={mergeClasses(
 				"w-full h-full",
 				"bg-gradient-to-r from-black/90 via-black/60 to-black/90"
@@ -111,7 +109,9 @@ const OffresPedagogiqueBlock = async () => {
 		<div className="text-white text-center">
 			{offrePedaText}
 		</div>
-		<div>
+		<div className={mergeClasses(
+			layoutClasses.mainColumnPadding,
+		)}>
 			<EcorcesTabComponent tabs={tabs}/>
 		</div>
 		<TextLink href="/ecole" className="text-center underline">
