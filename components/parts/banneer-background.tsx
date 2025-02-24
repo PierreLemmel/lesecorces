@@ -1,23 +1,23 @@
+import { type } from "node:os";
 import { mergeClasses } from "../../lib/utils";
 import { EcorcesBanneer } from "../../server/server";
-import { backgroundUrl, croppedImageUrl } from "../ui/ecorces-ui";
+import { backgroundUrl, croppedImageUrl as fullUrl } from "../ui/ecorces-ui";
 
 export type BanneerBackgroundProps = {
-    banneer: EcorcesBanneer;
+    banneer: EcorcesBanneer|string;
     className?: string;
 }
 
 export const BanneerBackground = (props: BanneerBackgroundProps) => {
 
     const {
-        banneer: {
-            url,
-            cropArea
-        },
+        banneer,
         className
     } = props;
 
-    const croppedUrl = croppedImageUrl(url, cropArea);
+    const croppedUrl = typeof banneer === 'object' ?
+        fullUrl(banneer.url, banneer.cropArea) :
+        banneer;
 
     return <div
         className={mergeClasses(

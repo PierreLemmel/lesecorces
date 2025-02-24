@@ -7,9 +7,11 @@ import { EcorcesContact, getContacts } from "../../../server/contacts";
 import { getServices } from "../../../server/services";
 import { TextLink } from "../../../components/ui/text-link";
 import MainMenu from "../../../components/layout/main-menu";
-import { layoutClasses } from "../../../components/ui/ecorces-ui";
+import { layoutClasses, uiBreakPoints } from "../../../components/ui/ecorces-ui";
 import Link from "next/link";
 import EcorcesTabComponent, { TabContent } from "../../../components/ui/ecorces-tab-component";
+import { BanneerBackground } from "../../../components/parts/banneer-background";
+import { ServicesBlockContent } from "./espace-pro-components";
 
 const EspaceProPage = () => {
 
@@ -103,7 +105,7 @@ const ContactCard = (props: ContactCardProps) => {
         <div className={mergeClasses(
             "flex flex-col items-center justify-center",
             "bg-golden/30",
-            "max-w-[25rem]",
+            "w-[21rem]",
             "min-h-[10rem]",
             "px-6 py-6 gap-1",
         )}>
@@ -197,46 +199,43 @@ const DocumentsBlock = async () => {
         )}>
             <Link href="/redirect/espace-pro-diffusion" target="_blank">
             <div className={mergeClasses(
+                "relative",
                 "flex flex-col items-stretch justify-center",
                 "h-[7.2rem]",
                 "cursor-pointer hover:scale-[1.03] transition-transform",
-                "bg-center bg-no-repeat bg-cover bg-blend-multiply",
                 "px-4 py-3",
-                "bg-[url('/img/espace-pro/espace-pro-01.jpg')]",
-                "bg-black/50",
             )}>
-                <div className="text-white text-xl font-semibold">Espace diffusion</div>
-                <div className="text-white/70 text-sm italic">{espaceProDiffusion}</div>
+                <BanneerBackground banneer="/img/espace-pro/espace-pro-01.jpg" />
+                <div className="text-white text-xl font-semibold z-10">Espace diffusion</div>
+                <div className="text-white/70 text-sm italic z-10">{espaceProDiffusion}</div>
             </div>
             </Link>
 
             <Link href="/redirect/espace-pro-presse" target="_blank">
             <div className={mergeClasses(
+                "relative",
                 "flex flex-col items-stretch justify-center",
                 "h-[7.2rem]",
                 "cursor-pointer hover:scale-[1.03] transition-transform",
-                "bg-center bg-no-repeat bg-cover bg-blend-multiply",
                 "px-4 py-3",
-                "bg-[url('/img/espace-pro/espace-pro-02.jpg')]",
-                "bg-black/55",
             )}>
-                <div className="text-white text-xl font-semibold">Espace Presse</div>
-                <div className="text-white/70 text-sm italic">{espaceProPresse}</div>
+                <BanneerBackground banneer="/img/espace-pro/espace-pro-02.jpg" />
+                <div className="text-white text-xl font-semibold z-10">Espace Presse</div>
+                <div className="text-white/70 text-sm italic z-10">{espaceProPresse}</div>
             </div>
             </Link>
 
             <Link href="/redirect/espace-pro-visuels" target="_blank">
             <div className={mergeClasses(
+                "relative",
                 "flex flex-col items-stretch justify-center",
                 "h-[7.2rem]",
                 "cursor-pointer hover:scale-[1.03] transition-transform",
-                "bg-center bg-no-repeat bg-cover bg-blend-multiply",
                 "px-4 py-3",
-                "bg-[url('/img/espace-pro/espace-pro-03.jpg')]",
-                "bg-black/55",
             )}>
-                <div className="text-white text-xl font-semibold">Charte graphique / Visuels</div>
-                <div className="text-white/70 text-sm italic">{espaceProVisuels}</div>
+                <BanneerBackground banneer="/img/espace-pro/espace-pro-03.jpg" />
+                <div className="text-white text-xl font-semibold z-10">Charte graphique / Visuels</div>
+                <div className="text-white/70 text-sm italic z-10">{espaceProVisuels}</div>
             </div>
             </Link>
         </div>
@@ -256,47 +255,10 @@ const ServicesBlock = async () => {
         getBlockContent("ESPACE_PRO_AUTRES_ACTIVITES"),
     ]);
 
-    const tabs: TabContent[] = services.map(service => ({
-        title: service.name,
-        content: service.content
-    }));
-
-    return <div className={mergeClasses(
-        "flex flex-col items-stretch",
-        "border-t border-golden",
-        "pt-2",
-        layoutClasses.mainColumnPadding
-    )}>
-        <div className={mergeClasses(
-            "uppercase font-semibold text-3xl",
-            "text-white",
-            "mb-2",
-        )}>
-            Autres activités
-        </div>
-        <div className="px-1">
-            {autresActivites}
-        </div>
-        <EcorcesTabComponent
-            className="mt-6"
-            tabs={tabs}
-        />
-
-        <div className={mergeClasses(
-            "bg-center bg-no-repeat bg-cover",
-            "w-full aspect-video",
-            "mt-2 mb-9"
-        )} style={{
-            backgroundImage: "url('/img/qacda/qacda-03.jpeg')"
-        }}/>
-
-        <div className="text-center mb-8">
-            <TextLink href="/compagnie" className="text-underline">
-                Voir la page de notre compagnie
-            </TextLink>
-        </div>
-
-    </div>
+    return <ServicesBlockContent
+        services={services}
+        autresActivites={autresActivites}
+    />
 }
 
 export default EspaceProPage;

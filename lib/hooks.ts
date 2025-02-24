@@ -1,4 +1,4 @@
-import { DependencyList, RefObject, useEffect } from "react";
+import { DependencyList, RefObject, useEffect, useState } from "react";
 
 export function useElementSize<T extends HTMLElement = HTMLElement>(ref: RefObject<T>, onSizeChanged: (size: { width: number, height: number }) => void) {
 
@@ -24,6 +24,33 @@ export function useElementSize<T extends HTMLElement = HTMLElement>(ref: RefObje
     }, []);
 
 }
+
+export const useWindowSize = () => {
+    const [size, setSize] = useState<{ width: number, height: number }>({ width: 0, height: 0 });
+
+    useEffect(() => {
+        const measureSize = () => {
+            if (window) {
+                const size = {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                }
+
+                setSize(size);
+            }
+        };
+
+        measureSize();
+        window.addEventListener('resize', measureSize);
+
+        return () => {
+            window.removeEventListener('resize', measureSize);
+        };
+    }, [])
+
+    return size;
+}
+
 
 export const useEffectAsync = (effect: () => Promise<void>, deps?: DependencyList): void => {
     deps ||= [];
