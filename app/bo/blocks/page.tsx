@@ -11,6 +11,7 @@ import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
 import { mergeClasses } from "../../../lib/utils";
 import { useSearchParams } from "next/navigation";
 import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
 
 const BlocksManager = () => {
 
@@ -252,7 +253,7 @@ const BlocksEdition = (props: BlocksEditionProps) => {
 
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
-            <div className="heading-1">Blocs</div>
+            <div className={mergeClasses(layoutClasses.heading1)}>Blocs</div>
         </div>
 
         <div className="flex flex-row items-center gap-4 mb-4">

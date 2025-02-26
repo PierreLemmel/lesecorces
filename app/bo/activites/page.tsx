@@ -146,7 +146,7 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
 
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
-            <div className="heading-1">Activités</div>
+            <div className={mergeClasses(layoutClasses.heading1)}>Activités</div>
             <EcorcesButton
                 onClick={commitChanges}
                 disabled={!modified}

@@ -51,7 +51,7 @@ const ActivitesBlock = async () => {
         "flex flex-col items-center",
         "mb-12 mt-8"
     )}>
-        <div className="heading-1">Nos prochaines activités</div>
+        <div className={mergeClasses(layoutClasses.heading1)}>Nos prochaines activités</div>
         
         <div className="flex flex-col items-stretch gap-2 px-3 w-full mb-4 mt-2">
             {
@@ -135,13 +135,15 @@ const CompagnieBlock = async () => {
 			"z-10"
 		)}>
 			<div className={mergeClasses(
-				"heading-1 text-golden",
+				layoutClasses.heading1,
+				"text-golden",
 				"text-center"
 			)}>
 				Notre Compagnie
 			</div>
 			<div className={mergeClasses(
-				"heading-2 text-white",
+				layoutClasses.heading2,
+				"text-white",
 				"text-center"
 			)}>
 				Pourquoi Écorcés ?
@@ -183,10 +185,16 @@ const EspaceProBlock = () => <div className={mergeClasses(
 )} style={{
 	backgroundImage: "url(/img/misc/homepage-pro-bg.png)"
 }}>
-	<div className="heading-1 text-golden text-center">
+	<div className={mergeClasses(
+		layoutClasses.heading1,
+		"text-golden text-center"
+	)}>
 		Vous êtes professionnel-le ?
 	</div>
-	<div className="heading-2 text-white text-center">
+	<div className={mergeClasses(
+		layoutClasses.heading2,
+		"text-white text-center"
+	)}>
 		Accédez à nos outils de diffusion
 	</div>
 	<div className={mergeClasses(
@@ -241,7 +249,10 @@ const EspaceProBlockCard = (props: EspaceProBlockCardProps) => {
 		"aspect-square min-w-full"
 	)}>
 		<EcorcesIcon icon={icon} className="bg-black text-white text-xl p-2" />
-		<div className="heading-2 text-white">{title}</div>
+		<div className={mergeClasses(
+			layoutClasses.heading2,
+			"text-white"
+		)}>{title}</div>
 		<div className="text-center text-white pt-3 pb-4">{text}</div>
 		<TextLink
 			href={actionHref}
@@ -268,8 +279,18 @@ const NewsLetterBlock = async () => {
 		"flex flex-col items-stretch px-2",
 		"mb-8"
 	)}>
-		<div className="heading-1 text-center">{newsLetter01}</div>
-		<div className="heading-2 text-center text-white">{newsLetter02}</div>
+		<div className={mergeClasses(
+			layoutClasses.heading1,
+			"text-center"
+		)}>
+			{newsLetter01}
+		</div>
+		<div className={mergeClasses(
+			layoutClasses.heading2,
+			"text-center text-white"
+		)}>
+			{newsLetter02}
+		</div>
 		<div className="text-white mt-6 text-center">{newsLetter03}</div>
 
 		<NewsLetter className="mt-4" />

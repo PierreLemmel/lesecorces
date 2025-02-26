@@ -14,7 +14,7 @@ import MainMenu from "../../../components/layout/main-menu";
 
 const CompagniePage = () => {
 
-    return <div className="w-full min-h-screen flex flex-col bg-water text-golden">
+    return <div className="w-screen min-h-screen flex flex-col bg-water text-golden">
 
         <MainMenu />
 
@@ -73,15 +73,39 @@ const PresentationBlock = async () => {
     ])
 
     return <div className={mergeClasses(
-        "flex flex-col items-stretch",
+        "grid",
+        "grid-cols-1 md:grid-cols-3 lg:grid-cols-[2fr_1fr_1fr]",
+        "grid-rows-[auto_auto]",
+        "gap-x-4 lg:gap-x-6",
+        "md:py-4 lg:py-6    ",
+        layoutClasses.mainColumnPadding,
         "bg-cover bg-no-repeat bg-center",
-        "bg-blend-multiply bg-black/60"
+        "bg-blend-multiply bg-black/75"
     )} style={{
         backgroundImage: "url(/img/qacda/qacda-04.jpeg)"
     }}>
         <div className={mergeClasses(
+            "hidden",
+            "md:flex flex-col items-center",
+            "justify-center gap-2",
+            "row-span-2 w-full",
+        )}>
+            <div className={mergeClasses(
+                "bg-center bg-no-repeat bg-cover",
+                "w-24 aspect-square",
+                "bg-[url('/img/misc/voir-compagnie-anim.gif')]"
+            )}/>
+            <TextLink href="/compagnie" className="underline">
+                Voir nos spectacles
+            </TextLink>
+        </div>
+
+        <div className={mergeClasses(
+            "md:col-span-2",
             "border-t border-golden",
-            "px-2 pt-1 pb-4"
+            "px-2 pt-1",
+            "pb-4 md:pb-6",
+            "md:font-bold"
         )}>
             {presentationContent}
         </div>
@@ -89,18 +113,28 @@ const PresentationBlock = async () => {
         <div className={mergeClasses(
             "flex flex-col items-stretch",
             "border-t border-golden",
-            "px-2 pt-2 pb-8 gap-2"
+            "px-2 pt-2 gap-2",
+            "pb-8 md:pb-0"
         )}>
-            <div className="text-white font-semibold text-xl">Les origines</div>
+            <div className={mergeClasses(
+                "text-white font-semibold text-xl"
+            )}>
+                Les origines
+            </div>
             <div>{origineContent}</div>
         </div>
 
         <div className={mergeClasses(
             "flex flex-col items-stretch",
             "border-t border-golden",
-            "px-2 pt-2 pb-8 gap-2"
+            "px-2 pt-2 gap-2",
+            "pb-8 md:pb-0"
         )}>
-            <div className="text-white font-semibold">Pourquoi Écorcés ?</div>
+            <div className={mergeClasses(
+                "text-white font-semibold text-xl"
+            )}>
+                Pourquoi Écorcés ?
+            </div>
             <div>{pourquoiEcorcesContent}</div>
         </div>
     </div>
@@ -112,21 +146,26 @@ const ActualitesBlock = async () => {
     const activites = await getActivites({
         upcoming: true,
         visible: true,
-        limit: 3
+        limit: 6
     });
 
     return <div className={mergeClasses(
         "flex flex-col items-center",
+        layoutClasses.mainColumnPadding,
         "mb-8 mt-8",
     )}>
-        <div className="heading-1">Nos actualités</div>
+        <div className={mergeClasses(
+            layoutClasses.heading1
+        )}>
+            Nos actualités
+        </div>
         
         <div className={mergeClasses(
             "w-full",
             "grid",
-            "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-            "gap-2",
-            "gap-2 px-3 mb-4 mt-2",
+            "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6",
+            "compagnie-actualites-grid",
+            "gap-2 mb-4 mt-2",
         )}>
             {
                 activites.length > 0 ? activites.map((activite, index) => <ActiviteCard
@@ -186,15 +225,30 @@ const AussiAvecNousBlock = async () => {
     const subtitle = await getBlockContent("COMPAGNIE_AUSSI_AVEC_NOUS");
 
     return <div className={mergeClasses(
-       "flex flex-col items-stretch",
+       "flex flex-col items-center",
        "border-t border-golden",
-       "px-4 pt-8"
+       "pt-8",
+       "pb-5 md:pb-8 lg:pb-12",
+       layoutClasses.mainColumnPadding
     )}>
-        <div className="text-center heading-1">Aussi avec nous</div>
-        <div className="text-center heading-2 text-white">{subtitle}</div>
         <div className={mergeClasses(
-            "flex flex-col items-stretch",
-            "mt-10 gap-6"
+            layoutClasses.heading1,
+            "text-center"
+        )}>
+            Aussi avec nous
+        </div>
+        <div className={mergeClasses(
+            layoutClasses.heading2,
+            "text-center text-white"
+        )}>
+            {subtitle}
+        </div>
+        <div className={mergeClasses(
+            "grid",
+            "grid-cols-1 lg:grid-cols-3",
+            "w-full max-w-[60rem]",
+            "mt-10 gap-6",
+            "px-2"
         )}>
             {amis.map((ami, index) => {
                 const {
@@ -285,14 +339,27 @@ const PartenairesBlock = async () => {
     return <div className={mergeClasses(
         "flex flex-col items-stretch",
         "border-t border-golden",
-        "px-4 pt-8 pb-6"
+        "pt-8 pb-6",
+        layoutClasses.mainColumnPadding
      )}>
-        <div className="text-center heading-1">Partenaires</div>
-        <div className="text-center heading-2 text-white">{subtitle}</div>
+        <div className={mergeClasses(
+            layoutClasses.heading1,
+            "text-center"
+        )}>
+            Partenaires
+        </div>
+        <div className={mergeClasses(
+            layoutClasses.heading2,
+            "text-center text-white"
+        )}>
+            {subtitle}
+        </div>
 
         <div className={mergeClasses(
-            "flex flex-row flex-wrap items-center justify-around",
-            "gap-y-4 mt-6"
+            "grid",
+            "grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12",
+            "gap-2",
+            "mt-6"
         )}>
             {partenaires.map((partenaire, index) => <PartenaireCard
                 partenaire={partenaire}
@@ -317,7 +384,7 @@ const PartenaireCard = (props: PartenaireCardProps) => {
     return <Link href={url} target="_blank">
         <div className={mergeClasses(
             "aspect-square rounded",
-            "h-24",
+            "w-full",
             "bg-center bg-contain bg-no-repeat",
             "cursor-pointer hover:scale-105",
             "bg-white/20"
@@ -348,27 +415,69 @@ const ContactBlock = async () => {
     ]);
 
     return <div className={mergeClasses(
-        "flex flex-col items-center",
-        "px-6 pt-8 mt-4",
+        "grid",
+        "items-center",
+        "grid-cols-1 lg:grid-cols-2",
+        "mt-4",
+        layoutClasses.mainColumnPadding,
         "border-t border-golden",
-        "bg-no-repeat bg-[size:auto_130%] bg-[position:100%_20%]"
+        "bg-no-repeat bg-cover bg-[position:100%_20%]",
+        "py-10 md:py-14 lg:py-20"
     )} style={{
         backgroundImage: "url(/img/misc/homepage-pro-bg.png)"
     }}>
-        <div className="text-center heading-1">Contact</div>
-        <div className="text-center heading-2 text-white">Selon si vous êtes...</div>
+        <div className={mergeClasses(
+            "flex flex-col items-center",
+            "lg:col-span-2"
+        )}>
+            <div className={mergeClasses(
+                layoutClasses.heading1,
+                "text-center"
+            )}>
+                Contact
+            </div>
+            <div className={mergeClasses(
+                layoutClasses.heading2,
+                "text-center text-white"
+            )}>
+                Selon si vous êtes...
+            </div>
+        </div>
 
-        <div className="text-center text-golden/60 mt-8 font-semibold">{contactPro01}</div>
-        <div className="text-center text-white font-light">{contactPro02}</div>
-        <TextLink href="/espace-pro" className="underline mt-4">Espace professionnels</TextLink>
-        
-        <div className="text-center text-golden/60 mt-8 font-semibold">{contactEcole01}</div>
-        <div className="text-center text-white font-light">{contactEcole02}</div>
-        <TextLink href="/ecole" className="underline mt-4">Offres pédagogiques</TextLink>
-        
-        <div className="text-center heading-1 mt-12">{contactAutre01}</div>
-        <div className="text-center heading-2 text-white">{contactAutre02}</div>
-        <EcorcesIcon icon={faArrowTurnDown} className="text-2xl mb-10" />
+        <div className={mergeClasses(
+            "flex flex-col items-center"
+        )}>
+            <div className="text-center text-golden/60 mt-8 font-semibold">{contactPro01}</div>
+            <div className="text-center text-white font-light">{contactPro02}</div>
+            <TextLink href="/espace-pro" className="underline mt-4">Espace professionnels</TextLink>
+        </div>
+
+        <div className={mergeClasses(
+            "flex flex-col items-center"
+        )}>
+            <div className="text-center text-golden/60 mt-8 font-semibold">{contactEcole01}</div>
+            <div className="text-center text-white font-light">{contactEcole02}</div>
+            <TextLink href="/ecole" className="underline mt-4">Offres pédagogiques</TextLink>
+        </div>
+
+        <div className={mergeClasses(
+            "flex flex-col items-center",
+            "lg:col-span-2"
+        )}>
+            <div className={mergeClasses(
+                layoutClasses.heading1,
+                "text-center mt-12"
+            )}>
+                {contactAutre01}
+            </div>
+            <div className={mergeClasses(
+                layoutClasses.heading2,
+                "text-center text-white"
+            )}>
+                {contactAutre02}
+            </div>
+            <EcorcesIcon icon={faArrowTurnDown} className="text-2xl lg:text-3xl mt-2" />
+        </div>
     </div>
     
 }

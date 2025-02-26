@@ -8,10 +8,8 @@ import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
 import { EcorcesLabel } from "../../../components/ui/ecorces-label";
 import { mergeClasses } from "../../../lib/utils";
 import { EcorcesRedirect, saveRedirects, getRedirects, duplicateRedirect } from "../../../server/redirects";
-import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
-import { loremIpsumMedium } from "../../../components/ui/ecorces-ui";
-import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
 import { TextLink } from "../../../components/ui/text-link";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
 
 
 const EcorcesRedirectManager = () => {
@@ -153,7 +151,7 @@ const RedirectsEdition = (props: RedirectsEditionProps) => {
 
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
-            <div className="heading-1">Redirects</div>
+            <div className={mergeClasses(layoutClasses.heading1)}>Redirects</div>
             <EcorcesButton
                 onClick={commitChanges}
                 disabled={!modified}

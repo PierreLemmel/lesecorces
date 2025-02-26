@@ -9,7 +9,7 @@ import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
 import { EcorcesLabel } from "../../../components/ui/ecorces-label";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import { mergeClasses } from "../../../lib/utils";
-import { backgroundUrl } from "../../../components/ui/ecorces-ui";
+import { backgroundUrl, layoutClasses } from "../../../components/ui/ecorces-ui";
 import { EcorcesPartenaire, savePartenaires, getPartenaires, duplicatePartenaire } from "../../../server/membres";
 import { EcorcesImage } from "../../../server/server";
 import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
@@ -166,7 +166,7 @@ const PartenairesEdition = (props: PartenairesEditionProps) => {
 
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
-            <div className="heading-1">Partenaires</div>
+            <div className={mergeClasses(layoutClasses.heading1)}>Partenaires</div>
             <EcorcesButton
                 onClick={commitChanges}
                 disabled={!modified}

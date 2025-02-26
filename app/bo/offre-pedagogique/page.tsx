@@ -11,6 +11,7 @@ import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
 import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
 import { TextLink } from "../../../components/ui/text-link";
 import { mergeClasses } from "../../../lib/utils";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
 
 const OffrePedagogiqueManager = () => {
 
@@ -140,7 +141,7 @@ const OffresPedagogiquesEdition = (props: OffresPedagogiquesEditionProps) => {
 
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
-            <div className="heading-1">Offre pédagogique</div>
+            <div className={mergeClasses(layoutClasses.heading1)}>Offre pédagogique</div>
             <EcorcesButton
                 onClick={commitChanges}
                 disabled={!modified}

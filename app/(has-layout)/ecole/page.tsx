@@ -8,6 +8,7 @@ import StagesBlockContent from "./stages-block-content";
 import Link from "next/link";
 import { Footer } from "../../../components/layout/footer";
 import MainMenu from "../../../components/layout/main-menu";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
 
 const EcolePage = () => {
 
@@ -246,8 +247,12 @@ const ContactBlock = () => {
         "flex flex-col items-center",
         "px-4 mt-8 mb-10"
     )}>
-        <div className="heading-1">Contact</div>
-        <div className="heading-2">Vous avez une question ?</div>
+        <div className={mergeClasses(layoutClasses.heading1)}>
+            Contact
+        </div>
+        <div className={mergeClasses(layoutClasses.heading2)}>
+            Vous avez une question ?
+        </div>
 
         <div className={mergeClasses(
                 "w-[80%]",

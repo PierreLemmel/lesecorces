@@ -9,6 +9,7 @@ import { mergeClasses } from "../../../lib/utils";
 import EcorcesButton from "../../../components/ui/ecorces-button";
 import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
 import { useEffectAsync } from "../../../lib/hooks";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
 
 const NewsLetterEdit = () => {
 
@@ -109,7 +110,7 @@ const NewsLetterEdition = (props: NewsLetterEditionProps) => {
         "flex flex-col items-stretch",
         "gap-4"
     )}>
-        <div className="heading-1">Mails</div>
+        <div className={mergeClasses(layoutClasses.heading1)}>Mails</div>
         <div className={mergeClasses(
             "flex flex-col gap-2",
             "pl-2"

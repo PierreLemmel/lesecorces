@@ -10,6 +10,27 @@ export const uiBreakPoints = {
     xxl: 1536
 } as const;
 
+export type EcorcesBreakPoints = "none"|keyof typeof uiBreakPoints;
+
+export function getBreakpoint(width: number): EcorcesBreakPoints {
+
+    if (width < uiBreakPoints.sm) {
+        return "sm";
+    }
+    else if (width < uiBreakPoints.md) {
+        return "md";
+    }
+    else if (width < uiBreakPoints.lg) {
+        return "lg";
+    }
+    else if (width < uiBreakPoints.xl) {
+        return "xl";
+    }
+    else {
+        return "xxl";
+    }
+}
+
 export const mainMenuItems = [
     {
         href: "/",
@@ -127,4 +148,6 @@ export const ecorcesColor = {
 
 export const layoutClasses = {
     mainColumnPadding: "px-2 sm:px-6 md:px-12",
+    heading1: "uppercase font-extrabold text-xl lg:text-2xl mb-1",
+    heading2: "font-semibold text-lg lg:text-xl",
 } as const;

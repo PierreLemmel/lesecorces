@@ -63,7 +63,7 @@ export const ServicesBlockContent = (props: ServicesBlockContentProps) => {
     
             <div className="text-center mb-8">
                 <TextLink href="/compagnie" className="text-underline">
-                    Voir la page de notre compagnie
+                    Découvrir notre compagnie
                 </TextLink>
             </div>
     
@@ -108,7 +108,7 @@ export const ServicesBlockContent = (props: ServicesBlockContentProps) => {
                     "bg-[url('/img/misc/voir-compagnie-anim.gif')]"
                 )}/>
                 <TextLink href="/compagnie" className="underline">
-                    Voir la page de notre compagnie
+                    Découvrir notre compagnie
                 </TextLink>
             </div>
 

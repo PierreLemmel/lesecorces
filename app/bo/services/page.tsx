@@ -9,7 +9,7 @@ import { EcorcesLabel } from "../../../components/ui/ecorces-label";
 import { mergeClasses } from "../../../lib/utils";
 import { EcorcesService, saveServices, getServices, duplicateService } from "../../../server/services";
 import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
-import { loremIpsumMedium } from "../../../components/ui/ecorces-ui";
+import { layoutClasses, loremIpsumMedium } from "../../../components/ui/ecorces-ui";
 import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
 
 
@@ -155,7 +155,7 @@ const ServicesEdition = (props: ServicesEditionProps) => {
 
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
-            <div className="heading-1">Services</div>
+            <div className={mergeClasses(layoutClasses.heading1)}>Services</div>
             <EcorcesButton
                 onClick={commitChanges}
                 disabled={!modified}

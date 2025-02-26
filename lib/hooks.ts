@@ -1,4 +1,5 @@
 import { DependencyList, RefObject, useEffect, useState } from "react";
+import { EcorcesBreakPoints, getBreakpoint, uiBreakPoints } from "../components/ui/ecorces-ui";
 
 export function useElementSize<T extends HTMLElement = HTMLElement>(ref: RefObject<T>, onSizeChanged: (size: { width: number, height: number }) => void) {
 
@@ -27,6 +28,7 @@ export function useElementSize<T extends HTMLElement = HTMLElement>(ref: RefObje
 
 export const useWindowSize = () => {
     const [size, setSize] = useState<{ width: number, height: number }>({ width: 0, height: 0 });
+    const [breakPoint, setBreakpoint] = useState<EcorcesBreakPoints>("sm");
 
     useEffect(() => {
         const measureSize = () => {
@@ -37,6 +39,9 @@ export const useWindowSize = () => {
                 }
 
                 setSize(size);
+
+                const newBreakpoint = getBreakpoint(size.width);
+                setBreakpoint(newBreakpoint);
             }
         };
 
@@ -48,7 +53,10 @@ export const useWindowSize = () => {
         };
     }, [])
 
-    return size;
+    return {
+        ...size,
+        breakPoint
+    };
 }
 
 

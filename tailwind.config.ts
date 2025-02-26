@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss'
 import { ecorcesColor } from './components/ui/ecorces-ui'
+import { Config } from 'tailwindcss';
 
 const {
   golden,
@@ -33,6 +33,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
 }
+
 export default config

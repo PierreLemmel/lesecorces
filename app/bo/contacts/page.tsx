@@ -9,6 +9,7 @@ import { EcorcesLabel } from "../../../components/ui/ecorces-label";
 import { mergeClasses } from "../../../lib/utils";
 import { EcorcesContact, saveContacts, getContacts, duplicateContact } from "../../../server/contacts";
 import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
 
 
 const CONTACTS_COLLECTION = "espace-pro";
@@ -155,7 +156,7 @@ const ContactsEdition = (props: ContactsEditionProps) => {
 
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
-            <div className="heading-1">Contacts</div>
+            <div className={mergeClasses(layoutClasses.heading1)}>Contacts</div>
             <EcorcesButton
                 onClick={commitChanges}
                 disabled={!modified}

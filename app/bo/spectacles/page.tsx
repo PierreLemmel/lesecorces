@@ -18,7 +18,7 @@ import EcorcesTextInput from "../../../components/ui/ecorces-text-input";
 import { mergeClasses } from "../../../lib/utils";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
-import { loremIpsumMedium } from "../../../components/ui/ecorces-ui";
+import { layoutClasses, loremIpsumMedium } from "../../../components/ui/ecorces-ui";
 import { useSearchParams } from "next/navigation";
 import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
 
@@ -298,7 +298,7 @@ const SpectaclesEdition = (props: SpectaclesEditionProps) => {
 	return (
 		<div className="w-full">
 			<div className="flex flex-row justify-between items-center mb-6">
-				<div className="heading-1">Spectacles</div>
+				<div className={mergeClasses(layoutClasses.heading1)}>Spectacles</div>
 			</div>
 
 			<div className="mb-6">

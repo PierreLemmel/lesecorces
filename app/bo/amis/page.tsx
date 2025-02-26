@@ -19,6 +19,7 @@ import { mergeClasses } from "../../../lib/utils";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import { useSearchParams } from "next/navigation";
 import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
 
 
 const AmisManager = () => {
@@ -275,7 +276,7 @@ const AmisEdition = (props: AmisEditionProps) => {
 	return (
 		<div className="w-full">
 			<div className="flex flex-row justify-between items-center mb-6">
-				<div className="heading-1">Amis</div>
+				<div className={mergeClasses(layoutClasses.heading1)}>Amis</div>
 			</div>
 
 			<div className="mb-6">
