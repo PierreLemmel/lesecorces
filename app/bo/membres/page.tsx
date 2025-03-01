@@ -398,7 +398,7 @@ const MembresEdition = (props: MembresEditionProps) => {
 						/>
 					</div>
 					<div>
-						<EcorcesLabel>Website</EcorcesLabel>
+						<EcorcesLabel>Site internet</EcorcesLabel>
 						<EcorcesTextInput
 							placeHolder="Website"
 							value={form.socials.website || ""}
@@ -437,6 +437,10 @@ const MembresEdition = (props: MembresEditionProps) => {
 										handleChange("gallery", newGallery);
 									}}
 									file={image}
+									imageSize={{
+										width: 800,
+										height: 800
+									}}
 									destinationFolder="membres"
 								/>
 							</div>

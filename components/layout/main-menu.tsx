@@ -12,12 +12,14 @@ import { TextLink } from "../ui/text-link";
 
 export type MainMenuProps = {
     shadow?: boolean;
+    floating?: boolean;
 }
 
 const tagline = "Vivez l'expérience unique de l'improvisation théâtrale avec Les Écorcés";
 
 const defaultProps: Required<MainMenuProps> = {
-    shadow: false
+    shadow: false,
+    floating: false
 }
 
 const MainMenu = (props: MainMenuProps) => {
@@ -157,7 +159,12 @@ const MenuElement_Small = (props: MenuElement_SmallProps) => {
 
 const MainMenu_Large = (props: MainMenuProps) => {
 
+    const {
+        floating
+    } = props;
+
     return <div className={mergeClasses(
+        floating && "absolute top-0 left-0 w-full z-50",
         "grid grid-cols-3",
         "grid-cols-[2fr_2fr_1fr]",
         "gap-6 pt-6 px-12"

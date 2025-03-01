@@ -11,6 +11,8 @@ import { faInstagram, faFacebook, faSoundcloud } from "@fortawesome/free-brands-
 import Link from "next/link";
 import { Footer } from "../../../components/layout/footer";
 import MainMenu from "../../../components/layout/main-menu";
+import { MembresBlockContent } from "./client-component";
+import { ActivitesGridDisplay } from "../../../components/parts/activites-grid-display";
 
 const CompagniePage = () => {
 
@@ -160,22 +162,10 @@ const ActualitesBlock = async () => {
             Nos actualités
         </div>
         
-        <div className={mergeClasses(
-            "w-full",
-            "grid",
-            "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6",
-            "compagnie-actualites-grid",
-            "gap-2 mb-4 mt-2",
-        )}>
-            {
-                activites.length > 0 ? activites.map((activite, index) => <ActiviteCard
-                    activite={activite}
-                    key={`Activity-${index.toString().padStart(2, " ")}`}
-                />) : <div className="text-white mt-4">
-                    Aucune activité n&apos;est prévue pour l&apos;instant
-                </div>
-            }
-        </div>
+        <ActivitesGridDisplay
+            activites={activites}
+            className="mb-4 mt-2"
+        />
         
         <div><TextLink href="/activites" className="underline">Tout voir</TextLink></div>
     </div>
@@ -195,16 +185,7 @@ const MembresBlock = async () => {
         return membre;
     }));
 
-    return <div className={mergeClasses(
-        "flex flex-col items-stretch",
-        "gap-8 pt-6",
-        "border-t border-golden"
-    )}>
-        {membres.map((membre, index) => <MembreCard
-            membre={membre}
-            key={`Membre-${index.toString().padStart(2, " ")}`}
-        />)}
-    </div>
+    return <MembresBlockContent membres={membres} />
 }
 
 
@@ -226,7 +207,6 @@ const AussiAvecNousBlock = async () => {
 
     return <div className={mergeClasses(
        "flex flex-col items-center",
-       "border-t border-golden",
        "pt-8",
        "pb-5 md:pb-8 lg:pb-12",
        layoutClasses.mainColumnPadding

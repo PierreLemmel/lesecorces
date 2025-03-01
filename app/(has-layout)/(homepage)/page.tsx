@@ -1,23 +1,24 @@
 import React from "react";
 import { faNewspaper, faPhone, faPhotoFilm } from '@fortawesome/free-solid-svg-icons'
-import { TextLink } from "../../components/ui/text-link";
-import { mergeClasses } from "../../lib/utils";
-import { EcorcesIcon } from "../../components/ui/icon";
-import { proRessources } from "../../lib/res";
+import { TextLink } from "../../../components/ui/text-link";
+import { mergeClasses } from "../../../lib/utils";
+import { EcorcesIcon } from "../../../components/ui/icon";
+import { proRessources } from "../../../lib/res";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { getActivites, getBlockContent, getOffrePedagogique } from "../../server/server";
-import EcorcesTabComponent from "../../components/ui/ecorces-tab-component";
-import { ActiviteCard } from "../../components/parts/activite-card";
-import { NewsLetter } from "../../components/ui/newsletter";
-import { Footer } from "../../components/layout/footer";
-import MainMenu from "../../components/layout/main-menu";
-import { layoutClasses } from "../../components/ui/ecorces-ui";
+import { getActivites, getBlockContent, getOffrePedagogique } from "../../../server/server";
+import EcorcesTabComponent from "../../../components/ui/ecorces-tab-component";
+import { NewsLetter } from "../../../components/ui/newsletter";
+import { Footer } from "../../../components/layout/footer";
+import MainMenu from "../../../components/layout/main-menu";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
+import { ActivitesGridDisplay } from "../../../components/parts/activites-grid-display";
+import { OffresPedagogiqueBlockContent } from "./client-component";
 
 const Home = () => {
 
 	return <div className="w-full min-h-screen flex flex-col bg-black text-golden">
 		
-		<MainMenu shadow={true} />
+		<MainMenu shadow={true} floating={true} />
 		
 		<Header />
 
@@ -31,10 +32,28 @@ const Home = () => {
 	</div>
 }
 
-const Header = () => <div className="w-full flex flex-col items-stretch pt-[1rem]">
-	<div className="h-[15rem] relative overflow-hidden">
-		<video autoPlay muted loop className="absolute top-0 left-0 w-full h-full object-cover" src="/videos/qacda-teaser.mp4" />
-		<div className="absolute -top-1 inset-0 h-[2.5rem] bg-gradient-to-b from-black to-transparent"></div>
+const Header = () => <div className={mergeClasses(
+	"w-full flex flex-col items-stretch",
+	"pt-[1rem] md:pt-0"
+)}>
+	<div className={mergeClasses(
+		"relative overflow-hidden",
+		"h-[15rem] md:h-[30rem]"
+	)}>
+		<video
+			autoPlay muted loop
+			className={mergeClasses(
+				"absolute top-0 left-0 w-full h-full object-cover",
+				"bg-cover bg-[50%_86%] bg-no-repeat bg-[url(/img/misc/homepage-video-fallback.jpeg)]",
+				
+			)}
+			src="/videos/qacda-teaser.mp4"
+		/>
+		<div className={mergeClasses(
+			"absolute -top-1 inset-0 bg-gradient-to-b from-black to-transparent",
+			"h-[2.5rem] md:h-[10.6rem]"
+		 )} />
+		
 	</div>
 </div>
 
@@ -44,27 +63,38 @@ const ActivitesBlock = async () => {
     const activites = await getActivites({
         upcoming: true,
         visible: true,
-        limit: 3
+        limit: 6
     });
 
     return <div className={mergeClasses(
-        "flex flex-col items-center",
-        "mb-12 mt-8"
+        "grid",
+		"grid-rows-[auto,auto,auto] md:grid-rows-[auto,auto]",
+		"grid-cols-1 md:grid-cols-2",
+		layoutClasses.mainColumnPadding,
+        "mb-12 mt-8 md:mt-12"
     )}>
-        <div className={mergeClasses(layoutClasses.heading1)}>Nos prochaines activités</div>
+        <div className={mergeClasses(
+			layoutClasses.heading1,
+			"md:justify-self-start",
+			"md:pl-6"
+		)}>
+			Nos prochaines activités
+		</div>
         
-        <div className="flex flex-col items-stretch gap-2 px-3 w-full mb-4 mt-2">
-            {
-                activites.length > 0 ? activites.map((activite, index) => <ActiviteCard
-                    activite={activite}
-                    key={`Activity-${index.toString().padStart(2, " ")}`}
-                />) : <div className="text-white mt-4">
-                    Aucune activité n&apos;est prévue pour l&apos;instant
-                </div>
-            }
-        </div>
+        <ActivitesGridDisplay
+            activites={activites}
+            className={mergeClasses(
+				"mb-4 mt-2",
+				"row-start-2 md:col-span-2"
+			)}
+        />
         
-        <div><TextLink href="/actualites" className="underline">Tout voir</TextLink></div>
+        <div className={mergeClasses(
+			"md:justify-self-end",
+			"md:pr-12"
+		)}>
+			<TextLink href="/actualites" className="underline">Tout voir</TextLink>
+		</div>
     </div>
 }
 
@@ -83,42 +113,9 @@ const OffresPedagogiqueBlock = async () => {
 		content: offre.description
 	}));
 
-	return <div className={mergeClasses(
-		"flex flex-col items-stretch gap-3",
-		"pb-16",
-		"relative z-20",
-	)}>
-		<div className={mergeClasses(
-			"absolute inset-0",
-			"bg-[100%_auto] bg-top bg-no-repeat",
-			"bg-[url(/img/qacda/qacda-02.jpeg)]",
-			"-z-10"
-		)}>
-			<div className={mergeClasses(
-				"w-full h-full",
-				"bg-gradient-to-r from-black/90 via-black/60 to-black/90"
-			)} />
-		</div>
-
-		<div className={mergeClasses(
-			"heading-1 text-golden",
-			"text-center",
-		)}>
-			Nos offres pédagogiques
-		</div>
-		<div className="text-white text-center">
-			{offrePedaText}
-		</div>
-		<div className={mergeClasses(
-			layoutClasses.mainColumnPadding,
-		)}>
-			<EcorcesTabComponent tabs={tabs}/>
-		</div>
-		<TextLink href="/ecole" className="text-center underline">
-			Voir nos offres pédagogiques
-		</TextLink>
-		
-	</div>;
+	return <OffresPedagogiqueBlockContent
+		{...{offrePedaText, tabs}}
+	/>
 }
 
 
@@ -131,7 +128,10 @@ const CompagnieBlock = async () => {
 		"relative flex flex-row gap-4"
 	)}>
 		<div className={mergeClasses(
-			"flex flex-col items-stretch",
+			"flex flex-col justify-center",
+			"items-stretch md:items-end",
+			"md:w-1/2",
+			"md:pl-[16.66%]",
 			"z-10"
 		)}>
 			<div className={mergeClasses(
@@ -166,12 +166,15 @@ const CompagnieBlock = async () => {
 					Page de notre compagnie
 				</TextLink>
 			</div>
-
 		</div>
+
 		<div className={mergeClasses(
 			"absolute w-full h-full top-0 left-0",
-			"bg-cover bg-top bg-no-repeat",
-			"filter blur-[3px] saturate-[0.7] opacity-60 sepia-[0.2]"
+			"left-0 md:left-[55%]",
+			"w-full md:w-[28.33%]",
+			"bg-cover bg-[50%_15%] bg-no-repeat",
+			"filter saturate-[0.7] opacity-60 sepia-[0.2]",
+			"blur-[3px] md:blur-none"
 		)} style={{
 			backgroundImage: "url(/img/qacda/qacda-01.jpeg)",
 		}}></div>
@@ -181,10 +184,11 @@ const CompagnieBlock = async () => {
 const EspaceProBlock = () => <div className={mergeClasses(
 	"flex flex-col items-stretch",
 	"gap-1 mt-8",
-	"bg-no-repeat bg-[size:auto_200%] bg-[position:100%_20%]"
-)} style={{
-	backgroundImage: "url(/img/misc/homepage-pro-bg.png)"
-}}>
+	"bg-no-repeat bg-[size:auto_200%] bg-[position:100%_20%]",
+	"bg-[url(/img/misc/homepage-pro-bg.png)]",
+	"pt-2 md:pt-8",
+	"pb-6 md:pb-10"
+)}>
 	<div className={mergeClasses(
 		layoutClasses.heading1,
 		"text-golden text-center"
@@ -198,7 +202,8 @@ const EspaceProBlock = () => <div className={mergeClasses(
 		Accédez à nos outils de diffusion
 	</div>
 	<div className={mergeClasses(
-		"flex flex-row flex-wrap items-stretch justify-center",
+		"flex items-stretch justify-center",
+		"flex-col md:flex-row",
 		"gap-7 px-7 py-6"
 	)}>
 		<EspaceProBlockCard
@@ -245,10 +250,14 @@ const EspaceProBlockCard = (props: EspaceProBlockCardProps) => {
 
 	return <div className={mergeClasses(
 		"flex flex-col items-center justify-center",
-		"bg-golden/15 gap-2 px-[10%] py-3",
-		"aspect-square min-w-full"
+		"bg-golden/15 gap-2 py-3",
+		"aspect-square",
+		layoutClasses.mainColumnPadding,
+		"w-full md:w-[21rem] lg:w-[23rem]",
 	)}>
-		<EcorcesIcon icon={icon} className="bg-black text-white text-xl p-2" />
+		<EcorcesIcon icon={icon} className={mergeClasses(
+			"bg-black text-white text-xl p-2"
+		)} />
 		<div className={mergeClasses(
 			layoutClasses.heading2,
 			"text-white"
@@ -276,24 +285,50 @@ const NewsLetterBlock = async () => {
 	]);
 
 	return <div className={mergeClasses(
-		"flex flex-col items-stretch px-2",
-		"mb-8"
+		"flex flex-row items-stretch",
+		layoutClasses.mainColumnPadding,
+		"md:mb-8"
 	)}>
 		<div className={mergeClasses(
-			layoutClasses.heading1,
-			"text-center"
+			"hidden md:flex",
+			"w-1/2",
+			"md:pl-[15%]",
 		)}>
-			{newsLetter01}
+			<div className={mergeClasses(
+				"h-full w-full",
+				"bg-cover bg-left bg-no-repeat",
+				"bg-[url(/img/qacda/qacda-06.jpeg)]",
+			)}>
+				<div className={mergeClasses(
+					"w-full h-full",
+					"bg-[linear-gradient(to_right,rgba(0,0,0,1)_0%,rgba(0,0,0,0)_23%)]",
+					"z-10"
+				)}/>
+			</div>
 		</div>
-		<div className={mergeClasses(
-			layoutClasses.heading2,
-			"text-center text-white"
-		)}>
-			{newsLetter02}
-		</div>
-		<div className="text-white mt-6 text-center">{newsLetter03}</div>
 
-		<NewsLetter className="mt-4" />
+		<div className={mergeClasses(
+			"flex flex-col items-stretch",
+			"mb-8",
+			"md:px-9 lg:px-12",
+			"md:py-6"
+		)}>
+			<div className={mergeClasses(
+				layoutClasses.heading1,
+				"text-center"
+			)}>
+				{newsLetter01}
+			</div>
+			<div className={mergeClasses(
+				layoutClasses.heading2,
+				"text-center text-white"
+			)}>
+				{newsLetter02}
+			</div>
+			<div className="text-white mt-6 text-center">{newsLetter03}</div>
+
+			<NewsLetter className="mt-4" />
+		</div>
 	</div>;
 }
 

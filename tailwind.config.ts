@@ -31,6 +31,9 @@ const config: Config = {
         leaves,
         bark
       },
+      backgroundImage: {
+        'feathering-landscape': 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 23%, rgba(0,0,0,0) 77%, rgba(0,0,0,0) 100%)'
+      }
     },
   },
 }

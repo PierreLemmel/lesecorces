@@ -23,7 +23,7 @@ export const TextLink = (props: TextLinkProps) => {
             className={mergeClasses(
                 "italic",
                 emphasis ? "font-semibold text-golden2" : "text-golden",
-                "cursor-pointer hover:scale-105 transition-transform transform-gpu origin-center",
+                "cursor-pointer hover:scale-[1.025] transition-transform transform-gpu origin-center",
                 className
             )}
         >

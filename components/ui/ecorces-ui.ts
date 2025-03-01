@@ -148,6 +148,6 @@ export const ecorcesColor = {
 
 export const layoutClasses = {
     mainColumnPadding: "px-2 sm:px-6 md:px-12",
-    heading1: "uppercase font-extrabold text-xl lg:text-2xl mb-1",
+    heading1: "uppercase font-extrabold text-xl md:text-2xl lg:text-3xl mb-1",
     heading2: "font-semibold text-lg lg:text-xl",
 } as const;

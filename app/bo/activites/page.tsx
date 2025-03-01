@@ -14,7 +14,7 @@ import EcorcesSelectMenu from "../../../components/ui/ecorces-select-menu";
 import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import { mergeClasses } from "../../../lib/utils";
-import { backgroundUrl, croppedImageUrl } from "../../../components/ui/ecorces-ui";
+import { backgroundUrl, croppedImageUrl, layoutClasses } from "../../../components/ui/ecorces-ui";
 
 
 const EcorcesActiviteManager = () => {

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { verifyThatSessionCookieIsAdmin } from "../../../../server/admin";
-import { verifySessionCookie } from "../../../../lib/firebase-server";
 
 export async function POST(req: Request) {
     try {
