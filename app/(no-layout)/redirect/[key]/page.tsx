@@ -1,29 +1,38 @@
-'use client';
+"use client";
 
 import RedirectTo from '../../../../components/redirect/redirect-to';
 import { useParams } from 'next/navigation';
+import { getDocument } from '../../../../lib/firebase';
+import { useEffect, useState } from 'react';
+import { useEffectAsync } from '../../../../lib/hooks';
 
-const URL_PROARTI = 'https://www.proarti.fr/collect/project/quelque-chose-a-change-dans-lair/0';
-const URL_FACTORY_AVIGNON = 'https://lafactory.vostickets.net/billet/FR/representation-LA_FACTORY-21994-0.wb';
-const URL_CLAVEL = 'https://www.billetweb.fr/qacda-clavel';
 
-const urls: Record<string, string> = {
-    'carte-visite': URL_PROARTI,
-    'flyer-avignon': URL_FACTORY_AVIGNON,
-    'qacda-clavel': URL_CLAVEL,
-    'flyer-cagnotte': URL_PROARTI,
-    'kakemono': URL_PROARTI,
-};
-
-const RedirectToTest = () => {
+const Redirect = () => {
 
     const params = useParams();
     const key = params["key"] as string;
 
-    if (key && urls[key.toLowerCase()]) {
-        const url = urls[key.toLowerCase()];
+    const [url, setUrl] = useState<string | null>(null);
+
+    useEffectAsync(async () => {
+
+        if (!key) {
+            return;
+        }
+
+        const links = await getDocument<Record<string, string>>("/links/default")
+        const newUrl = links[key.toLowerCase()];
+
+        setUrl(newUrl);
+    }, [key])
+
+
+    if (url) {
         return <RedirectTo url={url} />;
+    }
+    else {
+        return <div>Redirecting...</div>;
     }
 }
 
-export default RedirectToTest;
+export default Redirect;

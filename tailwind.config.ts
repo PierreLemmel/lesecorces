@@ -1,4 +1,15 @@
-import type { Config } from 'tailwindcss'
+import { ecorcesColor } from './components/ui/ecorces-ui'
+import { Config } from 'tailwindcss';
+
+const {
+  golden,
+  golden2,
+  flower,
+  water,
+  trunk,
+  leaves,
+  bark,
+} = ecorcesColor
 
 const config: Config = {
   content: [
@@ -9,11 +20,22 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        'abril-fatface': ['AbrilFatface', 'sans-serif'],
-        'arsenica': ['Arsenica', 'sans-serif'],
+        'red-hat-display': ['RedHatDisplay', 'sans-serif'],
+      },
+      colors: {
+        golden,
+        golden2,
+        flower,
+        water,
+        trunk,
+        leaves,
+        bark
+      },
+      backgroundImage: {
+        'feathering-landscape': 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 23%, rgba(0,0,0,0) 77%, rgba(0,0,0,0) 100%)'
       }
     },
   },
-  plugins: [],
 }
+
 export default config

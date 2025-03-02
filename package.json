@@ -1,7 +1,7 @@
 {
-  "name": "my-project",
-  "version": "0.1.0",
-  "private": true,
+  "name": "lesecorces",
+  "version": "1.0.0",
+  "private": false,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,9 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "firebase": "^11.2.0",
+    "firebase-admin": "^13.0.2",
+    "framer-motion": "^11.18.1",
     "next": "^14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-easy-crop": "^5.2.0",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@types/node": "^20",

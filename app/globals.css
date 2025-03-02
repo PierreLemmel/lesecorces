@@ -2,14 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: 'AbrilFatface';
-    src: url("/fonts/AbrilFatFace/AbrilFatface-Regular.ttf") format('truetype');
+.center-child {
+    @apply flex justify-center items-center;
+}
+
+.heading-1 {
+    @apply uppercase font-extrabold text-xl mb-1
+}
+
+.heading-2 {
+    @apply font-semibold text-lg
 }
 
 @font-face {
-    font-family: 'Arsenica';
-    src: url('/fonts/Arsenica/ArsenicaTrial-Regular.ttf') format('truetype');
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: 800;
+    font-style: italic;
+}
+
+@media (max-width: 639px) {
+    .activites-grid > *:nth-child(n + 4) { 
+        display: none;
+    }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) { 
+    .activites-grid > *:nth-child(n + 5) { 
+        display: none;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) { 
+    .activites-grid > *:nth-child(n + 4) { 
+        display: none;
+    }
+}
+
+@media (min-width: 1280px) and (max-width: 1535px) { 
+    .activites-grid > *:nth-child(n + 5) { 
+        display: none;
+    }
+}
+
+@media (min-width: 1536px) { 
+    .activites-grid > *:nth-child(n + 7) { 
+        display: none;
+    }
 }
