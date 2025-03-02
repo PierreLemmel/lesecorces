@@ -9,6 +9,7 @@ export type EcorcesSpectacle = {
         creation: string;
         duree: string;
         artistes: string;
+        age: string;
         genres: string;
     };
 

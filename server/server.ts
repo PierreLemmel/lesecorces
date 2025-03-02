@@ -111,7 +111,7 @@ export type EcorcesActivite = {
     title: string;
     date: Timestamp;
     endDate?: Timestamp;
-    city: ActiviteVille;
+    city: string;
     description: string;
     banneer?: EcorcesBanneer;
     link?: string;

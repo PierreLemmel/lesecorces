@@ -225,6 +225,7 @@ function createEmptyForm(): SpectacleForm {
             creation: "2018",
             duree: "1h00",
             artistes: "3",
+			age: "10+",
             genres: "Théâtre Improvisé"
         },
         teaser: undefined,
@@ -366,6 +367,17 @@ const SpectaclesEdition = (props: SpectaclesEditionProps) => {
 							setValue={(val) => handleChange("ficheTechnique", {
                                 ...form.ficheTechnique,
                                 artistes: val
+                            } satisfies EcorcesSpectacle["ficheTechnique"])}
+						/>
+					</div>
+					<div>
+						<EcorcesLabel>Âge minimal</EcorcesLabel>
+						<EcorcesTextInput
+							placeHolder="Âge minimal"
+							value={form.ficheTechnique.age}
+							setValue={(val) => handleChange("ficheTechnique", {
+                                ...form.ficheTechnique,
+                                age: val
                             } satisfies EcorcesSpectacle["ficheTechnique"])}
 						/>
 					</div>

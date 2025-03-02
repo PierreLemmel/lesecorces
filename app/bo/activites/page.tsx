@@ -15,9 +15,15 @@ import EcorcesCheckbox from "../../../components/ui/ecorces-checkbox";
 import EcorcesImageUploader from "../../../components/ui/ecorces-image-uploader";
 import { mergeClasses } from "../../../lib/utils";
 import { backgroundUrl, croppedImageUrl, layoutClasses } from "../../../components/ui/ecorces-ui";
+import EcorcesTextArea from "../../../components/ui/ecorces-text-area";
+import { useSearchParams } from "next/navigation";
+import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
 
 
-const EcorcesActiviteManager = () => {
+const EcorcesActivites = () => {
+    const searchParams = useSearchParams();
+    const isSuperAdmin = searchParams.get("superadmin")?.toLowerCase() === "true";
+
     const [activities, setActivities] = useState<EcorcesActivite[]>([]);
     
     const [isLoading, setIsLoading] = useState(true);
@@ -72,17 +78,18 @@ const EcorcesActiviteManager = () => {
     const props: ActivitesEditionProps = {
         activities,
         setActivities,
-        commitChanges
+        commitChanges,
+        isSuperAdmin
     }
 
     return <ActivitesEdition {...props} />;
 };
 
-
 type ActivitesEditionProps = {
     activities: EcorcesActivite[];
     setActivities: Dispatch<EcorcesActivite[]>;
     commitChanges: () => Promise<void>;
+    isSuperAdmin: boolean;
 }
 
 const ActivitesEdition = (props: ActivitesEditionProps) => {
@@ -91,6 +98,7 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
         activities,
         setActivities,
         commitChanges,
+        isSuperAdmin
     } = props;
 
     const [form, setForm] = useState<EcorcesActivite>(createEmptyActivite());
@@ -144,6 +152,28 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
         setForm(createEmptyActivite());
     }
 
+    const [citySelection, setCitySelection] = useState<ActiviteVille>("Lyon");
+    const [otherCity, setOtherCity] = useState<string>("");
+
+    useEffect(() => {
+
+        const city = citySelection !== "Autre" ? citySelection : otherCity;
+        handleChange("city", city);
+
+    }, [citySelection, otherCity]);
+
+    useEffect(() => {
+
+        if (form.city === "Lyon" || form.city === "Paris") {
+            setCitySelection(form.city);
+            setOtherCity("");
+        }
+        else {
+            setCitySelection("Autre");
+            setOtherCity(form.city);
+        }
+    }, [form])
+
     return <div className="w-full">
         <div className="flex flex-row justify-between items-center mb-6">
             <div className={mergeClasses(layoutClasses.heading1)}>Activités</div>
@@ -166,6 +196,7 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
                         handleEdit={() => handleEdit(index)}
                         handleDelete={() => handleDelete(index)}
                         handleDuplicate={() => handleDuplicate(index)}
+                        isSuperAdmin={isSuperAdmin}
                     />)}
                 </div>
             )}
@@ -216,16 +247,25 @@ const ActivitesEdition = (props: ActivitesEditionProps) => {
                     />
                 </div>
                 <div>
-                    <EcorcesLabel>Ville</EcorcesLabel>
+                    <EcorcesLabel>Lieu</EcorcesLabel>
                     <EcorcesSelectMenu<ActiviteVille>
                         options={allActiviteVilles.map(v => ({ value: v, label: v }))}
-                        value={form.city}
-                        onChange={v => handleChange("city", v)}
+                        value={citySelection}
+                        onChange={setCitySelection}
                     />
                 </div>
+                {citySelection === "Autre" && <div>
+                    <EcorcesLabel>Autre lieu</EcorcesLabel>
+                    <EcorcesTextInput
+                        placeHolder="Préciser le lieu"
+                        value={otherCity}
+                        setValue={setOtherCity}
+                    />
+                </div>}
                 <div>
                     <EcorcesLabel>Description</EcorcesLabel>
-                    <EcorcesTextInput
+                    <EcorcesTextArea
+                        rows={4}
                         placeHolder="Quelques mots sur l'activité"
                         value={form.description}
                         setValue={val => handleChange("description", val)}
@@ -277,6 +317,7 @@ type ActivityCardProps = {
     handleEdit: () => void;
     handleDelete: () => void;
     handleDuplicate: () => void;
+    isSuperAdmin: boolean;
 }
 
 const ActivityCard = (props: ActivityCardProps) => {
@@ -285,7 +326,8 @@ const ActivityCard = (props: ActivityCardProps) => {
         activity,
         handleEdit,
         handleDelete,
-        handleDuplicate
+        handleDuplicate,
+        isSuperAdmin
     } = props;
 
     const bgUrl = activity.banneer ? croppedImageUrl(activity.banneer.url, activity.banneer.cropArea) : null;
@@ -326,11 +368,15 @@ const ActivityCard = (props: ActivityCardProps) => {
 
             <div className="flex flex-row mt-4 space-x-2">
                 <EcorcesButton onClick={handleEdit}>Modifier</EcorcesButton>
-                <EcorcesButton onClick={handleDelete}>Supprimer</EcorcesButton>
+                <EcorcesButton onClick={handleDelete} disabled={!isSuperAdmin}>Supprimer</EcorcesButton>
                 <EcorcesButton onClick={handleDuplicate}>Dupliquer</EcorcesButton>
             </div>
         </div>
     );
 }
 
-export default EcorcesActiviteManager;
+const EcorcesActivitesManager = () => <EcorcesSuspense>
+	<EcorcesActivites />
+</EcorcesSuspense>;
+
+export default EcorcesActivitesManager;

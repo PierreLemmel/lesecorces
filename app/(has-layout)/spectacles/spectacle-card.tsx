@@ -35,6 +35,7 @@ const SpectacleCard_Small = (props: SpectacleCardProps) => {
                 creation,
                 duree,
                 artistes,
+                age,
                 genres
             },
             description: {
@@ -55,7 +56,8 @@ const SpectacleCard_Small = (props: SpectacleCardProps) => {
         ["Création", creation, 1],
         ["Durée", duree, 1],
         ["Artistes", artistes, 1],
-        ["Genres", genres, 3],
+        ["Âge", age, 1],
+        ["Genres", genres, 2],
     ]
 
     const [folded, setFolded] = useState(true);
@@ -188,9 +190,9 @@ const SpectacleCard_Small = (props: SpectacleCardProps) => {
                         allowFullScreen={true}
                     />}
                     
-                    <div className="text-white">{paragraph1}</div>
-                    <div className="text-white">{paragraph2}</div>
-                    <div className="text-white">{paragraph3}</div>
+                    <div className="text-white p-2">{paragraph1}</div>
+                    <div className="text-white p-2">{paragraph2}</div>
+                    <div className="text-white bg-golden/30 p-2">{paragraph3}</div>
 
                     <Gallery_Small gallery={gallery} />
 
@@ -217,6 +219,7 @@ const SpectacleCard_Large = (props: SpectacleCardProps) => {
                 creation,
                 duree,
                 artistes,
+                age,
                 genres
             },
             description: {
@@ -237,7 +240,8 @@ const SpectacleCard_Large = (props: SpectacleCardProps) => {
         ["Création", creation, 1],
         ["Durée", duree, 1],
         ["Artistes", artistes, 1],
-        ["Genres", genres, 3],
+        ["Âge", age, 1],
+        ["Genres", genres, 2],
     ]
 
     const [folded, setFolded] = useState(true);
@@ -327,6 +331,7 @@ const SpectacleCard_Large = (props: SpectacleCardProps) => {
             }}>
 
                 <div className={mergeClasses(
+                    "col-span-2",
                     "grid",
                     "grid-cols-3",
                     "grid-rows-[repeat(3,auto)]",
@@ -353,7 +358,7 @@ const SpectacleCard_Large = (props: SpectacleCardProps) => {
                     })}
                 </div>
                 
-                <div />
+                
 
                 <div className={mergeClasses()}>
                     {teaser && <iframe
