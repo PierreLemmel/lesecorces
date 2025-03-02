@@ -6,6 +6,7 @@ import { getDocument } from '../../../../lib/firebase';
 import { useEffect, useState } from 'react';
 import { useEffectAsync } from '../../../../lib/hooks';
 
+
 const Redirect = () => {
 
     const params = useParams();
