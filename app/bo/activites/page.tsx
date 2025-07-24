@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic'
+
 import { Dispatch, useCallback, useEffect, useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { ActiviteType, ActiviteVille, allActiviteVilles, allActivityTypes, createEmptyActivite, duplicateActivite, EcorcesActivite, getActivites, saveActivites } from "../../../server/server";

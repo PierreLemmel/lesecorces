@@ -1,6 +1,8 @@
 "use client";
 
-import { Suspense, useCallback, useMemo, useState } from "react";
+export const dynamic = 'force-dynamic'
+
+import { useCallback, useMemo, useState } from "react";
 import { useEffectAsync } from "../../../lib/hooks";
 import {
 	getAmi,

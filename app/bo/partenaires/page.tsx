@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic'
+
 import { Dispatch, useCallback, useState } from "react";
 import LoadingSpinner from "../../../components/ui/loading-spinner";
 import { useEffectAsync } from "../../../lib/hooks";

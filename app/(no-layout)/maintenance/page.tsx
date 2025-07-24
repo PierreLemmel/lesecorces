@@ -1,4 +1,3 @@
-import { Inter } from "next/font/google";
 import { mergeClasses } from "../../../lib/utils";
 import Image from 'next/image';
 

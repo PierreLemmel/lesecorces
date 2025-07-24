@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic'
+
 import { useSearchParams } from "next/navigation";
 import EcorcesSuspense from "../../../components/ui/ecorces-suspense";
 import { useEffect, useState } from "react";

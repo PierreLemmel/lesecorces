@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { Footer } from "../../../components/layout/footer";
 import MainMenu from "../../../components/layout/main-menu";
 import { mergeClasses } from "../../../lib/utils";
