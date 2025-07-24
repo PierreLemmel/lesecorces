@@ -1,11 +1,11 @@
+export const dynamic = 'force-dynamic'
+
 import { faArrowTurnDown, faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { EcorcesIcon } from "../../../components/ui/icon";
 import { mergeClasses } from "../../../lib/utils";
 import { getActivites, getBlockContent } from "../../../server/server";
 import { TextLink } from "../../../components/ui/text-link";
-import { ActiviteCard } from "../../../components/parts/activite-card";
 import { EcorcesPartenaire, getAmi, getMembre, getPartenaires } from "../../../server/membres";
-import { MembreCard } from "./membre-card";
 import { backgroundUrl, croppedImageUrl, layoutClasses } from "../../../components/ui/ecorces-ui";
 import { faInstagram, faFacebook, faSoundcloud } from "@fortawesome/free-brands-svg-icons";
 import Link from "next/link";

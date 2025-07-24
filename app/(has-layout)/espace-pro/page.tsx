@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { faArrowTurnDown, faDownload, faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { Footer } from "../../../components/layout/footer";
 import { EcorcesIcon } from "../../../components/ui/icon";
@@ -5,11 +7,9 @@ import { isNullOrEmpty, mergeClasses } from "../../../lib/utils";
 import { getBlockContent } from "../../../server/server";
 import { EcorcesContact, getContacts } from "../../../server/contacts";
 import { getServices } from "../../../server/services";
-import { TextLink } from "../../../components/ui/text-link";
 import MainMenu from "../../../components/layout/main-menu";
-import { layoutClasses, uiBreakPoints } from "../../../components/ui/ecorces-ui";
+import { layoutClasses } from "../../../components/ui/ecorces-ui";
 import Link from "next/link";
-import EcorcesTabComponent, { TabContent } from "../../../components/ui/ecorces-tab-component";
 import { BanneerBackground } from "../../../components/parts/banneer-background";
 import { ServicesBlockContent } from "./espace-pro-components";
 

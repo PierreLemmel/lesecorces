@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import React from "react";
 import { faNewspaper, faPhone, faPhotoFilm } from '@fortawesome/free-solid-svg-icons'
 import { TextLink } from "../../../components/ui/text-link";
@@ -6,7 +8,6 @@ import { EcorcesIcon } from "../../../components/ui/icon";
 import { proRessources } from "../../../lib/res";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { getActivites, getBlockContent, getOffrePedagogique } from "../../../server/server";
-import EcorcesTabComponent from "../../../components/ui/ecorces-tab-component";
 import { NewsLetter } from "../../../components/ui/newsletter";
 import { Footer } from "../../../components/layout/footer";
 import MainMenu from "../../../components/layout/main-menu";

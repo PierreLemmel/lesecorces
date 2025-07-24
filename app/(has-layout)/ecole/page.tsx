@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { faArrowTurnDown, faAtom, faEnvelope, faGem, faHand, faLeaf, faSeedling, faShieldHeart } from "@fortawesome/free-solid-svg-icons";
 import { EcorcesIcon } from "../../../components/ui/icon";
 import { groupBy, mergeClasses } from "../../../lib/utils";

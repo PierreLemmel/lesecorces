@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic'
+
 import { Dispatch, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useEffectAsync } from "../../../lib/hooks";
 import { addVersionToBlock, createBlock, createEmptyBlock, deleteBlock, duplicateBlock,  EcorcesBlock, getBlock, listBlocksIds, saveBlock } from "../../../server/server";

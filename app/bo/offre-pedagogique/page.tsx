@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic'
+
 import { Dispatch, useCallback, useState } from "react";
 import { useEffectAsync } from "../../../lib/hooks";
 import { createEmptyOffrePedagogique, duplicateOffrePedagogique, EcorcesOffrePedagogique, getOffrePedagogique, saveOffrePedagogique } from "../../../server/server";

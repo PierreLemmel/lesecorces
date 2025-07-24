@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 import { Footer } from "../../../components/layout/footer";
 import { EcorcesIcon } from "../../../components/ui/icon";
